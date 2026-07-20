@@ -1,4 +1,6 @@
 cadquery==2.8.0
 trimesh==4.12.2
+pyglet<2
+numpy>=2,<2.8
 Pillow==12.3.0
-
+lxml>=5,<7

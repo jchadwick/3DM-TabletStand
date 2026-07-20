@@ -1,4 +1,8 @@
-"""Render a presentation preview of the v1 stand using Blender.
+"""Optional polished presentation preview of the v1 stand using Blender.
+
+Routine previews use render_cadquery_preview.py and direct in-memory CadQuery
+tessellation. This script intentionally uses the generated STL only when a
+Blender-specific presentation scene is desired.
 
 Run with:
     blender --background --python scripts/render_preview.py
@@ -15,7 +19,8 @@ from mathutils import Matrix, Vector
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "build" / "v1"
-TILT = math.radians(10.0)
+TILT = math.radians(80.0)
+SLEEVE_CENTER_Y = 24.0
 
 
 def material(name: str, color: tuple[float, float, float, float], metallic: float = 0.0, roughness: float = 0.45):
@@ -82,7 +87,9 @@ def main():
     screen.data.materials.append(screen_mat)
 
     # Existing 32 mm OD pedestal tube, shown extending into the sleeve.
-    bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=16.0, depth=95.0, location=(0, 0, -76.0))
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=96, radius=16.0, depth=95.0, location=(0, SLEEVE_CENTER_Y, -50.5)
+    )
     tube = bpy.context.object
     tube.name = "Existing 32 mm tube"
     tube.data.materials.append(tube_mat)
@@ -94,7 +101,13 @@ def main():
     curve_data.bevel_resolution = 5
     spline = curve_data.splines.new("BEZIER")
     spline.bezier_points.add(3)
-    points = [(106.0, 0.0, 9.6), (124.0, 0.0, 9.0), (132.0, -2.0, -3.0), (121.0, -8.0, -22.0)]
+    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((106.0, 0.0, 4.2)) + Vector((0, 0, 0.45))
+    points = [
+        local_exit,
+        local_exit + Vector((12.0, 0.0, 0.0)),
+        local_exit + Vector((23.0, 7.0, -7.0)),
+        local_exit + Vector((18.0, 19.0, -25.0)),
+    ]
     for bp, co in zip(spline.bezier_points, points):
         bp.co = co
         bp.handle_left_type = "AUTO"
@@ -149,7 +162,7 @@ def main():
     bpy.ops.wm.save_as_mainfile(filepath=str(BUILD / "tablet_stand_v1_preview.blend"))
     bpy.ops.render.render(write_still=True)
 
-    # Edge-on view makes the accepted 10-degree rise and vertical sleeve clear.
+    # Edge-on view makes the accepted 10-degree-back-from-vertical angle clear.
     camera.location = (335.0, -15.0, 88.0)
     look_at(camera, (0.0, 0.0, -13.0))
     camera.data.lens = 62

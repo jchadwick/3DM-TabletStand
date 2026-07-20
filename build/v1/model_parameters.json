@@ -10,13 +10,17 @@
     "y": 1.0,
     "z": 0.8
   },
-  "tilt_degrees_above_horizontal": 10.0,
+  "tilt_degrees_from_vertical": 10.0,
+  "screen_angle_degrees_above_horizontal": 80.0,
+  "orientation": "top edge higher and farther from user; bottom edge lower and nearer",
   "tube": {
     "od": 32.0,
     "sleeve_id": 32.2,
     "sleeve_od": 40.2,
     "body_length": 50.0,
-    "engagement": 47.0
+    "engagement": 51.0,
+    "seating_cap_thickness": 3.0,
+    "center_offset_behind_screen_plane_y": 24.0
   },
   "retention": "left slide-in; one M3 screw end stop",
   "usb_c": {

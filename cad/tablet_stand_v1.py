@@ -5,7 +5,9 @@ Coordinates:
     Y: viewer / bottom edge (-) to far / top edge (+)
     Z: up
 
-The tablet plane rises in +Y by 10 degrees.  The support tube remains vertical.
+The tablet plane is 10 degrees back from vertical (80 degrees above horizontal).
+Its +Y / top edge is higher and farther from the user.  The support tube remains
+vertical and is offset behind the screen plane.
 All dimensions are millimeters.
 """
 
@@ -27,7 +29,8 @@ TABLET_Z = 8.4
 FIT_X = 1.0
 FIT_Y = 1.0
 FIT_Z = 0.8
-TILT_DEG = 10.0
+TILT_FROM_VERTICAL_DEG = 10.0
+SCREEN_ANGLE_FROM_HORIZONTAL_DEG = 90.0 - TILT_FROM_VERTICAL_DEG
 
 # Skeletal frame and retaining rails
 BASE_T = 3.0
@@ -46,7 +49,9 @@ SLEEVE_WALL = 4.0
 SLEEVE_OD = SLEEVE_ID + 2.0 * SLEEVE_WALL
 SLEEVE_LENGTH = 50.0
 SLEEVE_TOP_Z = 4.0
-SLEEVE_ENGAGEMENT = 47.0
+SLEEVE_CAP_T = 3.0
+SLEEVE_ENGAGEMENT = SLEEVE_LENGTH + SLEEVE_TOP_Z - SLEEVE_CAP_T
+SLEEVE_CENTER_Y = 24.0
 GUSSET_T = 4.0
 
 # M3 removable end stop
@@ -162,18 +167,29 @@ def flat_end_stop() -> cq.Workplane:
 
 
 def vertical_sleeve() -> cq.Workplane:
-    return (
+    sleeve = (
         cq.Workplane("XY")
         .workplane(offset=-SLEEVE_LENGTH)
         .circle(SLEEVE_OD / 2.0)
         .circle(SLEEVE_ID / 2.0)
         .extrude(SLEEVE_LENGTH + SLEEVE_TOP_Z)
+        .translate((0, SLEEVE_CENTER_Y, 0))
     )
+    cap = (
+        cq.Workplane("XY")
+        .workplane(offset=SLEEVE_TOP_Z - SLEEVE_CAP_T)
+        .circle(SLEEVE_OD / 2.0)
+        .extrude(SLEEVE_CAP_T)
+        .translate((0, SLEEVE_CENTER_Y, 0))
+    )
+    return sleeve.union(cap)
 
 
 def gussets() -> cq.Workplane:
-    # Two V-shaped ribs tie the sleeve walls into the tilted center plate.
-    rib_profile = [(-31.0, -8.5), (31.0, 2.5), (10.0, -15.0), (-10.0, -15.0)]
+    # Two triangular ribs connect the nearly vertical backplate to the sleeve,
+    # which is offset behind the tablet so it cannot intrude into the cavity.
+    # Points are (Y, Z) in the installed coordinate system.
+    rib_profile = [(-2.5, -31.0), (8.5, 31.0), (22.0, 4.0), (22.0, -22.0)]
     ribs = None
     for x in (-13.0, 13.0):
         rib = (
@@ -188,16 +204,21 @@ def gussets() -> cq.Workplane:
 
 
 def installed_parts() -> tuple[cq.Workplane, cq.Workplane]:
-    main_tilted = flat_main_holder().rotate((0, 0, 0), (1, 0, 0), TILT_DEG)
-    stop_tilted = flat_end_stop().rotate((0, 0, 0), (1, 0, 0), TILT_DEG)
+    main_tilted = flat_main_holder().rotate(
+        (0, 0, 0), (1, 0, 0), SCREEN_ANGLE_FROM_HORIZONTAL_DEG
+    )
+    stop_tilted = flat_end_stop().rotate(
+        (0, 0, 0), (1, 0, 0), SCREEN_ANGLE_FROM_HORIZONTAL_DEG
+    )
     main_installed = main_tilted.union(vertical_sleeve()).union(gussets())
     # Re-bore after unioning the gussets so no hidden rib material intrudes into
-    # the tested 32.2 mm tube path.  A 3 mm seating cap remains at the top.
+    # the tested 32.2 mm tube path.  A deliberate 3 mm seating cap remains.
     bore = (
         cq.Workplane("XY")
         .workplane(offset=-SLEEVE_LENGTH)
         .circle(SLEEVE_ID / 2.0)
         .extrude(SLEEVE_ENGAGEMENT)
+        .translate((0, SLEEVE_CENTER_Y, 0))
     )
     main_installed = main_installed.cut(bore)
     return main_installed, stop_tilted
@@ -221,13 +242,17 @@ def export() -> None:
         "units": "mm",
         "tablet": {"x": TABLET_X, "y": TABLET_Y, "z": TABLET_Z},
         "fit_allowance_total": {"x": FIT_X, "y": FIT_Y, "z": FIT_Z},
-        "tilt_degrees_above_horizontal": TILT_DEG,
+        "tilt_degrees_from_vertical": TILT_FROM_VERTICAL_DEG,
+        "screen_angle_degrees_above_horizontal": SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        "orientation": "top edge higher and farther from user; bottom edge lower and nearer",
         "tube": {
             "od": 32.0,
             "sleeve_id": SLEEVE_ID,
             "sleeve_od": SLEEVE_OD,
             "body_length": SLEEVE_LENGTH,
             "engagement": SLEEVE_ENGAGEMENT,
+            "seating_cap_thickness": SLEEVE_CAP_T,
+            "center_offset_behind_screen_plane_y": SLEEVE_CENTER_Y,
         },
         "retention": "left slide-in; one M3 screw end stop",
         "usb_c": {"side": "right", "position": "center", "plug_projection": 6.50, "flat_cable_thickness": 0.6},
