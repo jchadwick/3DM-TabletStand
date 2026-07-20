@@ -1,0 +1,28 @@
+{
+  "units": "mm",
+  "tablet": {
+    "x": 200.0,
+    "y": 123.0,
+    "z": 8.4
+  },
+  "fit_allowance_total": {
+    "x": 1.0,
+    "y": 1.0,
+    "z": 0.8
+  },
+  "tilt_degrees_above_horizontal": 10.0,
+  "tube": {
+    "od": 32.0,
+    "sleeve_id": 32.2,
+    "sleeve_od": 40.2,
+    "body_length": 50.0,
+    "engagement": 47.0
+  },
+  "retention": "left slide-in; one M3 screw end stop",
+  "usb_c": {
+    "side": "right",
+    "position": "center",
+    "plug_projection": 6.5,
+    "flat_cable_thickness": 0.6
+  }
+}

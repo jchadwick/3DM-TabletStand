@@ -2,7 +2,9 @@
 
 A 3D-printable, pedestal-mounted holder for a 2024 onn. 8-inch tablet. The holder is intended to slide onto an existing vertical 32 mm OD tube and present the tablet in landscape orientation at 10 degrees above horizontal.
 
-The project is currently in the design-brief stage. The source tablet mesh and visual references are preserved under [`reference/`](reference/), and the decisions from the initial design conversation are recorded in [`docs/design-brief.md`](docs/design-brief.md).
+The source tablet mesh and visual references are preserved under [`reference/`](reference/), and the decisions from the initial design conversation are recorded in [`docs/design-brief.md`](docs/design-brief.md). A parametric first concept is available under [`cad/`](cad/) with generated print and preview artifacts in [`build/v1/`](build/v1/).
+
+![Version 1 tablet stand preview](build/v1/tablet_stand_v1_preview.png)
 
 ## Locked design inputs
 
@@ -19,13 +21,24 @@ The project is currently in the design-brief stage. The source tablet mesh and v
 
 ```text
 docs/                 Design decisions and open measurements
+cad/                  Parametric CadQuery source
+scripts/              Blender preview renderer
+build/v1/             STEP, STL, parameters, and rendered previews
 reference/images/     Uploaded visual references
 reference/tablet/     Supplied OBJ and material file
 ```
 
-## Status
+## Build the concept
 
-1. Preserve source material and design brief.
-2. Generate the first parametric CAD concept and preview.
-3. Test-print critical interfaces before committing to a full-size print.
+The current project environment uses Python 3.12 with CadQuery 2.8.0. From an environment containing the packages in `requirements.txt`:
 
+```bash
+python cad/tablet_stand_v1.py
+blender --background --python scripts/render_preview.py
+```
+
+## Current status
+
+1. Source material and design brief preserved.
+2. Parametric version 1 CAD and preview generated.
+3. Next: review the form, verify hardware and obstruction zones, then test-print critical interfaces before a full-size print.
