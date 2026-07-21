@@ -27,6 +27,10 @@
     "side": "right",
     "position": "center",
     "plug_projection": 6.5,
-    "flat_cable_thickness": 0.6
+    "pocket_clearance_x": 1.5,
+    "flat_cable_thickness": 0.6,
+    "exit_groove_width_y": 24.0,
+    "exit_groove_height_z": 1.8,
+    "loading": "position plug in right pocket, then slide tablet in from left"
   }
 }

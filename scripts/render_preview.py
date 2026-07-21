@@ -94,19 +94,37 @@ def main():
     tube.name = "Existing 32 mm tube"
     tube.data.materials.append(tube_mat)
 
-    # Represent the slim cable leaving the open center of the right edge and curving down.
+    # Illustrate the low-profile plug inside the closed right pocket and the
+    # 0.6 mm flat section passing through its groove.  The displayed widths are
+    # schematic because the real connector/cable width is still unconfirmed.
+    tablet_transform = Matrix.Translation((0.0, 0.0, 0.45)) @ Matrix.Rotation(TILT, 4, "X")
+    bpy.ops.mesh.primitive_cube_add()
+    plug = bpy.context.object
+    plug.name = "USB-C plug indication"
+    plug.dimensions = (6.5, 12.0, 3.0)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    plug.matrix_world = tablet_transform @ Matrix.Translation((103.25, 0.0, 4.2))
+    plug.data.materials.append(cable_mat)
+
+    bpy.ops.mesh.primitive_cube_add()
+    flat_cable = bpy.context.object
+    flat_cable.name = "Flat cable indication"
+    flat_cable.dimensions = (50.8, 10.0, 0.6)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    flat_cable.matrix_world = tablet_transform @ Matrix.Translation((131.9, 0.0, 4.2))
+    flat_cable.data.materials.append(cable_mat)
+
     curve_data = bpy.data.curves.new("USB-C cable path", type="CURVE")
     curve_data.dimensions = "3D"
     curve_data.bevel_depth = 1.7
     curve_data.bevel_resolution = 5
     spline = curve_data.splines.new("BEZIER")
-    spline.bezier_points.add(3)
-    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((106.0, 0.0, 4.2)) + Vector((0, 0, 0.45))
+    spline.bezier_points.add(2)
+    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((157.3, 0.0, 4.2)) + Vector((0, 0, 0.45))
     points = [
         local_exit,
-        local_exit + Vector((12.0, 0.0, 0.0)),
-        local_exit + Vector((23.0, 7.0, -7.0)),
-        local_exit + Vector((18.0, 19.0, -25.0)),
+        local_exit + Vector((12.0, 7.0, -7.0)),
+        local_exit + Vector((7.0, 19.0, -25.0)),
     ]
     for bp, co in zip(spline.bezier_points, points):
         bp.co = co

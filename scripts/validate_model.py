@@ -49,6 +49,20 @@ def main() -> None:
     assert metadata["tilt_degrees_from_vertical"] == 10.0
     assert metadata["screen_angle_degrees_above_horizontal"] == 80.0
     assert metadata["tube"]["sleeve_id"] == 32.2
+    assert metadata["usb_c"]["plug_projection"] == 6.5
+    assert metadata["usb_c"]["exit_groove_height_z"] > metadata["usb_c"]["flat_cable_thickness"]
+
+    # Check the right-side concept in its unrotated construction plane: the
+    # outer end is closed, its centered flat-cable groove is open, and the plug
+    # chamber plus supporting floor remain clear/solid where expected.
+    flat_holder = model.flat_main_holder().val()
+    cavity_right_x = (model.TABLET_X + model.FIT_X) / 2.0
+    end_wall_center_x = cavity_right_x + model.USB_POCKET_INNER_X + model.USB_END_WALL_T / 2.0
+    assert flat_holder.isInside(cq.Vector(end_wall_center_x, 30.0, model.TABLET_Z / 2.0))
+    assert not flat_holder.isInside(cq.Vector(end_wall_center_x, 0.0, model.TABLET_Z / 2.0))
+    assert not flat_holder.isInside(cq.Vector(cavity_right_x + 3.0, 0.0, model.TABLET_Z / 2.0))
+    assert flat_holder.isInside(cq.Vector(cavity_right_x + 3.0, 0.0, -model.BASE_T / 2.0))
+    print("USB-C outer end closed; flat-cable groove and plug chamber clear")
 
     for path in sorted(BUILD.glob("*.stl")):
         mesh = trimesh.load_mesh(path, force="mesh")

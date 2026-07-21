@@ -25,6 +25,9 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Retaining hardware | M3 screw | User has M3 screws |
 | USB-C plug projection | 6.50 mm | User measurement |
 | Flat cable thickness / length | 0.6 mm / about 50.8 mm | User measurement |
+| USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection + 1.50 mm provisional clearance |
+| Flat-cable exit groove | 24 mm wide × 1.8 mm high | Broad provisional design value; cable width still unconfirmed |
+| Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
 
 ## Functional design
 
@@ -32,7 +35,10 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
-- Right-side corner stops leave the center of the right edge open for USB-C. Keep cable routing broad and non-captive because its width is not yet verified.
+- Internal right-side corner stops locate the tablet while a closed outer right end contains the 6.50 mm-projecting USB-C plug.
+- The plug pocket is open toward the tablet: position or connect the plug, then slide the tablet in from the left and onto it. A 24 × 1.8 mm centered groove passes only the 0.6 mm flat cable through the outer wall.
+- Keep the plug chamber and cable groove broad rather than close-fitting because the connector and cable widths remain unverified.
+- Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 
 ## Known unknowns before a full print

@@ -8,6 +8,7 @@ exports remain separate manufacturing deliverables, not preview inputs.
 from __future__ import annotations
 
 import math
+import subprocess
 import sys
 from io import BytesIO
 from pathlib import Path
@@ -94,14 +95,37 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     tube.apply_translation((0.0, model.SLEEVE_CENTER_Y, -49.0))
     objects.append((tube, (118, 127, 140, 255)))
 
-    # Schematic cable path exiting the right-edge midpoint and bending behind.
-    local_exit = np.array([106.0, 0.0, model.TABLET_Z / 2.0, 1.0])
-    exit_point = (translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD) @ local_exit)[:3]
+    # Schematic low-profile connector and flat cable.  The displayed 10 mm
+    # width is illustrative only; the 24 mm model groove stays deliberately
+    # broad until the real cable width is measured.
+    tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
+    plug = trimesh.creation.box(extents=(model.USB_PLUG_PROJECTION, 12.0, 3.0))
+    plug.apply_transform(
+        tablet_transform
+        @ translation(model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION / 2.0, 0, model.TABLET_Z / 2.0)
+    )
+    objects.append((plug, (18, 18, 20, 255)))
+
+    flat_length = 50.8
+    flat_cable = trimesh.creation.box(extents=(flat_length, 10.0, 0.6))
+    flat_cable.apply_transform(
+        tablet_transform
+        @ translation(
+            model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION + flat_length / 2.0,
+            0,
+            model.TABLET_Z / 2.0,
+        )
+    )
+    objects.append((flat_cable, (7, 7, 8, 255)))
+
+    local_exit = np.array(
+        [model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION + flat_length, 0.0, model.TABLET_Z / 2.0, 1.0]
+    )
+    exit_point = (tablet_transform @ local_exit)[:3]
     cable_points = [
         exit_point,
-        exit_point + np.array([12.0, 0.0, 0.0]),
-        exit_point + np.array([23.0, 7.0, -7.0]),
-        exit_point + np.array([18.0, 19.0, -25.0]),
+        exit_point + np.array([12.0, 7.0, -7.0]),
+        exit_point + np.array([7.0, 19.0, -25.0]),
     ]
     objects.append((cable_mesh(cable_points), (7, 7, 8, 255)))
     return objects
@@ -151,29 +175,53 @@ def render_view(objects, output: Path, size: tuple[int, int], eye, target):
     image.save(output)
 
 
-def contact_sheet(hero_path: Path, side_path: Path, output: Path):
+def contact_sheet(hero_path: Path, side_path: Path, detail_path: Path, output: Path):
     hero = Image.open(hero_path).convert("RGB")
     side = Image.open(side_path).convert("RGB")
-    canvas = Image.new("RGB", (1400, 1740), BACKGROUND[:3])
+    detail = Image.open(detail_path).convert("RGB")
+    canvas = Image.new("RGB", (1400, 2500), BACKGROUND[:3])
     canvas.paste(hero, (0, 45))
-    canvas.paste(side, (0, 1040))
+    canvas.paste(side, (0, 1070))
+    canvas.paste(detail, (0, 1800))
     draw = ImageDraw.Draw(canvas)
     draw.text((24, 14), "V1 KIOSK ORIENTATION - THREE-QUARTER", fill=(225, 232, 240))
-    draw.text((24, 1009), "SIDE VIEW - 10 DEG BACK FROM VERTICAL", fill=(225, 232, 240))
+    draw.text((24, 1039), "SIDE VIEW - 10 DEG BACK FROM VERTICAL", fill=(225, 232, 240))
+    draw.text((24, 1769), "RIGHT END - CLOSED PLUG POCKET AND FLAT-CABLE GROOVE", fill=(225, 232, 240))
     canvas.save(output)
 
 
 def main():
     BUILD.mkdir(parents=True, exist_ok=True)
-    objects = build_objects()
     hero = BUILD / "tablet_stand_v1_preview.png"
     side = BUILD / "tablet_stand_v1_side.png"
-    render_view(objects, hero, (1400, 1000), eye=(280.0, -340.0, 115.0), target=(0.0, 8.0, -5.0))
-    render_view(objects, side, (1400, 700), eye=(330.0, 15.0, 30.0), target=(0.0, 15.0, -8.0))
-    contact_sheet(hero, side, BUILD / "tablet_stand_v1_multiview.png")
+    detail = BUILD / "tablet_stand_v1_usb_detail.png"
+
+    # Trimesh/pyglet can fail when opening a second capture window in the same
+    # macOS process.  Render one camera per clean child process.
+    if len(sys.argv) == 3 and sys.argv[1] == "--render-one":
+        objects = build_objects()
+        if sys.argv[2] == "hero":
+            render_view(objects, hero, (1400, 1000), eye=(280.0, -340.0, 115.0), target=(0.0, 8.0, -5.0))
+        elif sys.argv[2] == "side":
+            render_view(objects, side, (1400, 700), eye=(330.0, 15.0, 30.0), target=(0.0, 15.0, -8.0))
+        elif sys.argv[2] == "usb":
+            render_view(
+                objects,
+                detail,
+                (1400, 700),
+                eye=(185.0, -105.0, 58.0),
+                target=(105.0, -4.0, 1.0),
+            )
+        else:
+            raise ValueError(f"unknown preview view: {sys.argv[2]}")
+        return
+
+    subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "hero"], check=True)
+    subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "side"], check=True)
+    subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "usb"], check=True)
+    contact_sheet(hero, side, detail, BUILD / "tablet_stand_v1_multiview.png")
     print("Rendered CadQuery solids directly with Trimesh (no STL import).")
 
 
 if __name__ == "__main__":
     main()
-

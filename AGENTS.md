@@ -27,8 +27,9 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve | Closed cylindrical sleeve slides down over an accessible tube end; 40.2 mm OD, 4.0 mm wall, 51 mm clear engagement, 3.0 mm seating cap |
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw |
-| USB-C | Center of right short edge from the front; preserve the open center relief and broad routing path |
-| Cable | Plug projects 6.50 mm; flat section is 0.6 mm thick for about 50.8 mm; width remains unconfirmed, so do not make a close-fitting tunnel |
+| USB-C | Center of right short edge from the front; closed outer right end contains the plug while the tablet slides onto it from the left |
+| Cable | Plug projects 6.50 mm into an 8.0 mm clear pocket; flat section is 0.6 mm thick for about 50.8 mm; provisional exit groove is 24 × 1.8 mm; width remains unconfirmed, so do not tighten it |
+| Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
 | Current status | Version 1 is a reviewed concept, not a production-ready print |
 
