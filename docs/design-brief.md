@@ -55,7 +55,8 @@ The selected direction should keep the rear largely open for airflow and materia
 - Flat cable section: 0.6 mm thick for approximately 2 in (50.8 mm).
 - Plug projection from tablet: 0.256 in (6.50 mm).
 - The original width value remains ambiguous, so the first design should use a generous plug chamber and cable groove rather than a close-fitting captive tunnel.
-- Any turn in the cable route should be broad and radiused. The printed holder must not clamp the thin flat section or force a sharp bend at the connector.
+- The right-angle adapter turns immediately behind the tablet. Its photo-marked 51.4 mm pigtail and downstream connection should stay behind the open back, then route to an open groove/clip on the sleeve or collet before exiting near the tube.
+- Any turn in the cable route should be broad and radiused. The printed holder must not clamp the thin flat section, force a sharp bend at the connector, require the larger downstream connector to pass through a captive tunnel, or cut into the tested 32.2 mm sleeve bore.
 
 ## First concept intent
 
@@ -63,12 +64,13 @@ The selected direction should keep the rear largely open for airflow and materia
 - A removable end stop retained by one M3 screw.
 - A vertical 32.2 mm ID sleeve centered left-to-right and offset behind the tablet plane.
 - Low-profile gussets blending the sleeve into the back support.
-- A closed outer right end with a broad USB-C plug chamber and low-profile flat-cable exit groove.
+- A right-edge USB-C pocket that lets the right-angle pigtail turn behind the tablet, plus a largely hidden and serviceable rear route to the tube sleeve.
 - Rounded exterior edges and a visually quiet, symmetric form except where the cable route requires asymmetry.
 
 ## Measurements to validate before final print
 
 - Flat cable and connector body width.
+- Post-connector cable diameter, the meaning/axis of the photo-marked 9.6 mm connector dimension, and the intended direction where the cable leaves the sleeve/collet.
 - Exact locations of power/volume buttons, speakers, cameras, and microphones near any retaining rail.
 - Desired sleeve engagement length and available unobstructed tube length.
 - M3 screw length and whether a nut, heat-set insert, or tapped plastic hole will be used.

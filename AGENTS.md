@@ -27,11 +27,14 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve | Closed cylindrical sleeve slides down over an accessible tube end; 40.2 mm OD, 4.0 mm wall, 51 mm clear engagement, 3.0 mm seating cap |
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw |
-| USB-C | Center of right short edge from the front; closed outer right end contains the plug while the tablet slides onto it from the left |
-| Cable | Plug projects 6.50 mm into an 8.0 mm clear pocket; flat section is 0.6 mm thick for about 50.8 mm; provisional exit groove is 24 × 1.8 mm; width remains unconfirmed, so do not tighten it |
+| USB-C | Center of right short edge from the front; the right-angle adapter turns immediately behind the tablet rather than exiting straight out to the right |
+| Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the cable routes to an open groove/clip on the sleeve/collet and exits near the tube |
+| Cable unknowns | Photo marks 9.6 mm at the downstream connector body, but the measurement axis and the post-connector cable diameter remain unconfirmed; do not cut the 4 mm sleeve wall or tighten the route until confirmed |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
 | Current status | Version 1 is a reviewed concept, not a production-ready print |
+
+The generated V1 artifacts still depict the now-superseded straight-out cable path. The next CAD revision must reroute it behind the tablet and onto the sleeve while preserving the tested 32.2 mm tube bore.
 
 Coordinate system in `cad/tablet_stand_v1.py`: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 

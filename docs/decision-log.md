@@ -27,6 +27,8 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 | Plug projection | 0.256 in / 6.50 mm | User measurement |
 | Flat cable thickness | 0.6 mm | User measurement |
 | Flat cable length | About 2 in / 50.8 mm before braided transition | User measurement |
+| Right-angle pigtail reach | 51.4 mm marked length | User photo; precise endpoints still to confirm |
+| Downstream connector body | 9.6 mm marked dimension | User photo; axis/meaning still to confirm |
 | Retaining screw | M3 | User hardware |
 
 ## Active design decisions
@@ -35,14 +37,22 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
 - A removable left end stop secured by one M3 screw provides retention more secure than snap clips.
-- The right edge uses internal corner stops plus a closed outer end that contains the low-profile USB-C plug. The tablet may slide onto a plug positioned in the pocket.
-- The outer end has a broad centered groove for the 0.6 mm flat cable; connector/cable width remains unconfirmed, so the groove must not become close-fitting.
+- The right edge uses internal stops and accommodates the low-profile right-angle USB-C plug. The adapter turns immediately behind the tablet instead of sending the cable straight out through the right wall.
+- The 51.4 mm pigtail, downstream connection, and cable should remain largely hidden across the open back, then transition into an open groove or clip on the sleeve/collet and exit near the tube.
+- Do not make the rear route captive or cut into the tested tube bore. The post-connector cable diameter and desired sleeve exit direction must be confirmed before selecting a shallow groove, raised clip, or open channel.
 - Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right but offset behind the screen plane; version 1 uses a 24 mm Y offset and two structural ribs.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Rear-hidden right-angle cable route — 2026-07-20
+
+- **Superseded:** the V1 straight-out flat-cable groove through the outer right wall.
+- **Active intent:** the right-angle adapter wraps immediately behind the tablet; its photo-marked 51.4 mm pigtail and downstream connection stay behind the open back, and the cable then routes to a groove/clip on the sleeve or collet before exiting near the tube.
+- The user photo marks 9.6 mm at the downstream connector body, but the measurement axis is not yet confirmed. The downstream cable diameter and final sleeve exit direction are also required before changing fit-critical sleeve geometry.
+- Prefer open, serviceable rear clips/channel features that do not require feeding the larger connector through a closed tunnel and do not reduce the proven 32.2 mm sleeve bore.
 
 ### Closed USB-C end and softened corners — 2026-07-20
 

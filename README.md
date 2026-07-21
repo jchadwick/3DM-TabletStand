@@ -16,7 +16,7 @@ The source tablet mesh and visual references are preserved under [`reference/`](
 - Styling: simple and sleek, with sturdy support but minimal enclosure.
 - Retention direction: slide-in edge rails with a removable one-screw end stop using M3 hardware.
 - Cable: a slim plug protrudes 0.256 in (6.50 mm) from the tablet; its flat cable section is 0.6 mm thick for roughly 2 in before transitioning to braided cable.
-- USB-C handling: the closed outer right end contains the plug; place the cable in its broad groove and slide the tablet onto the connector from the left.
+- USB-C handling: the right-angle pigtail turns immediately behind the tablet; its connection and downstream cable stay largely hidden across the open back before entering an open groove/clip on the tube sleeve.
 
 ## Repository layout
 
