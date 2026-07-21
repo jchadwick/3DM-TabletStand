@@ -14,6 +14,7 @@ All dimensions are millimeters.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import cadquery as cq
@@ -46,6 +47,11 @@ RIGHT_STOP_SPAN = 25.0
 CENTER_PLATE_X = 74.0
 CENTER_PLATE_Y = 64.0
 SPINE_W = 12.0
+HOLDER_OUTER_Y = TABLET_Y + FIT_Y + 2.0 * WALL_T
+HOLDER_BOTTOM_Z = (
+    -HOLDER_OUTER_Y / 2.0 * math.sin(math.radians(SCREEN_ANGLE_FROM_HORIZONTAL_DEG))
+    - BASE_T * math.cos(math.radians(SCREEN_ANGLE_FROM_HORIZONTAL_DEG))
+)
 
 # USB-C plug pocket and rear-hidden cable route.
 USB_PLUG_PROJECTION = 6.50
@@ -69,8 +75,6 @@ BRAIDED_CHANNEL_SLOT = 2.8
 BRAIDED_CHANNEL_OUTER_X = 7.2
 BRAIDED_CHANNEL_OUTER_Y = 4.6
 BRAIDED_CHANNEL_EMBED = 1.2
-BRAIDED_CHANNEL_TOP_Z = 0.0
-BRAIDED_CHANNEL_BOTTOM_Z = -50.0
 REAR_CLIP_X = (16.0, 38.0)
 REAR_CLIP_LENGTH = 6.0
 REAR_CLIP_OUTER_Y = 7.2
@@ -82,11 +86,17 @@ SLEEVE_ID = 32.2
 SLEEVE_WALL = 4.0
 SLEEVE_OD = SLEEVE_ID + 2.0 * SLEEVE_WALL
 SLEEVE_LENGTH = 50.0
-SLEEVE_TOP_Z = 4.0
+# Lower the complete rear sleeve assembly until its bottom is level with the
+# installed holder's lower long edge. The sleeve's 54 mm overall body height,
+# 51 mm clear engagement, and 3 mm seating cap remain unchanged.
+SLEEVE_BOTTOM_Z = HOLDER_BOTTOM_Z
+SLEEVE_TOP_Z = SLEEVE_BOTTOM_Z + SLEEVE_LENGTH + 4.0
 SLEEVE_CAP_T = 3.0
-SLEEVE_ENGAGEMENT = SLEEVE_LENGTH + SLEEVE_TOP_Z - SLEEVE_CAP_T
+SLEEVE_ENGAGEMENT = SLEEVE_TOP_Z - SLEEVE_BOTTOM_Z - SLEEVE_CAP_T
 SLEEVE_CENTER_Y = 24.0
 GUSSET_T = 4.0
+BRAIDED_CHANNEL_TOP_Z = SLEEVE_TOP_Z - 4.0
+BRAIDED_CHANNEL_BOTTOM_Z = BRAIDED_CHANNEL_TOP_Z - 50.0
 
 # M3 removable end stop
 M3_CLEARANCE = 3.4
@@ -112,7 +122,7 @@ def flat_main_holder() -> cq.Workplane:
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
     outer_x = cavity_x + 2.0 * WALL_T
-    outer_y = cavity_y + 2.0 * WALL_T
+    outer_y = HOLDER_OUTER_Y
     rail_top = TABLET_Z + FIT_Z + LIP_T
 
     # Open-backed perimeter with a central plate and four connecting spokes.
@@ -243,10 +253,10 @@ def flat_end_stop() -> cq.Workplane:
 def vertical_sleeve() -> cq.Workplane:
     sleeve = (
         cq.Workplane("XY")
-        .workplane(offset=-SLEEVE_LENGTH)
+        .workplane(offset=SLEEVE_BOTTOM_Z)
         .circle(SLEEVE_OD / 2.0)
         .circle(SLEEVE_ID / 2.0)
-        .extrude(SLEEVE_LENGTH + SLEEVE_TOP_Z)
+        .extrude(SLEEVE_TOP_Z - SLEEVE_BOTTOM_Z)
         .translate((0, SLEEVE_CENTER_Y, 0))
     )
     cap = (
@@ -292,7 +302,13 @@ def gussets() -> cq.Workplane:
     # Two triangular ribs connect the nearly vertical backplate to the sleeve,
     # which is offset behind the tablet so it cannot intrude into the cavity.
     # Points are (Y, Z) in the installed coordinate system.
-    rib_profile = [(-2.5, -31.0), (8.5, 31.0), (22.0, 4.0), (22.0, -22.0)]
+    sleeve_drop = SLEEVE_BOTTOM_Z + SLEEVE_LENGTH
+    rib_profile = [
+        (-2.5, -31.0),
+        (8.5, 31.0),
+        (22.0, 4.0 + sleeve_drop),
+        (22.0, -22.0 + sleeve_drop),
+    ]
     ribs = None
     for x in (-13.0, 13.0):
         rib = (
@@ -318,7 +334,7 @@ def installed_parts() -> tuple[cq.Workplane, cq.Workplane]:
     # the tested 32.2 mm tube path.  A deliberate 3 mm seating cap remains.
     bore = (
         cq.Workplane("XY")
-        .workplane(offset=-SLEEVE_LENGTH)
+        .workplane(offset=SLEEVE_BOTTOM_Z)
         .circle(SLEEVE_ID / 2.0)
         .extrude(SLEEVE_ENGAGEMENT)
         .translate((0, SLEEVE_CENTER_Y, 0))
@@ -356,6 +372,9 @@ def export() -> None:
             "engagement": SLEEVE_ENGAGEMENT,
             "seating_cap_thickness": SLEEVE_CAP_T,
             "center_offset_behind_screen_plane_y": SLEEVE_CENTER_Y,
+            "bottom_z": SLEEVE_BOTTOM_Z,
+            "holder_bottom_z": HOLDER_BOTTOM_Z,
+            "bottom_alignment": "sleeve bottom level with holder lower long edge",
         },
         "retention": "left slide-in; one M3 screw end stop",
         "usb_c": {

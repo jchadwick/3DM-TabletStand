@@ -92,7 +92,8 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
 
     # Existing 32 mm tube, aligned to the rear-offset sleeve and seating cap.
     tube = trimesh.creation.cylinder(radius=16.0, height=100.0, sections=72)
-    tube.apply_translation((0.0, model.SLEEVE_CENTER_Y, -49.0))
+    tube_top_z = model.SLEEVE_TOP_Z - model.SLEEVE_CAP_T
+    tube.apply_translation((0.0, model.SLEEVE_CENTER_Y, tube_top_z - 50.0))
     objects.append((tube, (118, 127, 140, 255)))
 
     # Schematic right-angle adapter: it turns immediately behind the tablet,
@@ -145,8 +146,8 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
         connector_exit,
         rear_clip_far,
         rear_clip_near,
-        np.array([3.0, channel_y - 5.0, 1.0]),
-        np.array([0.0, channel_y, -2.0]),
+        np.array([3.0, channel_y - 5.0, model.BRAIDED_CHANNEL_TOP_Z + 1.0]),
+        np.array([0.0, channel_y, model.BRAIDED_CHANNEL_TOP_Z - 2.0]),
         np.array([0.0, channel_y, model.BRAIDED_CHANNEL_BOTTOM_Z]),
     ]
     objects.append((cable_mesh(cable_points, radius=model.BRAIDED_CABLE_D / 2.0), (7, 7, 8, 255)))

@@ -44,9 +44,17 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right but offset behind the screen plane; version 1 uses a 24 mm Y offset and two structural ribs.
+- The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Rear sleeve lowered to holder bottom — 2026-07-20
+
+- Lowered the complete sleeve/collet and its external cable channel by 14.53 mm so the sleeve bottom and holder's lower long edge share Z = -64.53 mm in the installed orientation.
+- Preserved the 32.2 mm tested bore, 40.2 mm OD, 51 mm clear engagement, 3 mm seating cap, and 24 mm rear offset.
+- Extended the two gussets down to the new sleeve position while retaining their original holder-side anchors.
+- The open cable span now runs visibly downward and backward from the center rear clips into the lowered sleeve channel; no larger connector is made captive.
 
 ### Braided cable channel implemented — 2026-07-20
 

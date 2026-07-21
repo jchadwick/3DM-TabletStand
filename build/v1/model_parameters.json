@@ -20,7 +20,10 @@
     "body_length": 50.0,
     "engagement": 51.0,
     "seating_cap_thickness": 3.0,
-    "center_offset_behind_screen_plane_y": 24.0
+    "center_offset_behind_screen_plane_y": 24.0,
+    "bottom_z": -64.53344847879431,
+    "holder_bottom_z": -64.53344847879431,
+    "bottom_alignment": "sleeve bottom level with holder lower long edge"
   },
   "retention": "left slide-in; one M3 screw end stop",
   "usb_c": {

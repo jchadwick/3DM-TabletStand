@@ -36,7 +36,17 @@ def main() -> None:
 
     main_holder, _ = model.installed_parts()
     shape = main_holder.val()
-    tube_axis = cq.Vector(0, model.SLEEVE_CENTER_Y, 0.0)
+    tilted_holder = model.flat_main_holder().rotate(
+        (0, 0, 0), (1, 0, 0), model.SCREEN_ANGLE_FROM_HORIZONTAL_DEG
+    )
+    actual_holder_bottom_z = tilted_holder.val().BoundingBox().zmin
+    actual_sleeve_bottom_z = model.vertical_sleeve_with_cable_channel().val().BoundingBox().zmin
+    assert abs(actual_holder_bottom_z - model.HOLDER_BOTTOM_Z) < 1e-6
+    assert abs(actual_sleeve_bottom_z - actual_holder_bottom_z) < 1e-6
+    print(f"holder and sleeve bottoms aligned at z={actual_holder_bottom_z:.2f} mm")
+
+    tube_axis_z = model.SLEEVE_BOTTOM_Z + model.SLEEVE_ENGAGEMENT / 2.0
+    tube_axis = cq.Vector(0, model.SLEEVE_CENTER_Y, tube_axis_z)
     cap_axis = cq.Vector(0, model.SLEEVE_CENTER_Y, model.SLEEVE_TOP_Z - model.SLEEVE_CAP_T / 2.0)
     assert not shape.isInside(tube_axis), "tube path is obstructed"
     assert shape.isInside(cap_axis), "seating cap is not solid"

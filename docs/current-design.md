@@ -22,6 +22,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Sleeve body / engagement | 50 mm / 51 mm | V1 design value |
 | Seating cap | 3.0 mm | V1 deterministic tube stop |
 | Sleeve rear offset | 24 mm | Keeps tube out of tablet cavity |
+| Sleeve vertical placement | Bottom level with holder's lower long edge (Z = -64.53 mm) | User-requested alignment; rear assembly lowered 14.53 mm |
 | Retaining hardware | M3 screw | User has M3 screws |
 | USB-C plug projection | 6.50 mm | User measurement |
 | Flat cable thickness / length | 0.6 mm / about 50.8 mm | User measurement |
@@ -37,13 +38,14 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 ## Functional design
 
 - The holder slides down over the tube using a closed cylindrical sleeve with a solid seating cap.
+- The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
 - Internal right-side corner stops locate the tablet while accommodating the 6.50 mm-projecting USB-C plug.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
 - The right outer wall is solid. A broad slot through the rear floor of the plug pocket lets the 0.6 mm pigtail turn behind the tablet.
-- The 3.45 mm braided section snaps into two open C-clips on the rear spine, then into a rear-facing external sleeve channel and exits downward beside the tube. The 9.6 mm-marked connector body remains accessible outside all captive features.
+- The 3.45 mm braided section snaps into two open C-clips on the rear spine, spans downward and backward through the open rear to the lowered sleeve channel, then snaps into that rear-facing external channel and exits beside the tube. The 9.6 mm-marked connector body remains accessible outside all captive features.
 - The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
