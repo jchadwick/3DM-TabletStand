@@ -94,9 +94,9 @@ def main():
     tube.name = "Existing 32 mm tube"
     tube.data.materials.append(tube_mat)
 
-    # Illustrate the low-profile plug inside the closed right pocket and the
-    # 0.6 mm flat section passing through its groove.  The displayed widths are
-    # schematic because the real connector/cable width is still unconfirmed.
+    # Illustrate the low-profile right-angle plug turning behind the tablet,
+    # followed by its 51.4 mm pigtail, accessible connector body, and confirmed
+    # 3.45 mm braided cable routed to the rear sleeve channel.
     tablet_transform = Matrix.Translation((0.0, 0.0, 0.45)) @ Matrix.Rotation(TILT, 4, "X")
     bpy.ops.mesh.primitive_cube_add()
     plug = bpy.context.object
@@ -109,22 +109,35 @@ def main():
     bpy.ops.mesh.primitive_cube_add()
     flat_cable = bpy.context.object
     flat_cable.name = "Flat cable indication"
-    flat_cable.dimensions = (50.8, 10.0, 0.6)
+    flat_cable.dimensions = (51.4, 8.0, 0.6)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    flat_cable.matrix_world = tablet_transform @ Matrix.Translation((131.9, 0.0, 4.2))
+    flat_cable.matrix_world = tablet_transform @ Matrix.Translation((80.8, 0.0, -3.6))
     flat_cable.data.materials.append(cable_mat)
+
+    bpy.ops.mesh.primitive_cube_add()
+    downstream = bpy.context.object
+    downstream.name = "Downstream connector indication"
+    downstream.dimensions = (12.0, 9.6, 5.0)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    downstream.matrix_world = tablet_transform @ Matrix.Translation((49.1, 0.0, -5.4))
+    downstream.data.materials.append(cable_mat)
 
     curve_data = bpy.data.curves.new("USB-C cable path", type="CURVE")
     curve_data.dimensions = "3D"
-    curve_data.bevel_depth = 1.7
+    curve_data.bevel_depth = 3.45 / 2.0
     curve_data.bevel_resolution = 5
     spline = curve_data.splines.new("BEZIER")
-    spline.bezier_points.add(2)
-    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((157.3, 0.0, 4.2)) + Vector((0, 0, 0.45))
+    spline.bezier_points.add(5)
+    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((43.1, 0.0, -5.4)) + Vector((0, 0, 0.45))
+    far_clip = Matrix.Rotation(TILT, 4, "X") @ Vector((38.0, 0.0, -5.4)) + Vector((0, 0, 0.45))
+    near_clip = Matrix.Rotation(TILT, 4, "X") @ Vector((16.0, 0.0, -5.4)) + Vector((0, 0, 0.45))
     points = [
         local_exit,
-        local_exit + Vector((12.0, 7.0, -7.0)),
-        local_exit + Vector((7.0, 19.0, -25.0)),
+        far_clip,
+        near_clip,
+        Vector((3.0, 40.0, 1.0)),
+        Vector((0.0, 45.0, -2.0)),
+        Vector((0.0, 45.0, -50.0)),
     ]
     for bp, co in zip(spline.bezier_points, points):
         bp.co = co

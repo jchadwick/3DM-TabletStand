@@ -27,8 +27,11 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Flat cable thickness / length | 0.6 mm / about 50.8 mm | User measurement |
 | Right-angle pigtail reach | 51.4 mm | Marked on user photo; endpoint definition should be confirmed before a close fit |
 | Downstream connector body | 9.6 mm marked dimension | User photo; measurement axis/meaning still to confirm |
-| USB-C plug-pocket depth | 8.0 mm clear | Generated V1 only; route is superseded and awaiting revision |
-| Flat-cable exit groove | 24 mm wide × 1.8 mm high | Generated V1 only; straight-out route is superseded |
+| Round braided cable diameter | 3.45 mm | User measurement |
+| USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection plus provisional clearance |
+| Rear turn slot | 3 × 16 mm | Broad opening for the 0.6 mm pigtail to turn behind the tablet |
+| Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
+| Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
 
 ## Functional design
@@ -39,15 +42,15 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
 - Internal right-side corner stops locate the tablet while accommodating the 6.50 mm-projecting USB-C plug.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
-- Route the downstream cable across the rear support to an open groove or clip integrated on the outside of the sleeve/collet, then let it exit near the tube. Preserve the tested 32.2 mm sleeve bore and avoid a captive tunnel that would require threading the large connector through it.
-- The generated V1 cable pocket/groove is superseded by this routing decision and requires a CAD revision after the downstream cable diameter and desired sleeve exit direction are confirmed.
+- The right outer wall is solid. A broad slot through the rear floor of the plug pocket lets the 0.6 mm pigtail turn behind the tablet.
+- The 3.45 mm braided section snaps into two open C-clips on the rear spine, then into a rear-facing external sleeve channel and exits downward beside the tube. The 9.6 mm-marked connector body remains accessible outside all captive features.
+- The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 
 ## Known unknowns before a full print
 
 - Flat cable and connector-body width.
-- Post-connector cable diameter and desired sleeve/collet exit direction; these determine whether the sleeve uses a shallow groove, raised clip, or open channel without weakening its 4 mm wall.
 - Whether the photo's 9.6 mm annotation is connector width, height, or another measurement.
 - Power, volume, speaker, camera, microphone, and any other edge clearances.
 - M3 screw length and whether it uses a nut, heat-set insert, or printed pilot hole.

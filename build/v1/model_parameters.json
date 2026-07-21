@@ -28,9 +28,12 @@
     "position": "center",
     "plug_projection": 6.5,
     "pocket_clearance_x": 1.5,
+    "right_angle_pigtail_length": 51.4,
     "flat_cable_thickness": 0.6,
-    "exit_groove_width_y": 24.0,
-    "exit_groove_height_z": 1.8,
-    "loading": "position plug in right pocket, then slide tablet in from left"
+    "downstream_connector_body_marked_dimension": 9.6,
+    "braided_cable_diameter": 3.45,
+    "braided_channel_id": 4.15,
+    "braided_channel_slot": 2.8,
+    "routing": "right-angle pigtail turns behind tablet; braided cable snaps into rear clips and external sleeve channel"
   }
 }

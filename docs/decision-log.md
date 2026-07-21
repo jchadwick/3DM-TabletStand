@@ -29,6 +29,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 | Flat cable length | About 2 in / 50.8 mm before braided transition | User measurement |
 | Right-angle pigtail reach | 51.4 mm marked length | User photo; precise endpoints still to confirm |
 | Downstream connector body | 9.6 mm marked dimension | User photo; axis/meaning still to confirm |
+| Round braided cable diameter | 3.45 mm | User measurement; cable after the pictured adapter |
 | Retaining screw | M3 | User hardware |
 
 ## Active design decisions
@@ -38,8 +39,8 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Tablet slides in from the left through narrow long-edge rails.
 - A removable left end stop secured by one M3 screw provides retention more secure than snap clips.
 - The right edge uses internal stops and accommodates the low-profile right-angle USB-C plug. The adapter turns immediately behind the tablet instead of sending the cable straight out through the right wall.
-- The 51.4 mm pigtail, downstream connection, and cable should remain largely hidden across the open back, then transition into an open groove or clip on the sleeve/collet and exit near the tube.
-- Do not make the rear route captive or cut into the tested tube bore. The post-connector cable diameter and desired sleeve exit direction must be confirmed before selecting a shallow groove, raised clip, or open channel.
+- The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
+- The sleeve channel uses 4.15 mm internal clearance, a 2.8 mm snap opening, and a shallow 1.2 mm embed. It leaves at least 2.8 mm of sleeve wall and does not cut into the tested 32.2 mm tube bore.
 - Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right but offset behind the screen plane; version 1 uses a 24 mm Y offset and two structural ribs.
@@ -47,11 +48,19 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Braided cable channel implemented — 2026-07-20
+
+- Confirmed the cable after the pictured right-angle adapter is 3.45 mm diameter round braided wire.
+- Replaced the generated straight-out right-wall groove with a solid outer wall and a 3 × 16 mm rear turn slot for the flat pigtail.
+- Added two open rear C-clips and a downward, rear-facing sleeve channel sized to 4.15 mm ID with a 2.8 mm snap opening.
+- The sleeve channel embeds only 1.2 mm into the 4 mm sleeve wall, leaving 2.8 mm minimum material over the unchanged 32.2 mm tube bore.
+- The larger 9.6 mm-marked connector stays outside every captive feature for installation and service.
+
 ### Rear-hidden right-angle cable route — 2026-07-20
 
 - **Superseded:** the V1 straight-out flat-cable groove through the outer right wall.
 - **Active intent:** the right-angle adapter wraps immediately behind the tablet; its photo-marked 51.4 mm pigtail and downstream connection stay behind the open back, and the cable then routes to a groove/clip on the sleeve or collet before exiting near the tube.
-- The user photo marks 9.6 mm at the downstream connector body, but the measurement axis is not yet confirmed. The downstream cable diameter and final sleeve exit direction are also required before changing fit-critical sleeve geometry.
+- The user photo marks 9.6 mm at the downstream connector body, but the measurement axis was not yet confirmed. At this stage the downstream cable diameter and final sleeve exit direction were also still required before changing fit-critical sleeve geometry.
 - Prefer open, serviceable rear clips/channel features that do not require feeding the larger connector through a closed tunnel and do not reduce the proven 32.2 mm sleeve bore.
 
 ### Closed USB-C end and softened corners — 2026-07-20

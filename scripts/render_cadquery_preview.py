@@ -95,9 +95,9 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     tube.apply_translation((0.0, model.SLEEVE_CENTER_Y, -49.0))
     objects.append((tube, (118, 127, 140, 255)))
 
-    # Schematic low-profile connector and flat cable.  The displayed 10 mm
-    # width is illustrative only; the 24 mm model groove stays deliberately
-    # broad until the real cable width is measured.
+    # Schematic right-angle adapter: it turns immediately behind the tablet,
+    # lies across the open back, then converts to the confirmed 3.45 mm braided
+    # cable before reaching the rear-facing sleeve channel.
     tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
     plug = trimesh.creation.box(extents=(model.USB_PLUG_PROJECTION, 12.0, 3.0))
     plug.apply_transform(
@@ -106,28 +106,50 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     )
     objects.append((plug, (18, 18, 20, 255)))
 
-    flat_length = 50.8
-    flat_cable = trimesh.creation.box(extents=(flat_length, 10.0, 0.6))
+    elbow = trimesh.creation.box(extents=(4.0, 10.0, 8.0))
+    elbow.apply_transform(tablet_transform @ translation(104.5, 0, 0.5))
+    objects.append((elbow, (18, 18, 20, 255)))
+
+    flat_length = model.RIGHT_ANGLE_PIGTAIL_LENGTH
+    flat_start_x = model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION
+    flat_end_x = flat_start_x - flat_length
+    flat_cable = trimesh.creation.box(extents=(flat_length, 8.0, model.RIGHT_ANGLE_FLAT_T))
     flat_cable.apply_transform(
         tablet_transform
         @ translation(
-            model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION + flat_length / 2.0,
+            (flat_start_x + flat_end_x) / 2.0,
             0,
-            model.TABLET_Z / 2.0,
+            -3.6,
         )
     )
     objects.append((flat_cable, (7, 7, 8, 255)))
 
-    local_exit = np.array(
-        [model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION + flat_length, 0.0, model.TABLET_Z / 2.0, 1.0]
+    downstream = trimesh.creation.box(extents=(12.0, model.DOWNSTREAM_CONNECTOR_BODY, 5.0))
+    downstream.apply_transform(
+        tablet_transform @ translation(flat_end_x - 6.0, 0, model.REAR_CLIP_CENTER_Z)
     )
-    exit_point = (tablet_transform @ local_exit)[:3]
+    objects.append((downstream, (18, 18, 20, 255)))
+
+    connector_exit = (
+        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
+    )[:3]
+    rear_clip_far = (
+        tablet_transform @ np.array([model.REAR_CLIP_X[-1], 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
+    )[:3]
+    rear_clip_near = (
+        tablet_transform @ np.array([model.REAR_CLIP_X[0], 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
+    )[:3]
+    sleeve_back_y = model.SLEEVE_CENTER_Y + model.SLEEVE_OD / 2.0
+    channel_y = sleeve_back_y + model.BRAIDED_CHANNEL_ID / 2.0 - model.BRAIDED_CHANNEL_EMBED
     cable_points = [
-        exit_point,
-        exit_point + np.array([12.0, 7.0, -7.0]),
-        exit_point + np.array([7.0, 19.0, -25.0]),
+        connector_exit,
+        rear_clip_far,
+        rear_clip_near,
+        np.array([3.0, channel_y - 5.0, 1.0]),
+        np.array([0.0, channel_y, -2.0]),
+        np.array([0.0, channel_y, model.BRAIDED_CHANNEL_BOTTOM_Z]),
     ]
-    objects.append((cable_mesh(cable_points), (7, 7, 8, 255)))
+    objects.append((cable_mesh(cable_points, radius=model.BRAIDED_CABLE_D / 2.0), (7, 7, 8, 255)))
     return objects
 
 
@@ -186,7 +208,7 @@ def contact_sheet(hero_path: Path, side_path: Path, detail_path: Path, output: P
     draw = ImageDraw.Draw(canvas)
     draw.text((24, 14), "V1 KIOSK ORIENTATION - THREE-QUARTER", fill=(225, 232, 240))
     draw.text((24, 1039), "SIDE VIEW - 10 DEG BACK FROM VERTICAL", fill=(225, 232, 240))
-    draw.text((24, 1769), "RIGHT END - CLOSED PLUG POCKET AND FLAT-CABLE GROOVE", fill=(225, 232, 240))
+    draw.text((24, 1769), "REAR CABLE ROUTE - OPEN CLIPS AND SLEEVE CHANNEL", fill=(225, 232, 240))
     canvas.save(output)
 
 
@@ -209,8 +231,8 @@ def main():
                 objects,
                 detail,
                 (1400, 700),
-                eye=(185.0, -105.0, 58.0),
-                target=(105.0, -4.0, 1.0),
+                eye=(230.0, 235.0, 82.0),
+                target=(35.0, 25.0, -4.0),
             )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")

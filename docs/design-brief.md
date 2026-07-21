@@ -56,6 +56,7 @@ The selected direction should keep the rear largely open for airflow and materia
 - Plug projection from tablet: 0.256 in (6.50 mm).
 - The original width value remains ambiguous, so the first design should use a generous plug chamber and cable groove rather than a close-fitting captive tunnel.
 - The right-angle adapter turns immediately behind the tablet. Its photo-marked 51.4 mm pigtail and downstream connection should stay behind the open back, then route to an open groove/clip on the sleeve or collet before exiting near the tube.
+- The downstream cable is confirmed as 3.45 mm diameter round braided wire. Version 1 gives it a 4.15 mm open snap channel on the rear of the sleeve and preserves at least 2.8 mm of sleeve wall over the tested bore.
 - Any turn in the cable route should be broad and radiused. The printed holder must not clamp the thin flat section, force a sharp bend at the connector, require the larger downstream connector to pass through a captive tunnel, or cut into the tested 32.2 mm sleeve bore.
 
 ## First concept intent
@@ -70,7 +71,7 @@ The selected direction should keep the rear largely open for airflow and materia
 ## Measurements to validate before final print
 
 - Flat cable and connector body width.
-- Post-connector cable diameter, the meaning/axis of the photo-marked 9.6 mm connector dimension, and the intended direction where the cable leaves the sleeve/collet.
+- The meaning/axis of the photo-marked 9.6 mm connector dimension.
 - Exact locations of power/volume buttons, speakers, cameras, and microphones near any retaining rail.
 - Desired sleeve engagement length and available unobstructed tube length.
 - M3 screw length and whether a nut, heat-set insert, or tapped plastic hole will be used.

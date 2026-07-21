@@ -28,13 +28,12 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw |
 | USB-C | Center of right short edge from the front; the right-angle adapter turns immediately behind the tablet rather than exiting straight out to the right |
-| Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the cable routes to an open groove/clip on the sleeve/collet and exits near the tube |
-| Cable unknowns | Photo marks 9.6 mm at the downstream connector body, but the measurement axis and the post-connector cable diameter remain unconfirmed; do not cut the 4 mm sleeve wall or tighten the route until confirmed |
+| Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
+| Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
+| Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
 | Current status | Version 1 is a reviewed concept, not a production-ready print |
-
-The generated V1 artifacts still depict the now-superseded straight-out cable path. The next CAD revision must reroute it behind the tablet and onto the sleeve while preserving the tested 32.2 mm tube bore.
 
 Coordinate system in `cad/tablet_stand_v1.py`: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 
