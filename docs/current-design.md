@@ -31,7 +31,8 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Round braided cable diameter | 3.45 mm | User measurement |
 | USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection plus provisional clearance |
 | Rear turn slot | 3 × 16 mm | Broad opening for the 0.6 mm pigtail to turn behind the tablet |
-| Cable pass-through holes | 18 mm clear / 24 mm OD | Wide enough to pass the complete 9.6 mm-marked connector body |
+| Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
+| Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
 
 ## Functional design
@@ -44,8 +45,8 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Internal right-side corner stops locate the tablet while accommodating the 6.50 mm-projecting USB-C plug.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
 - The right outer wall is solid. A broad slot through the rear floor of the plug pocket lets the 0.6 mm pigtail turn behind the tablet.
-- The complete cable—including either end connector—passes through one 18 mm rear-holder eyelet and two 18 mm downward eyelets beside the sleeve. There are no cable-sized clips, channels, or captive tunnels.
-- The two sleeve-side eyelets overlap the sleeve only at their outer rims. Their 18 mm openings sit fully outside the 40.2 mm sleeve OD, so neither the sleeve wall nor tested 32.2 mm bore is cut.
+- The 3.45 mm braided section snaps into two open C-clips on the rear spine. From the nearer clip it drops through open space outside the right gusset, sweeps behind the sleeve, and enters the rear-facing external sleeve channel through its snap opening. No segment passes through a holder, gusset, or sleeve solid, and the 9.6 mm-marked connector body remains accessible outside all captive features.
+- The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 

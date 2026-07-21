@@ -29,8 +29,9 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve vertical alignment | Sleeve/collet bottom is level with the holder's lower long edge at **Z = -64.53 mm**; rear assembly is 14.53 mm below its prior position |
 | Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw |
 | USB-C | Center of right short edge from the front; the right-angle adapter turns immediately behind the tablet rather than exiting straight out to the right |
-| Cable | Right-angle pigtail is photo-marked 51.4 mm long; the complete cable and either connector route only through wide 18 mm pass-through eyelets—no cable-sized captive clips or channels |
-| Cable pass holes | One rear-holder and two sleeve-side eyelets, each 18 mm clear / 24 mm OD; sleeve-side openings remain fully outside the sleeve wall and 32.2 mm bore |
+| Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
+| Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
+| Clip-to-channel route | Preserve the clips; the free cable span drops outside the right gusset, sweeps behind the sleeve, and enters the channel through its rear opening—never route previewed cable through solids |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |

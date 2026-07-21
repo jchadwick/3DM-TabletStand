@@ -39,8 +39,9 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Tablet slides in from the left through narrow long-edge rails.
 - A removable left end stop secured by one M3 screw provides retention more secure than snap clips.
 - The right edge uses internal stops and accommodates the low-profile right-angle USB-C plug. The adapter turns immediately behind the tablet instead of sending the cable straight out through the right wall.
-- The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The complete cable and its connectors route through wide 18 mm pass-through eyelets rather than cable-sized clips or channels.
-- Two 18 mm downward eyelets sit beside the sleeve; their openings do not cut the sleeve wall or tested 32.2 mm tube bore.
+- The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
+- Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
+- The sleeve channel uses 4.15 mm internal clearance, a 2.8 mm snap opening, and a shallow 1.2 mm embed. It leaves at least 2.8 mm of sleeve wall and does not cut into the tested 32.2 mm tube bore.
 - Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right but offset behind the screen plane; version 1 uses a 24 mm Y offset and two structural ribs.
@@ -49,12 +50,11 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
-### Connector-pass cable holes replace tight guides — 2026-07-21
+### Preserve clips; route between solids — 2026-07-21
 
-- **Superseded:** the 4.15 mm snap channel and 2.8 mm openings sized only for the 3.45 mm braided wire.
-- Removed the narrow rear clips and full-length sleeve channel so neither USB-C connector must negotiate a cable-sized feature.
-- Added one rear-holder eyelet and two downward sleeve-side eyelets, all with 18 mm clear openings and 24 mm OD rims.
-- The sleeve-side openings sit completely outside the sleeve OD. The 32.2 mm bore, sleeve wall, fit, engagement, and bottom alignment remain unchanged.
+- Restored the two open rear C-clips and the external sleeve snap channel after rejecting connector-pass eyelets.
+- Corrected only the free cable span: it now drops outside the right gusset, sweeps behind the sleeve with cable-radius clearance, and enters the channel through its rear opening.
+- The cable does not pass through the backplate, gussets, sleeve wall, or tube bore.
 
 ### Rear sleeve lowered to holder bottom — 2026-07-20
 
@@ -65,7 +65,6 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ### Braided cable channel implemented — 2026-07-20
 
-- **Superseded on 2026-07-21 by connector-pass cable holes.**
 - Confirmed the cable after the pictured right-angle adapter is 3.45 mm diameter round braided wire.
 - Replaced the generated straight-out right-wall groove with a solid outer wall and a 3 × 16 mm rear turn slot for the flat pigtail.
 - Added two open rear C-clips and a downward, rear-facing sleeve channel sized to 4.15 mm ID with a 2.8 mm snap opening.

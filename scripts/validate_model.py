@@ -40,7 +40,7 @@ def main() -> None:
         (0, 0, 0), (1, 0, 0), model.SCREEN_ANGLE_FROM_HORIZONTAL_DEG
     )
     actual_holder_bottom_z = tilted_holder.val().BoundingBox().zmin
-    actual_sleeve_bottom_z = model.vertical_sleeve_with_cable_eyelets().val().BoundingBox().zmin
+    actual_sleeve_bottom_z = model.vertical_sleeve_with_cable_channel().val().BoundingBox().zmin
     assert abs(actual_holder_bottom_z - model.HOLDER_BOTTOM_Z) < 1e-6
     assert abs(actual_sleeve_bottom_z - actual_holder_bottom_z) < 1e-6
     print(f"holder and sleeve bottoms aligned at z={actual_holder_bottom_z:.2f} mm")
@@ -61,8 +61,7 @@ def main() -> None:
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["usb_c"]["plug_projection"] == 6.5
     assert metadata["usb_c"]["braided_cable_diameter"] == 3.45
-    assert metadata["usb_c"]["connector_pass_hole_id"] == 18.0
-    assert metadata["usb_c"]["connector_pass_hole_id"] > metadata["usb_c"]["downstream_connector_body_marked_dimension"]
+    assert metadata["usb_c"]["braided_channel_id"] > metadata["usb_c"]["braided_cable_diameter"]
 
     # Check the right-side concept in its unrotated construction plane: the
     # outer end is closed, its rear turn slot is open, and the plug chamber plus
@@ -76,26 +75,20 @@ def main() -> None:
     rear_turn_x = model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION
     assert not flat_holder.isInside(cq.Vector(rear_turn_x, 0.0, -model.BASE_T / 2.0))
     assert flat_holder.isInside(cq.Vector(rear_turn_x - 3.0, 0.0, -model.BASE_T / 2.0))
-    assert not flat_holder.isInside(
-        cq.Vector(model.HOLDER_EYELET_X, 0.0, model.HOLDER_EYELET_Z)
-    )
-    assert flat_holder.isInside(
-        cq.Vector(model.HOLDER_EYELET_X, model.CABLE_EYELET_OD / 2.0 - 1.0, model.HOLDER_EYELET_Z)
-    )
-    print("USB-C outer end closed; rear turn slot, plug chamber, and 18 mm holder eyelet clear")
+    clip_x = model.REAR_CLIP_X[-1]
+    assert not flat_holder.isInside(cq.Vector(clip_x, 0.0, model.REAR_CLIP_CENTER_Z))
+    assert flat_holder.isInside(cq.Vector(clip_x, 3.0, model.REAR_CLIP_CENTER_Z))
+    print("USB-C outer end closed; rear turn slot, plug chamber, and braided clips clear")
 
-    for eyelet_z in model.SLEEVE_EYELET_Z:
-        assert not shape.isInside(
-            cq.Vector(model.SLEEVE_EYELET_X, model.SLEEVE_CENTER_Y, eyelet_z)
-        )
-        assert shape.isInside(
-            cq.Vector(
-                model.SLEEVE_EYELET_X + model.CABLE_EYELET_OD / 2.0 - 1.0,
-                model.SLEEVE_CENTER_Y,
-                eyelet_z,
-            )
-        )
-    print("two 18 mm sleeve-side eyelets clear; sleeve wall and tube bore untouched")
+    sleeve_back_y = model.SLEEVE_CENTER_Y + model.SLEEVE_OD / 2.0
+    channel_y = sleeve_back_y + model.BRAIDED_CHANNEL_ID / 2.0 - model.BRAIDED_CHANNEL_EMBED
+    remaining_sleeve_wall = (
+        channel_y - model.BRAIDED_CHANNEL_ID / 2.0
+    ) - (model.SLEEVE_CENTER_Y + model.SLEEVE_ID / 2.0)
+    assert remaining_sleeve_wall >= 2.8 - 1e-6
+    assert not shape.isInside(cq.Vector(0.0, channel_y, -25.0))
+    assert shape.isInside(cq.Vector(3.0, channel_y + 0.5, -25.0))
+    print(f"external sleeve cable channel clear; minimum sleeve wall={remaining_sleeve_wall:.2f} mm")
 
     for path in sorted(BUILD.glob("*.stl")):
         mesh = trimesh.load_mesh(path, force="mesh")

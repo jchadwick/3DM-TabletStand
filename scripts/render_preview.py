@@ -21,13 +21,6 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "build" / "v1"
 TILT = math.radians(80.0)
 SLEEVE_CENTER_Y = 24.0
-SLEEVE_BOTTOM_Z = -64.53344847879431
-SLEEVE_TOP_Z = -10.53344847879431
-SLEEVE_CAP_T = 3.0
-HOLDER_EYELET_X = 34.0
-HOLDER_EYELET_Z = -8.0
-SLEEVE_EYELET_X = 29.6
-SLEEVE_EYELET_Z = (-25.0, -49.0)
 
 
 def material(name: str, color: tuple[float, float, float, float], metallic: float = 0.0, roughness: float = 0.45):
@@ -95,10 +88,7 @@ def main():
 
     # Existing 32 mm OD pedestal tube, shown extending into the sleeve.
     bpy.ops.mesh.primitive_cylinder_add(
-        vertices=96,
-        radius=16.0,
-        depth=100.0,
-        location=(0, SLEEVE_CENTER_Y, SLEEVE_TOP_Z - SLEEVE_CAP_T - 50.0),
+        vertices=96, radius=16.0, depth=95.0, location=(0, SLEEVE_CENTER_Y, -50.5)
     )
     tube = bpy.context.object
     tube.name = "Existing 32 mm tube"
@@ -106,7 +96,7 @@ def main():
 
     # Illustrate the low-profile right-angle plug turning behind the tablet,
     # followed by its 51.4 mm pigtail, accessible connector body, and confirmed
-    # 3.45 mm braided cable routed through wide connector-pass eyelets.
+    # 3.45 mm braided cable routed to the rear sleeve channel.
     tablet_transform = Matrix.Translation((0.0, 0.0, 0.45)) @ Matrix.Rotation(TILT, 4, "X")
     bpy.ops.mesh.primitive_cube_add()
     plug = bpy.context.object
@@ -129,7 +119,7 @@ def main():
     downstream.name = "Downstream connector indication"
     downstream.dimensions = (12.0, 9.6, 5.0)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    downstream.matrix_world = tablet_transform @ Matrix.Translation((49.1, 0.0, HOLDER_EYELET_Z))
+    downstream.matrix_world = tablet_transform @ Matrix.Translation((49.1, 0.0, -5.4))
     downstream.data.materials.append(cable_mat)
 
     curve_data = bpy.data.curves.new("USB-C cable path", type="CURVE")
@@ -137,22 +127,26 @@ def main():
     curve_data.bevel_depth = 3.45 / 2.0
     curve_data.bevel_resolution = 5
     spline = curve_data.splines.new("BEZIER")
-    spline.bezier_points.add(4)
-    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((43.1, 0.0, HOLDER_EYELET_Z)) + Vector((0, 0, 0.45))
-    holder_eyelet = Matrix.Rotation(TILT, 4, "X") @ Vector(
-        (HOLDER_EYELET_X, 0.0, HOLDER_EYELET_Z)
-    ) + Vector((0, 0, 0.45))
+    spline.bezier_points.add(8)
+    local_exit = Matrix.Rotation(TILT, 4, "X") @ Vector((43.1, 0.0, -5.4)) + Vector((0, 0, 0.45))
+    far_clip = Matrix.Rotation(TILT, 4, "X") @ Vector((38.0, 0.0, -5.4)) + Vector((0, 0, 0.45))
+    near_clip = Matrix.Rotation(TILT, 4, "X") @ Vector((16.0, 0.0, -5.4)) + Vector((0, 0, 0.45))
+    clip_release = Matrix.Rotation(TILT, 4, "X") @ Vector((16.0, 0.0, -9.0)) + Vector((0, 0, 0.45))
     points = [
         local_exit,
-        holder_eyelet,
-        Vector((SLEEVE_EYELET_X, SLEEVE_CENTER_Y, SLEEVE_EYELET_Z[0])),
-        Vector((SLEEVE_EYELET_X, SLEEVE_CENTER_Y, SLEEVE_EYELET_Z[1])),
-        Vector((SLEEVE_EYELET_X, SLEEVE_CENTER_Y, SLEEVE_BOTTOM_Z)),
+        far_clip,
+        near_clip,
+        clip_release,
+        Vector((22.825, clip_release.y, -36.0)),
+        Vector((22.825, 51.425, -36.0)),
+        Vector((0.0, 51.425, -36.0)),
+        Vector((0.0, 44.975, -36.0)),
+        Vector((0.0, 44.975, -64.533)),
     ]
     for bp, co in zip(spline.bezier_points, points):
         bp.co = co
-        bp.handle_left_type = "AUTO"
-        bp.handle_right_type = "AUTO"
+        bp.handle_left_type = "VECTOR"
+        bp.handle_right_type = "VECTOR"
     cable = bpy.data.objects.new("USB-C routing indication", curve_data)
     bpy.context.collection.objects.link(cable)
     cable.data.materials.append(cable_mat)

@@ -98,7 +98,7 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
 
     # Schematic right-angle adapter: it turns immediately behind the tablet,
     # lies across the open back, then converts to the confirmed 3.45 mm braided
-    # cable before passing through the connector-sized rear eyelets.
+    # cable before reaching the rear-facing sleeve channel.
     tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
     plug = trimesh.creation.box(extents=(model.USB_PLUG_PROJECTION, 12.0, 3.0))
     plug.apply_transform(
@@ -127,28 +127,54 @@ def build_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
 
     downstream = trimesh.creation.box(extents=(12.0, model.DOWNSTREAM_CONNECTOR_BODY, 5.0))
     downstream.apply_transform(
-        tablet_transform @ translation(flat_end_x - 6.0, 0, model.HOLDER_EYELET_Z)
+        tablet_transform @ translation(flat_end_x - 6.0, 0, model.REAR_CLIP_CENTER_Z)
     )
     objects.append((downstream, (18, 18, 20, 255)))
 
     connector_exit = (
-        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, model.HOLDER_EYELET_Z, 1.0])
+        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
     )[:3]
-    holder_eyelet = (
-        tablet_transform @ np.array([model.HOLDER_EYELET_X, 0.0, model.HOLDER_EYELET_Z, 1.0])
+    rear_clip_far = (
+        tablet_transform @ np.array([model.REAR_CLIP_X[-1], 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
     )[:3]
-    top_eyelet = np.array(
-        [model.SLEEVE_EYELET_X, model.SLEEVE_CENTER_Y, model.SLEEVE_EYELET_Z[0]]
+    rear_clip_near = (
+        tablet_transform @ np.array([model.REAR_CLIP_X[0], 0.0, model.REAR_CLIP_CENTER_Z, 1.0])
+    )[:3]
+    rear_clip_release = (
+        tablet_transform
+        @ np.array(
+            [
+                model.REAR_CLIP_X[0],
+                0.0,
+                model.REAR_CLIP_CENTER_Z - model.REAR_CLIP_OUTER_Z / 2.0 - 1.0,
+                1.0,
+            ]
+        )
+    )[:3]
+    sleeve_back_y = model.SLEEVE_CENTER_Y + model.SLEEVE_OD / 2.0
+    channel_y = sleeve_back_y + model.BRAIDED_CHANNEL_ID / 2.0 - model.BRAIDED_CHANNEL_EMBED
+    # Leave the near clip on the open right side, drop below the gusset, sweep
+    # behind the sleeve with a full cable-radius margin, then enter the channel
+    # through its rear snap opening. No segment crosses a holder solid.
+    outside_x = model.SLEEVE_OD / 2.0 + model.BRAIDED_CABLE_D / 2.0 + 1.0
+    rear_clear_y = (
+        model.SLEEVE_CENTER_Y
+        + model.SLEEVE_OD / 2.0
+        + model.BRAIDED_CHANNEL_OUTER_Y
+        + model.BRAIDED_CABLE_D / 2.0
+        + 1.0
     )
-    bottom_eyelet = np.array(
-        [model.SLEEVE_EYELET_X, model.SLEEVE_CENTER_Y, model.SLEEVE_EYELET_Z[1]]
-    )
+    transition_z = -36.0
     cable_points = [
         connector_exit,
-        holder_eyelet,
-        top_eyelet,
-        bottom_eyelet,
-        np.array([model.SLEEVE_EYELET_X, model.SLEEVE_CENTER_Y, model.SLEEVE_BOTTOM_Z]),
+        rear_clip_far,
+        rear_clip_near,
+        rear_clip_release,
+        np.array([outside_x, rear_clip_release[1], transition_z]),
+        np.array([outside_x, rear_clear_y, transition_z]),
+        np.array([0.0, rear_clear_y, transition_z]),
+        np.array([0.0, channel_y, transition_z]),
+        np.array([0.0, channel_y, model.BRAIDED_CHANNEL_BOTTOM_Z]),
     ]
     objects.append((cable_mesh(cable_points, radius=model.BRAIDED_CABLE_D / 2.0), (7, 7, 8, 255)))
     return objects
@@ -209,7 +235,7 @@ def contact_sheet(hero_path: Path, side_path: Path, detail_path: Path, output: P
     draw = ImageDraw.Draw(canvas)
     draw.text((24, 14), "V1 KIOSK ORIENTATION - THREE-QUARTER", fill=(225, 232, 240))
     draw.text((24, 1039), "SIDE VIEW - 10 DEG BACK FROM VERTICAL", fill=(225, 232, 240))
-    draw.text((24, 1769), "REAR CABLE ROUTE - 18 MM CONNECTOR-PASS EYELETS", fill=(225, 232, 240))
+    draw.text((24, 1769), "REAR CABLE ROUTE - OPEN CLIPS AND SLEEVE CHANNEL", fill=(225, 232, 240))
     canvas.save(output)
 
 
