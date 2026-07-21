@@ -55,8 +55,8 @@ The selected direction should keep the rear largely open for airflow and materia
 - Flat cable section: 0.6 mm thick for approximately 2 in (50.8 mm).
 - Plug projection from tablet: 0.256 in (6.50 mm).
 - The original width value remains ambiguous, so the first design should use a generous plug chamber and cable groove rather than a close-fitting captive tunnel.
-- The right-angle adapter turns immediately behind the tablet. Its photo-marked 51.4 mm pigtail and downstream connection should stay behind the open back, then route to an open groove/clip on the sleeve or collet before exiting near the tube.
-- The downstream cable is confirmed as 3.45 mm diameter round braided wire. Version 1 gives it a 4.15 mm open snap channel on the rear of the sleeve and preserves at least 2.8 mm of sleeve wall over the tested bore.
+- The right-angle adapter turns immediately behind the tablet. Its photo-marked 51.4 mm pigtail and downstream connection stay behind the open back, then the complete cable routes through wide 18 mm connector-pass eyelets beside the sleeve.
+- The downstream cable is confirmed as 3.45 mm diameter round braided wire. Version 1 uses no cable-sized clips or channels; the sleeve-side eyelet openings remain fully outside the sleeve wall and tested bore.
 - Any turn in the cable route should be broad and radiused. The printed holder must not clamp the thin flat section, force a sharp bend at the connector, require the larger downstream connector to pass through a captive tunnel, or cut into the tested 32.2 mm sleeve bore.
 
 ## First concept intent

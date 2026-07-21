@@ -35,8 +35,7 @@
     "flat_cable_thickness": 0.6,
     "downstream_connector_body_marked_dimension": 9.6,
     "braided_cable_diameter": 3.45,
-    "braided_channel_id": 4.15,
-    "braided_channel_slot": 2.8,
-    "routing": "right-angle pigtail turns behind tablet; braided cable snaps into rear clips and external sleeve channel"
+    "connector_pass_hole_id": 18.0,
+    "routing": "right-angle pigtail turns behind tablet; complete cable passes through 18 mm eyelets beside the sleeve"
   }
 }

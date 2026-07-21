@@ -66,20 +66,14 @@ RIGHT_ANGLE_PIGTAIL_LENGTH = 51.4
 RIGHT_ANGLE_FLAT_T = 0.6
 DOWNSTREAM_CONNECTOR_BODY = 9.6
 
-# Confirmed round braided cable and open snap-in routing features.  The channel
-# is external to the sleeve so the tested 32.2 mm bore remains untouched.
+# Confirmed round braided cable and connector-passable routing holes. No
+# cable-sized captive channels are used, and the sleeve bore remains untouched.
 BRAIDED_CABLE_D = 3.45
-BRAIDED_CHANNEL_CLEARANCE = 0.70
-BRAIDED_CHANNEL_ID = BRAIDED_CABLE_D + BRAIDED_CHANNEL_CLEARANCE
-BRAIDED_CHANNEL_SLOT = 2.8
-BRAIDED_CHANNEL_OUTER_X = 7.2
-BRAIDED_CHANNEL_OUTER_Y = 4.6
-BRAIDED_CHANNEL_EMBED = 1.2
-REAR_CLIP_X = (16.0, 38.0)
-REAR_CLIP_LENGTH = 6.0
-REAR_CLIP_OUTER_Y = 7.2
-REAR_CLIP_OUTER_Z = 5.2
-REAR_CLIP_CENTER_Z = -5.4
+CABLE_PASS_ID = 18.0
+CABLE_EYELET_OD = 24.0
+CABLE_EYELET_T = 6.0
+HOLDER_EYELET_X = 34.0
+HOLDER_EYELET_Z = -8.0
 
 # Pedestal sleeve and reinforcement
 SLEEVE_ID = 32.2
@@ -95,8 +89,8 @@ SLEEVE_CAP_T = 3.0
 SLEEVE_ENGAGEMENT = SLEEVE_TOP_Z - SLEEVE_BOTTOM_Z - SLEEVE_CAP_T
 SLEEVE_CENTER_Y = 24.0
 GUSSET_T = 4.0
-BRAIDED_CHANNEL_TOP_Z = SLEEVE_TOP_Z - 4.0
-BRAIDED_CHANNEL_BOTTOM_Z = BRAIDED_CHANNEL_TOP_Z - 50.0
+SLEEVE_EYELET_X = SLEEVE_OD / 2.0 + CABLE_PASS_ID / 2.0 + 0.5
+SLEEVE_EYELET_Z = (-25.0, -49.0)
 
 # M3 removable end stop
 M3_CLEARANCE = 3.4
@@ -200,22 +194,20 @@ def flat_main_holder() -> cq.Workplane:
     )
     main = main.union(cable_floor.cut(rear_turn_slot)).union(cable_ceiling).union(usb_end_wall)
 
-    # Two open C-clips on the rear X spine retain only the 3.45 mm braided
-    # section.  The 9.6 mm downstream connector remains accessible and never
-    # needs to pass through a captive tunnel.
-    for clip_x in REAR_CLIP_X:
-        clip_outer = cq.Workplane("XY").box(
-            REAR_CLIP_LENGTH, REAR_CLIP_OUTER_Y, REAR_CLIP_OUTER_Z
-        ).translate((clip_x, 0, REAR_CLIP_CENTER_Z))
-        clip_cavity = x_cylinder(
-            BRAIDED_CHANNEL_ID,
-            REAR_CLIP_LENGTH + 2.0,
-            (clip_x - REAR_CLIP_LENGTH / 2.0 - 1.0, 0, REAR_CLIP_CENTER_Z),
-        )
-        clip_opening = cq.Workplane("XY").box(
-            REAR_CLIP_LENGTH + 2.0, BRAIDED_CHANNEL_SLOT, REAR_CLIP_OUTER_Z
-        ).translate((clip_x, 0, REAR_CLIP_CENTER_Z - REAR_CLIP_OUTER_Z / 2.0))
-        main = main.union(clip_outer.cut(clip_cavity).cut(clip_opening))
+    # One wide rear eyelet accepts the complete connector, not just the wire.
+    # Its 18 mm clear hole is deliberately generous around the photographed
+    # 9.6 mm connector-body mark.
+    eyelet_outer = x_cylinder(
+        CABLE_EYELET_OD,
+        CABLE_EYELET_T,
+        (HOLDER_EYELET_X - CABLE_EYELET_T / 2.0, 0, HOLDER_EYELET_Z),
+    )
+    eyelet_hole = x_cylinder(
+        CABLE_PASS_ID,
+        CABLE_EYELET_T + 2.0,
+        (HOLDER_EYELET_X - CABLE_EYELET_T / 2.0 - 1.0, 0, HOLDER_EYELET_Z),
+    )
+    main = main.union(eyelet_outer.cut(eyelet_hole))
 
     # Reinforced lug for the single M3 end-stop screw.  The printed pilot hole
     # is intentionally simple; it can be drilled to suit the actual screw.
@@ -269,33 +261,20 @@ def vertical_sleeve() -> cq.Workplane:
     return sleeve.union(cap)
 
 
-def vertical_sleeve_with_cable_channel() -> cq.Workplane:
-    """Add a rear-facing snap channel without opening the tube bore."""
-    channel_length = BRAIDED_CHANNEL_TOP_Z - BRAIDED_CHANNEL_BOTTOM_Z
-    sleeve_back_y = SLEEVE_CENTER_Y + SLEEVE_OD / 2.0
-    cavity_y = sleeve_back_y + BRAIDED_CHANNEL_ID / 2.0 - BRAIDED_CHANNEL_EMBED
-    outer_center_y = sleeve_back_y + BRAIDED_CHANNEL_OUTER_Y / 2.0 - 0.5
-    outer = cq.Workplane("XY").box(
-        BRAIDED_CHANNEL_OUTER_X, BRAIDED_CHANNEL_OUTER_Y, channel_length
-    ).translate((0, outer_center_y, (BRAIDED_CHANNEL_TOP_Z + BRAIDED_CHANNEL_BOTTOM_Z) / 2.0))
-    cavity = (
-        cq.Workplane("XY")
-        .workplane(offset=BRAIDED_CHANNEL_BOTTOM_Z - 1.0)
-        .center(0, cavity_y)
-        .circle(BRAIDED_CHANNEL_ID / 2.0)
-        .extrude(channel_length + 2.0)
-    )
-    opening_depth = BRAIDED_CHANNEL_OUTER_Y + 2.0
-    opening = cq.Workplane("XY").box(
-        BRAIDED_CHANNEL_SLOT, opening_depth, channel_length + 2.0
-    ).translate(
-        (
-            0,
-            cavity_y + opening_depth / 2.0,
-            (BRAIDED_CHANNEL_TOP_Z + BRAIDED_CHANNEL_BOTTOM_Z) / 2.0,
+def vertical_sleeve_with_cable_eyelets() -> cq.Workplane:
+    """Add two wide connector-pass holes beside, never through, the sleeve."""
+    result = vertical_sleeve()
+    for center_z in SLEEVE_EYELET_Z:
+        eyelet = (
+            cq.Workplane("XY")
+            .workplane(offset=center_z - CABLE_EYELET_T / 2.0)
+            .center(SLEEVE_EYELET_X, SLEEVE_CENTER_Y)
+            .circle(CABLE_EYELET_OD / 2.0)
+            .circle(CABLE_PASS_ID / 2.0)
+            .extrude(CABLE_EYELET_T)
         )
-    )
-    return vertical_sleeve().union(outer).cut(cavity).cut(opening)
+        result = result.union(eyelet)
+    return result
 
 
 def gussets() -> cq.Workplane:
@@ -329,7 +308,7 @@ def installed_parts() -> tuple[cq.Workplane, cq.Workplane]:
     stop_tilted = flat_end_stop().rotate(
         (0, 0, 0), (1, 0, 0), SCREEN_ANGLE_FROM_HORIZONTAL_DEG
     )
-    main_installed = main_tilted.union(vertical_sleeve_with_cable_channel()).union(gussets())
+    main_installed = main_tilted.union(vertical_sleeve_with_cable_eyelets()).union(gussets())
     # Re-bore after unioning the gussets so no hidden rib material intrudes into
     # the tested 32.2 mm tube path.  A deliberate 3 mm seating cap remains.
     bore = (
@@ -386,9 +365,8 @@ def export() -> None:
             "flat_cable_thickness": RIGHT_ANGLE_FLAT_T,
             "downstream_connector_body_marked_dimension": DOWNSTREAM_CONNECTOR_BODY,
             "braided_cable_diameter": BRAIDED_CABLE_D,
-            "braided_channel_id": BRAIDED_CHANNEL_ID,
-            "braided_channel_slot": BRAIDED_CHANNEL_SLOT,
-            "routing": "right-angle pigtail turns behind tablet; braided cable snaps into rear clips and external sleeve channel",
+            "connector_pass_hole_id": CABLE_PASS_ID,
+            "routing": "right-angle pigtail turns behind tablet; complete cable passes through 18 mm eyelets beside the sleeve",
         },
     }
     (OUT / "model_parameters.json").write_text(json.dumps(metadata, indent=2) + "\n")
