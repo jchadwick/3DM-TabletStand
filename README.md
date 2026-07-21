@@ -2,7 +2,7 @@
 
 A 3D-printable, pedestal-mounted holder for a 2024 onn. 8-inch tablet. The holder is intended to slide onto an existing vertical 32 mm OD tube and present the tablet in landscape orientation at a kiosk-like 10 degrees back from vertical (80 degrees above horizontal).
 
-The source tablet mesh and visual references are preserved under [`reference/`](reference/), and the decisions from the initial design conversation are recorded in [`docs/design-brief.md`](docs/design-brief.md). A parametric first concept is available under [`cad/`](cad/) with generated print and preview artifacts in [`build/v1/`](build/v1/).
+The source tablet mesh and visual references are preserved under [`reference/`](reference/). The always-loaded project rules are in [`AGENTS.md`](AGENTS.md); the active specification, decision history, and validation workflow are indexed in [`docs/`](docs/README.md). A parametric first concept is available under [`cad/`](cad/) with generated print and preview artifacts in [`build/v1/`](build/v1/).
 
 ![Version 1 tablet stand preview](build/v1/tablet_stand_v1_preview.png)
 
@@ -21,9 +21,11 @@ The source tablet mesh and visual references are preserved under [`reference/`](
 
 ```text
 docs/                 Design decisions and open measurements
+docs/README.md        Documentation entrypoint
+docs/current-design.md Canonical active design specification
 docs/decision-log.md  Chronological record of confirmed and revised decisions
 cad/                  Parametric CadQuery source
-scripts/              Direct CAD preview and optional Blender renderers
+scripts/              Build validation and direct CAD preview tooling
 build/v1/             STEP, STL, parameters, and rendered previews
 reference/images/     Uploaded visual references
 reference/tablet/     Supplied OBJ and material file
@@ -35,6 +37,7 @@ The current project environment uses Python 3.12 with CadQuery 2.8.0. From an en
 
 ```bash
 python cad/tablet_stand_v1.py
+python scripts/validate_model.py
 python scripts/render_cadquery_preview.py
 ```
 

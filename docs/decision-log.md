@@ -7,6 +7,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Record every confirmed dimension and design decision in this repository as work progresses.
 - Preserve superseded decisions as history, but clearly label them superseded and update the active design brief, parameters, generated metadata, and previews.
 - Treat direct physical measurements and fit-test results as authoritative over web specifications or visual estimates.
+- Keep `docs/current-design.md` and the root `AGENTS.md` synchronized with every active design change so new sessions load the correct model context immediately.
 
 ## Confirmed dimensions
 
