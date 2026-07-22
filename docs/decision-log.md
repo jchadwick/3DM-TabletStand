@@ -38,7 +38,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
 - A removable left end stop secured by one M3 screw provides retention more secure than snap clips.
-- The right edge uses internal stops and accommodates the low-profile right-angle USB-C plug. The adapter turns immediately behind the tablet instead of sending the cable straight out through the right wall.
+- The right edge has a continuous full-depth screen-facing cap backed by internal stops and a solid outer USB-C wall. No tablet-edge or recessed plug-pocket segment is exposed from the front; the low-profile right-angle adapter still turns immediately behind the tablet instead of sending the cable straight out through the right wall.
 - The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
 - Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
 - The sleeve channel uses 4.15 mm internal clearance, a 2.8 mm snap opening, and a shallow 1.2 mm embed. It leaves at least 2.8 mm of sleeve wall and does not cut into the tested 32.2 mm tube bore.
@@ -49,6 +49,12 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Fully enclosed right-side face — 2026-07-21
+
+- Replaced the two separated screen-facing right retaining pads and narrow central pocket ceiling with one continuous full-depth cap spanning the entire tablet short edge and plug-pocket depth.
+- Preserved the two internal locating walls, solid outer USB-C end wall, 8.0 mm clear plug pocket, and 3 × 16 mm rear pigtail turn slot.
+- Neither the tablet's right edge nor the recessed pocket is partially exposed in the front view; cable installation and the left-to-right slide-in path remain unchanged.
 
 ### Preserve clips; route between solids — 2026-07-21
 

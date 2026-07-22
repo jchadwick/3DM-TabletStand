@@ -160,20 +160,23 @@ def flat_main_holder() -> cq.Workplane:
         )
         main = main.union(wall).union(lip)
 
-    # Two internal corner stops locate the tablet at its right edge while the
-    # central gap lets it slide onto a USB-C plug already resting in the case.
+    # A continuous, full-depth screen-facing cap covers the complete right side
+    # from the tablet edge to the solid outer USB-C wall. Behind it, two
+    # internal stop walls locate the tablet while their central gap still lets
+    # the tablet slide onto a USB-C plug resting in the pocket.
     stop_x = cavity_x / 2.0 + WALL_T / 2.0
+    right_cap_left_x = cavity_x / 2.0 - LIP_OVERLAP
+    right_cap_x = usb_outer_x - right_cap_left_x
+    right_cap = rounded_plate(
+        right_cap_x, outer_y, USB_POCKET_CEILING_T, TABLET_Z + FIT_Z, LIP_CORNER_R
+    ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0, 0))
+    main = main.union(right_cap)
     for sign in (-1.0, 1.0):
         stop_y = sign * (cavity_y / 2.0 - RIGHT_STOP_SPAN / 2.0)
         wall = rounded_plate(WALL_T, RIGHT_STOP_SPAN, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(
             (stop_x, stop_y, 0)
         )
-        lip = rounded_plate(
-            LIP_OVERLAP, RIGHT_STOP_SPAN, LIP_T, TABLET_Z + FIT_Z, LIP_CORNER_R
-        ).translate(
-            (cavity_x / 2.0 - LIP_OVERLAP / 2.0, stop_y, 0)
-        )
-        main = main.union(wall).union(lip)
+        main = main.union(wall)
 
     # The plug pocket encloses the measured 6.50 mm projection.  Its outer end
     # is solid; the right-angle adapter turns through the broad rear slot so its
@@ -183,13 +186,6 @@ def flat_main_holder() -> cq.Workplane:
     cable_floor = rounded_plate(
         usb_pocket_x, USB_POCKET_Y, BASE_T, -BASE_T, EXPOSED_CORNER_R
     ).translate((usb_pocket_center_x, 0, 0))
-    cable_ceiling = rounded_plate(
-        usb_pocket_x,
-        USB_POCKET_Y,
-        USB_POCKET_CEILING_T,
-        TABLET_Z + FIT_Z,
-        EXPOSED_CORNER_R,
-    ).translate((usb_pocket_center_x, 0, 0))
     usb_end_wall = rounded_plate(
         USB_END_WALL_T, outer_y, wall_h, -BASE_T, EXPOSED_CORNER_R
     ).translate((usb_end_wall_center_x, 0, 0))
@@ -198,7 +194,7 @@ def flat_main_holder() -> cq.Workplane:
         .box(USB_REAR_TURN_SLOT_X, USB_REAR_TURN_SLOT_Y, BASE_T + 2.0)
         .translate((TABLET_X / 2.0 + USB_PLUG_PROJECTION, 0, -BASE_T / 2.0))
     )
-    main = main.union(cable_floor.cut(rear_turn_slot)).union(cable_ceiling).union(usb_end_wall)
+    main = main.union(cable_floor.cut(rear_turn_slot)).union(usb_end_wall)
 
     # Two open C-clips on the rear X spine retain only the 3.45 mm braided
     # section.  The 9.6 mm downstream connector remains accessible and never
@@ -377,6 +373,7 @@ def export() -> None:
             "bottom_alignment": "sleeve bottom level with holder lower long edge",
         },
         "retention": "left slide-in; one M3 screw end stop",
+        "right_edge": "solid outer wall with continuous full-depth screen-facing cap",
         "usb_c": {
             "side": "right",
             "position": "center",

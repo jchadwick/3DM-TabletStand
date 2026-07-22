@@ -27,7 +27,7 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve | Closed cylindrical sleeve slides down over an accessible tube end; 40.2 mm OD, 4.0 mm wall, 51 mm clear engagement, 3.0 mm seating cap |
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Sleeve vertical alignment | Sleeve/collet bottom is level with the holder's lower long edge at **Z = -64.53 mm**; rear assembly is 14.53 mm below its prior position |
-| Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw |
+| Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw; right edge has a continuous full-depth screen-facing cap and solid outer wall |
 | USB-C | Center of right short edge from the front; the right-angle adapter turns immediately behind the tablet rather than exiting straight out to the right |
 | Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |

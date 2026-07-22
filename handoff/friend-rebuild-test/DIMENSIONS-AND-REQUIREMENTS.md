@@ -53,7 +53,7 @@ Cable routing requirements:
 - A front bezel is optional; a stable tray or partial wrap is acceptable.
 - Retention should be more secure than an occasional snap-out arrangement.
 - Outside corners should be lightly rounded/filleted so they are not sharp.
-- The right side should accommodate the USB-C connection and its groove while supporting slide-in tablet installation.
+- The right side should be solid and fully enclosed in the front/oblique view, not partially exposing the tablet edge or recessed USB-C pocket; it must still accommodate the USB-C connection and rearward cable turn while supporting slide-in tablet installation.
 
 ## Measurements still needed before a close-fitting final design
 
@@ -62,4 +62,3 @@ Cable routing requirements:
 - Confirm tablet button, speaker, camera, and microphone locations relative to any rail, bezel, or stop.
 - Confirm available tube engagement length.
 - Confirm printer, nozzle, material, build volume, and intended print orientation.
-

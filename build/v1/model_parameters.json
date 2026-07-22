@@ -26,6 +26,7 @@
     "bottom_alignment": "sleeve bottom level with holder lower long edge"
   },
   "retention": "left slide-in; one M3 screw end stop",
+  "right_edge": "solid outer wall with continuous full-depth screen-facing cap",
   "usb_c": {
     "side": "right",
     "position": "center",

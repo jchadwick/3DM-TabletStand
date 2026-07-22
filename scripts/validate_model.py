@@ -64,13 +64,18 @@ def main() -> None:
     assert metadata["usb_c"]["braided_channel_id"] > metadata["usb_c"]["braided_cable_diameter"]
 
     # Check the right-side concept in its unrotated construction plane: the
-    # outer end is closed, its rear turn slot is open, and the plug chamber plus
-    # supporting floor remain clear/solid where expected.
+    # outer end and full-depth screen-facing cap are continuous, its rear turn
+    # slot is open, and the plug chamber plus supporting floor remain
+    # clear/solid where expected.
     flat_holder = model.flat_main_holder().val()
     cavity_right_x = (model.TABLET_X + model.FIT_X) / 2.0
     end_wall_center_x = cavity_right_x + model.USB_POCKET_INNER_X + model.USB_END_WALL_T / 2.0
     assert flat_holder.isInside(cq.Vector(end_wall_center_x, 30.0, model.TABLET_Z / 2.0))
     assert flat_holder.isInside(cq.Vector(end_wall_center_x, 0.0, model.TABLET_Z / 2.0))
+    right_cap_z = model.TABLET_Z + model.FIT_Z + model.USB_POCKET_CEILING_T / 2.0
+    for cap_x in (cavity_right_x - model.LIP_OVERLAP / 2.0, cavity_right_x + 4.0, end_wall_center_x):
+        for cap_y in (-50.0, 0.0, 50.0):
+            assert flat_holder.isInside(cq.Vector(cap_x, cap_y, right_cap_z))
     assert not flat_holder.isInside(cq.Vector(cavity_right_x + 3.0, 0.0, model.TABLET_Z / 2.0))
     rear_turn_x = model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION
     assert not flat_holder.isInside(cq.Vector(rear_turn_x, 0.0, -model.BASE_T / 2.0))
@@ -78,7 +83,7 @@ def main() -> None:
     clip_x = model.REAR_CLIP_X[-1]
     assert not flat_holder.isInside(cq.Vector(clip_x, 0.0, model.REAR_CLIP_CENTER_Z))
     assert flat_holder.isInside(cq.Vector(clip_x, 3.0, model.REAR_CLIP_CENTER_Z))
-    print("USB-C outer end closed; rear turn slot, plug chamber, and braided clips clear")
+    print("right screen-facing cap and USB-C outer end continuous; rear route and clips clear")
 
     sleeve_back_y = model.SLEEVE_CENTER_Y + model.SLEEVE_OD / 2.0
     channel_y = sleeve_back_y + model.BRAIDED_CHANNEL_ID / 2.0 - model.BRAIDED_CHANNEL_EMBED
