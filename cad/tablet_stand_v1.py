@@ -118,7 +118,10 @@ def x_cylinder(diameter: float, length: float, origin: tuple[float, float, float
     return cq.Workplane("YZ", origin=origin).circle(diameter / 2.0).extrude(length)
 
 
-def flat_main_holder() -> cq.Workplane:
+def flat_main_holder(
+    include_rear_clips: bool = True,
+    include_endstop_lug: bool = True,
+) -> cq.Workplane:
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
     outer_x = cavity_x + 2.0 * WALL_T
@@ -196,36 +199,41 @@ def flat_main_holder() -> cq.Workplane:
     )
     main = main.union(cable_floor.cut(rear_turn_slot)).union(usb_end_wall)
 
-    # Two open C-clips on the rear X spine retain only the 3.45 mm braided
-    # section.  The 9.6 mm downstream connector remains accessible and never
-    # needs to pass through a captive tunnel.
-    for clip_x in REAR_CLIP_X:
-        clip_outer = cq.Workplane("XY").box(
-            REAR_CLIP_LENGTH, REAR_CLIP_OUTER_Y, REAR_CLIP_OUTER_Z
-        ).translate((clip_x, 0, REAR_CLIP_CENTER_Z))
-        clip_cavity = x_cylinder(
-            BRAIDED_CHANNEL_ID,
-            REAR_CLIP_LENGTH + 2.0,
-            (clip_x - REAR_CLIP_LENGTH / 2.0 - 1.0, 0, REAR_CLIP_CENTER_Z),
-        )
-        clip_opening = cq.Workplane("XY").box(
-            REAR_CLIP_LENGTH + 2.0, BRAIDED_CHANNEL_SLOT, REAR_CLIP_OUTER_Z
-        ).translate((clip_x, 0, REAR_CLIP_CENTER_Z - REAR_CLIP_OUTER_Z / 2.0))
-        main = main.union(clip_outer.cut(clip_cavity).cut(clip_opening))
+    if include_rear_clips:
+        # Two open C-clips on the rear X spine retain only the 3.45 mm braided
+        # section.  The 9.6 mm downstream connector remains accessible and
+        # never needs to pass through a captive tunnel. V2 relocates equivalent
+        # clips to its separately printed rear bracket so its cradle can lie
+        # flat on the print bed.
+        for clip_x in REAR_CLIP_X:
+            clip_outer = cq.Workplane("XY").box(
+                REAR_CLIP_LENGTH, REAR_CLIP_OUTER_Y, REAR_CLIP_OUTER_Z
+            ).translate((clip_x, 0, REAR_CLIP_CENTER_Z))
+            clip_cavity = x_cylinder(
+                BRAIDED_CHANNEL_ID,
+                REAR_CLIP_LENGTH + 2.0,
+                (clip_x - REAR_CLIP_LENGTH / 2.0 - 1.0, 0, REAR_CLIP_CENTER_Z),
+            )
+            clip_opening = cq.Workplane("XY").box(
+                REAR_CLIP_LENGTH + 2.0, BRAIDED_CHANNEL_SLOT, REAR_CLIP_OUTER_Z
+            ).translate((clip_x, 0, REAR_CLIP_CENTER_Z - REAR_CLIP_OUTER_Z / 2.0))
+            main = main.union(clip_outer.cut(clip_cavity).cut(clip_opening))
 
-    # Reinforced lug for the single M3 end-stop screw.  The printed pilot hole
-    # is intentionally simple; it can be drilled to suit the actual screw.
-    lug_x0 = -outer_x / 2.0 - 1.0
-    lug_length = 28.0
-    lug = cq.Workplane("XY").box(lug_length, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
-        (lug_x0 + lug_length / 2.0, 0, -ENDSTOP_PAD_Z / 2.0)
-    )
-    pilot = x_cylinder(M3_PILOT, 24.0, (lug_x0 - 1.0, 0, -4.0))
-    main = main.union(lug).cut(pilot)
+    if include_endstop_lug:
+        # Reinforced lug for the single M3 end-stop screw.  The printed pilot
+        # hole is intentionally simple; it can be drilled to suit the actual
+        # screw. V2 replaces this rear projection with a bed-compatible boss.
+        lug_x0 = -outer_x / 2.0 - 1.0
+        lug_length = 28.0
+        lug = cq.Workplane("XY").box(lug_length, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
+            (lug_x0 + lug_length / 2.0, 0, -ENDSTOP_PAD_Z / 2.0)
+        )
+        pilot = x_cylinder(M3_PILOT, 24.0, (lug_x0 - 1.0, 0, -4.0))
+        main = main.union(lug).cut(pilot)
     return main
 
 
-def flat_end_stop() -> cq.Workplane:
+def flat_end_stop(include_screw_pad: bool = True) -> cq.Workplane:
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
     outer_y = cavity_y + 2.0 * WALL_T
@@ -239,11 +247,14 @@ def flat_end_stop() -> cq.Workplane:
     lip = rounded_plate(LIP_OVERLAP, cavity_y, LIP_T, TABLET_Z + FIT_Z, LIP_CORNER_R).translate(
         (-cavity_x / 2.0 + LIP_OVERLAP / 2.0, 0, 0)
     )
-    pad = cq.Workplane("XY").box(8.0, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
-        (-cavity_x / 2.0 - 4.0, 0, -ENDSTOP_PAD_Z / 2.0)
-    )
-    clearance = x_cylinder(M3_CLEARANCE, 12.0, (-cavity_x / 2.0 - 10.0, 0, -4.0))
-    return wall.union(lip).union(pad).cut(clearance)
+    stop = wall.union(lip)
+    if include_screw_pad:
+        pad = cq.Workplane("XY").box(8.0, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
+            (-cavity_x / 2.0 - 4.0, 0, -ENDSTOP_PAD_Z / 2.0)
+        )
+        clearance = x_cylinder(M3_CLEARANCE, 12.0, (-cavity_x / 2.0 - 10.0, 0, -4.0))
+        stop = stop.union(pad).cut(clearance)
+    return stop
 
 
 def vertical_sleeve() -> cq.Workplane:

@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 1 is a concept for review and fit testing; it is not yet print-ready.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires fit coupons, a test slice, and physical hardware/device checks before it is print-ready.
 
 ## Orientation and coordinates
 
@@ -34,10 +34,20 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
 | Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
+| V2 main-body split | Cradle, rear tilt bracket, sleeve | Separates conflicting print axes |
+| V2 glue alignment | 36 × 16 × 2 mm cross key, print quantity 2 | Matching 1.15 mm-deep grooves; 0.25 mm planar clearance |
+| Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
+| Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
+| V2 end-stop screw | One M3, vertical local axis outside tablet cavity | Replaces V1 rear-projecting lug; exact length still unconfirmed |
 
 ## Functional design
 
-- The holder slides down over the tube using a closed cylindrical sleeve with a solid seating cap.
+- The active V2 holder is assembled from a flat-print cradle, a rear tilt bracket, a closed sleeve, and the removable end stop. One identical alignment-key STL is printed twice for the two structural glue joints.
+- The cradle prints with its complete rear frame datum on the bed. The V1 rear cable clips move to the rear bracket, and the V1 rear-projecting end-stop lug is replaced by a front-accessible vertical boss outside the tablet cavity.
+- The rear bracket prints on a 60 × 28 mm horizontal foot. Its 74 × 36 mm tilted plate bonds to the matching upper region of the cradle center plate and retains the two open braided-cable clips.
+- The sleeve prints upside down on a 60 × 46 mm flange. Its tube-entry bore therefore remains open upward and its 3 mm seating cap becomes a supported floor rather than a 32.2 mm bridge.
+- Both structural joints are adhesive bonds with matching cross grooves. Each uses one 36 × 16 × 2 mm printed key to constrain X/Y alignment during cure. Adhesive must be selected and prepared for the actual filament.
+- The holder slides down over the tube using the unchanged closed cylindrical sleeve with a solid seating cap.
 - The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
@@ -49,12 +59,14 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
+- V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
 
 ## Known unknowns before a full print
 
 - Flat cable and connector-body width.
 - Whether the photo's 9.6 mm annotation is connector width, height, or another measurement.
 - Power, volume, speaker, camera, microphone, and any other edge clearances.
-- M3 screw length and whether it uses a nut, heat-set insert, or printed pilot hole.
+- M3 end-stop screw length and whether its 2.7 mm printed pilot should be drilled for the selected screw.
 - Unobstructed tube length above its existing mounting point.
 - Printer, nozzle, material, usable build area, and desired print orientation.
+- Adhesive selection, surface preparation, clamp method, and cure time for the selected filament.

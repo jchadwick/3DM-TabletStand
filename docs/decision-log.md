@@ -44,11 +44,25 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - The sleeve channel uses 4.15 mm internal clearance, a 2.8 mm snap opening, and a shallow 1.2 mm embed. It leaves at least 2.8 mm of sleeve wall and does not cut into the tested 32.2 mm tube bore.
 - Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
-- With the tablet nearly vertical, the sleeve is centered left-to-right but offset behind the screen plane; version 1 uses a 24 mm Y offset and two structural ribs.
+- With the tablet nearly vertical, the sleeve is centered left-to-right and offset 24 mm behind the screen plane.
 - The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
+- V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
+- Both V2 glue joints use matching shallow cross grooves and one 36 × 16 × 2 mm printed key; the alignment-key STL is printed twice. The user confirmed that gluing the main body parts is acceptable.
+- The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
+- The removable V2 end stop retains one M3 screw, now on a local-Z boss outside the tablet cavity so neither the cradle nor stop inherits V1's rear-projecting pad.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Support-minimized keyed-glue V2 — 2026-07-28
+
+- Evaluated the monolithic V1 main STL in its viable sleeve-vertical orientation. Approximate triangle analysis flagged about 7,700 mm² of downward-facing surface beyond a 45-degree support rule, including the full-width upper rail and the 32.2 mm sleeve-cap ceiling.
+- Split the active V2 main structure into a cradle, rear tilt bracket, and sleeve while preserving the 200 × 123 × 8.4 mm tablet envelope, 80-degree screen angle, 32.2 mm tested bore, 51 mm engagement, 3 mm seating cap, 24 mm rear offset, and Z = -64.53 mm sleeve-bottom alignment.
+- The cradle prints on a 216 × 137.5 mm rear datum; the bracket prints on a 60 × 28 mm foot; and the sleeve prints upside down on a 60 × 46 mm flange with its tube-entry bore open upward.
+- The user confirmed that the main structural parts may be glued. Removed the provisional eight-screw structural scheme and retained only the removable end stop's single M3 screw.
+- Added matching half-depth cross grooves to both glue joints and one 36 × 16 × 2 mm alignment-key STL to print twice. Each groove is 1.15 mm deep with 0.25 mm planar clearance.
+- Relocated the two open cable clips to the rear bracket and moved the end-stop screw to a front-accessible local-Z boss outside the tablet cavity.
+- All five V2 STL files validate as watertight single components. Approximate flagged overhang area is about 2,870 mm² across all parts, primarily short rail lips, shallow groove roofs, and small clip details rather than tall support towers.
 
 ### Fully enclosed right-side face — 2026-07-21
 

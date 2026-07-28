@@ -1,0 +1,67 @@
+{
+  "units": "mm",
+  "revision": "v2 support-minimized modular concept",
+  "tablet": {
+    "x": 200.0,
+    "y": 123.0,
+    "z": 8.4
+  },
+  "fit_allowance_total": {
+    "x": 1.0,
+    "y": 1.0,
+    "z": 0.8
+  },
+  "tilt_degrees_from_vertical": 10.0,
+  "screen_angle_degrees_above_horizontal": 80.0,
+  "tube": {
+    "od": 32.0,
+    "sleeve_id": 32.2,
+    "sleeve_od": 40.2,
+    "engagement": 51.0,
+    "seating_cap_thickness": 3.0,
+    "center_offset_behind_screen_plane_y": 24.0,
+    "bottom_z": -64.53344847879431
+  },
+  "modules": {
+    "cradle": "rear frame face on bed; rail and end-stop features face up",
+    "rear_bracket": "horizontal sleeve-interface foot on bed",
+    "sleeve": "flange on bed; tube-entry bore open upward",
+    "end_stop": "screen-facing lip/top face on bed",
+    "alignment_key": "flat on bed; print two identical copies"
+  },
+  "joints": {
+    "end_stop": {
+      "count": 1,
+      "screw": "one M3 x 8-10 mm, verify physically",
+      "axis": "local Z, front-accessible and outside tablet cavity"
+    },
+    "cradle_to_bracket": {
+      "method": "adhesive bond",
+      "nominal_area_mm2": 2664.0,
+      "alignment": "matching cross grooves plus one printed alignment key"
+    },
+    "bracket_to_sleeve": {
+      "method": "adhesive bond",
+      "nominal_area_mm2": 1680.0,
+      "alignment": "matching cross grooves plus one printed alignment key"
+    }
+  },
+  "alignment_key": {
+    "quantity": 2,
+    "long": 36.0,
+    "short": 16.0,
+    "width": 4.0,
+    "thickness": 2.0,
+    "groove_depth_each_side": 1.15,
+    "total_clearance": 0.25
+  },
+  "cable": {
+    "braided_cable_diameter": 3.45,
+    "bracket_clip_x": [
+      16.0,
+      34.0
+    ],
+    "sleeve_channel_id": 4.15,
+    "sleeve_channel_slot": 2.8
+  }
+}

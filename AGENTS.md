@@ -12,7 +12,7 @@ For **every** change to model geometry, fit/tolerance values, CAD exports, or mo
 4. Record any confirmed measurement or design decision in `docs/decision-log.md`; update `docs/current-design.md` and this file when it changes the active specification.
 5. Physical measurements and fit tests from the user override visual estimates, generic specifications, or web research.
 
-Routine previews use direct in-memory CadQuery tessellation through `scripts/render_cadquery_preview.py`; generated STL is a manufacturing export, not an input to the preview. `scripts/render_preview.py` is optional Blender-only presentation tooling.
+Routine previews use direct in-memory CadQuery tessellation through the versioned `scripts/render_cadquery_preview*.py` tools; generated STL is a manufacturing export, not an input to the preview. `scripts/render_preview.py` is optional Blender-only presentation tooling.
 
 ## Active design — do not regress
 
@@ -27,26 +27,33 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve | Closed cylindrical sleeve slides down over an accessible tube end; 40.2 mm OD, 4.0 mm wall, 51 mm clear engagement, 3.0 mm seating cap |
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Sleeve vertical alignment | Sleeve/collet bottom is level with the holder's lower long edge at **Z = -64.53 mm**; rear assembly is 14.53 mm below its prior position |
-| Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one M3 screw; right edge has a continuous full-depth screen-facing cap and solid outer wall |
+| Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one local-Z M3 screw outside the tablet cavity; right edge has a continuous full-depth screen-facing cap and solid outer wall |
 | USB-C | Center of right short edge from the front; the right-angle adapter turns immediately behind the tablet rather than exiting straight out to the right |
 | Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
 | Clip-to-channel route | Preserve the clips; the free cable span drops outside the right gusset, sweeps behind the sleeve, and enters the channel through its rear opening—never route previewed cable through solids |
+| V2 print split | Active main body is a flat-print cradle, foot-down rear tilt bracket, and flange-down/bore-up sleeve; V1 remains preserved |
+| V2 structural joints | Two adhesive bonds with matching cross grooves; use one 36 × 16 × 2 mm printed key per joint (`alignment_key` STL quantity 2) |
+| V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
+| V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
-| Current status | Version 1 is a reviewed concept, not a production-ready print |
+| Current status | Version 2 is the active support-minimized, geometrically validated concept; it is not yet a production-ready print |
 
-Coordinate system in `cad/tablet_stand_v1.py`: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
+Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 
 ## Source of truth and generated files
 
-- `cad/tablet_stand_v1.py`: all active parametric geometry and named dimensions.
+- `cad/tablet_stand_v2.py`: active modular V2 geometry, glue joints, print orientations, and exports.
+- `cad/tablet_stand_v1.py`: preserved V1 source plus shared confirmed dimensions and base holder geometry used by V2.
 - `docs/current-design.md`: active human-readable design specification.
 - `docs/decision-log.md`: chronological decision history and measurement ledger.
 - `docs/design-brief.md`: original context, references, and unresolved details.
-- `scripts/validate_model.py`: geometry and artifact checks.
-- `build/v1/`: generated STEP, STLs, parameters, and previews. Regenerate after CAD changes; do not hand-edit.
+- `scripts/validate_model_v2.py`: active V2 geometry, joint, print-layout, and artifact checks.
+- `scripts/validate_model.py`: preserved V1 checks.
+- `build/v2/`: active generated STEP, five STL files, parameters, and previews. The alignment-key STL is printed twice.
+- `build/v1/`: preserved generated V1 artifacts; do not hand-edit either build directory.
 - `reference/tablet/tinker.obj`: user-supplied tablet reference mesh; preserve it unchanged.
 
 ## Required checks after a model change
@@ -55,9 +62,12 @@ Coordinate system in `cad/tablet_stand_v1.py`: X is tablet left (−) to right/U
 .venv/bin/python cad/tablet_stand_v1.py
 .venv/bin/python scripts/validate_model.py
 .venv/bin/python scripts/render_cadquery_preview.py
+.venv/bin/python cad/tablet_stand_v2.py
+.venv/bin/python scripts/validate_model_v2.py
+.venv/bin/python scripts/render_cadquery_preview_v2.py
 ```
 
-Before calling any version final or print-ready, obtain or verify: cable/connector width; button, speaker, camera, and microphone clearances; M3 screw length plus nut/insert strategy; available tube length; printer, nozzle, filament, build volume, and intended print orientation. Print a small fit coupon before committing to the full holder.
+Before calling any version final or print-ready, obtain or verify: cable/connector width; button, speaker, camera, and microphone clearances; M3 end-stop screw length and pilot strategy; available tube length; printer, nozzle, filament, build volume, intended print orientation, and adhesive/surface preparation. Print small rail, sleeve, cable-channel, alignment-key, and end-stop fit coupons before committing to the full holder.
 
 ## Git workflow
 

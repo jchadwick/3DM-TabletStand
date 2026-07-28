@@ -2,9 +2,9 @@
 
 A 3D-printable, pedestal-mounted holder for a 2024 onn. 8-inch tablet. The holder is intended to slide onto an existing vertical 32 mm OD tube and present the tablet in landscape orientation at a kiosk-like 10 degrees back from vertical (80 degrees above horizontal).
 
-The source tablet mesh and visual references are preserved under [`reference/`](reference/). The always-loaded project rules are in [`AGENTS.md`](AGENTS.md); the active specification, decision history, and validation workflow are indexed in [`docs/`](docs/README.md). A parametric first concept is available under [`cad/`](cad/) with generated print and preview artifacts in [`build/v1/`](build/v1/).
+The source tablet mesh and visual references are preserved under [`reference/`](reference/). The always-loaded project rules are in [`AGENTS.md`](AGENTS.md); the active specification, decision history, and validation workflow are indexed in [`docs/`](docs/README.md). The active support-minimized V2 is generated under [`build/v2/`](build/v2/), while V1 remains reproducible under [`build/v1/`](build/v1/).
 
-![Version 1 tablet stand preview](build/v1/tablet_stand_v1_preview.png)
+![Version 2 tablet stand preview](build/v2/tablet_stand_v2_preview.png)
 
 ## Locked design inputs
 
@@ -28,11 +28,12 @@ docs/decision-log.md  Chronological record of confirmed and revised decisions
 cad/                  Parametric CadQuery source
 scripts/              Build validation and direct CAD preview tooling
 build/v1/             STEP, STL, parameters, and rendered previews
+build/v2/             Active modular STEP, print STLs, parameters, and previews
 reference/images/     Uploaded visual references
 reference/tablet/     Supplied OBJ and material file
 ```
 
-## Build the concept
+## Build the concepts
 
 The current project environment uses Python 3.12 with CadQuery 2.8.0. From an environment containing the packages in `requirements.txt`:
 
@@ -40,10 +41,15 @@ The current project environment uses Python 3.12 with CadQuery 2.8.0. From an en
 python cad/tablet_stand_v1.py
 python scripts/validate_model.py
 python scripts/render_cadquery_preview.py
+python cad/tablet_stand_v2.py
+python scripts/validate_model_v2.py
+python scripts/render_cadquery_preview_v2.py
 ```
 
 ## Current status
 
-1. Source material and design brief preserved.
-2. Parametric version 1 CAD and preview generated.
-3. Next: review the form, verify hardware and obstruction zones, then test-print critical interfaces before a full-size print.
+1. Source material and the reproducible V1 concept remain preserved.
+2. V2 splits the cradle, rear tilt bracket, and sleeve onto support-friendly print datums.
+3. Two keyed adhesive joints assemble the main body; print the shared alignment-key STL twice.
+4. All V2 STL files are watertight single solids and the installed geometry preserves the confirmed V1 fit dimensions.
+5. Next: test-slice the documented layouts, print the critical fit/glue coupons, and verify device clearances before a full-size print.
