@@ -1,6 +1,6 @@
 # Build and Validation
 
-Run the following after any CAD or rendering change. The root [`AGENTS.md`](../AGENTS.md) requires the `parametric-3d-printing` skill before performing such work.
+Run the following after any CAD or rendering change. The root [`AGENTS.md`](../AGENTS.md) requires the `3d-model` skill before performing such work.
 
 ```bash
 .venv/bin/python cad/tablet_stand_v1.py

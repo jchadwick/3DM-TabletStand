@@ -6,7 +6,7 @@ This repository designs a functional, FDM-printable pedestal stand for a 2024 on
 
 For **every** change to model geometry, fit/tolerance values, CAD exports, or model previews/renders:
 
-1. First read and follow the local [`parametric-3d-printing` skill](/Users/jchadwick/.codex/skills/cad-skill/SKILL.md).
+1. First read and follow the local [`3d-model` skill](/Users/jchadwick/.agents/skills/3d-model/SKILL.md).
 2. Use CadQuery as the parametric source of truth; do not edit generated STL or STEP files directly.
 3. Build the model, validate watertight output, generate a multi-view preview, inspect it, and update the documentation in the same change.
 4. Record any confirmed measurement or design decision in `docs/decision-log.md`; update `docs/current-design.md` and this file when it changes the active specification.
