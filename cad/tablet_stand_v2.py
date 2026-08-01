@@ -40,14 +40,19 @@ M3_CLEARANCE = 3.4
 CRADLE_BRACKET_BOND_AREA = 74.0 * 36.0
 BRACKET_SLEEVE_BOND_AREA = 60.0 * 28.0
 
-# One support-free cross key is printed twice. Each joint receives matching
-# half-depth grooves, giving positive X/Y alignment without protrusions on the
-# broad print-bed faces.
-ALIGNMENT_KEY_LONG = 36.0
-ALIGNMENT_KEY_SHORT = 16.0
-ALIGNMENT_KEY_WIDTH = 4.0
-ALIGNMENT_KEY_T = 2.0
-ALIGNMENT_KEY_CLEARANCE = 0.25
+# One support-free cross key is printed twice. The grooves retain their
+# original size so replacement keys also fit already-printed V2 modules. A
+# physical PLA+ fit test found the original 0.25 mm total planar allowance too
+# tight, so the key is deliberately loose for glue assembly: at least 1.25 mm
+# total clearance in every in-plane direction plus 0.50 mm through-thickness.
+ALIGNMENT_GROOVE_LONG = 36.25
+ALIGNMENT_GROOVE_SHORT = 16.25
+ALIGNMENT_GROOVE_WIDTH = 4.25
+ALIGNMENT_KEY_LONG = 35.0
+ALIGNMENT_KEY_SHORT = 15.0
+ALIGNMENT_KEY_WIDTH = 3.0
+ALIGNMENT_KEY_T = 1.8
+ALIGNMENT_KEY_EDGE_CHAMFER = 0.4
 ALIGNMENT_GROOVE_DEPTH = 1.15
 ALIGNMENT_KEY_QUANTITY = 2
 
@@ -108,17 +113,16 @@ def shift_to_bed(shape: cq.Workplane) -> cq.Workplane:
     return shape.translate((0.0, 0.0, -shape.val().BoundingBox().zmin))
 
 
-def cross_key(
+def cross_profile(
     center_x: float,
     center_y: float,
     z0: float,
     thickness: float,
-    clearance: float = 0.0,
+    long: float,
+    short: float,
+    width: float,
 ) -> cq.Workplane:
-    """Create a connected cross key or its clearance-expanded groove cutter."""
-    long = ALIGNMENT_KEY_LONG + clearance
-    short = ALIGNMENT_KEY_SHORT + clearance
-    width = ALIGNMENT_KEY_WIDTH + clearance
+    """Create a connected cross profile with explicit finished dimensions."""
     horizontal = (
         cq.Workplane("XY")
         .workplane(offset=z0)
@@ -134,6 +138,44 @@ def cross_key(
         .translate((center_x, center_y, 0.0))
     )
     return horizontal.union(vertical)
+
+
+def cross_groove(
+    center_x: float,
+    center_y: float,
+    z0: float,
+    thickness: float,
+) -> cq.Workplane:
+    """Create the fixed-size alignment-groove cutter."""
+    return cross_profile(
+        center_x,
+        center_y,
+        z0,
+        thickness,
+        ALIGNMENT_GROOVE_LONG,
+        ALIGNMENT_GROOVE_SHORT,
+        ALIGNMENT_GROOVE_WIDTH,
+    )
+
+
+def cross_key(
+    center_x: float,
+    center_y: float,
+    z0: float,
+    thickness: float,
+) -> cq.Workplane:
+    """Create the loose-fit glue-alignment key with elephant-foot relief."""
+    key = cross_profile(
+        center_x,
+        center_y,
+        z0,
+        thickness,
+        ALIGNMENT_KEY_LONG,
+        ALIGNMENT_KEY_SHORT,
+        ALIGNMENT_KEY_WIDTH,
+    )
+    key = key.faces("<Z").edges().chamfer(ALIGNMENT_KEY_EDGE_CHAMFER)
+    return key.faces(">Z").edges().chamfer(ALIGNMENT_KEY_EDGE_CHAMFER)
 
 
 # ============================================================
@@ -161,12 +203,11 @@ def flat_cradle() -> cq.Workplane:
         .extrude(ENDSTOP_BOSS_HEIGHT + 2.0)
     )
     cradle = cradle.union(endstop_boss).cut(endstop_pilot)
-    cradle_groove = cross_key(
+    cradle_groove = cross_groove(
         0.0,
         BRACKET_PLATE_CENTER_Y,
         -v1.BASE_T - 0.05,
         ALIGNMENT_GROOVE_DEPTH + 0.05,
-        ALIGNMENT_KEY_CLEARANCE,
     )
     return cradle.cut(cradle_groove)
 
@@ -241,12 +282,11 @@ def rear_bracket_local_plate() -> cq.Workplane:
         BRACKET_PLATE_Z0,
         BRACKET_CORNER_R,
     ).translate((0.0, BRACKET_PLATE_CENTER_Y, 0.0))
-    plate_groove = cross_key(
+    plate_groove = cross_groove(
         0.0,
         BRACKET_PLATE_CENTER_Y,
         BRACKET_PLATE_Z0 + BRACKET_PLATE_T - ALIGNMENT_GROOVE_DEPTH,
         ALIGNMENT_GROOVE_DEPTH + 0.05,
-        ALIGNMENT_KEY_CLEARANCE,
     )
     plate = plate.cut(plate_groove)
     # The clips attach to the rear face of the plate rather than the cradle,
@@ -298,12 +338,11 @@ def rear_bracket_installed() -> cq.Workplane:
         BRACKET_FOOT_BOTTOM_Z,
         SLEEVE_FLANGE_CORNER_R,
     ).translate((0.0, BRACKET_FOOT_CENTER_Y, 0.0))
-    foot_groove = cross_key(
+    foot_groove = cross_groove(
         0.0,
         BRACKET_FOOT_CENTER_Y,
         BRACKET_FOOT_BOTTOM_Z - 0.05,
         ALIGNMENT_GROOVE_DEPTH + 0.05,
-        ALIGNMENT_KEY_CLEARANCE,
     )
     foot = foot.cut(foot_groove)
     # Two broad triangular ribs transfer tablet load into the sleeve foot. The
@@ -339,12 +378,11 @@ def pedestal_sleeve_installed() -> cq.Workplane:
         SLEEVE_FLANGE_BOTTOM_Z,
         SLEEVE_FLANGE_CORNER_R,
     ).translate((0.0, SLEEVE_FLANGE_CENTER_Y, 0.0))
-    flange_groove = cross_key(
+    flange_groove = cross_groove(
         0.0,
         BRACKET_FOOT_CENTER_Y,
         SLEEVE_FLANGE_TOP_Z - ALIGNMENT_GROOVE_DEPTH,
         ALIGNMENT_GROOVE_DEPTH + 0.05,
-        ALIGNMENT_KEY_CLEARANCE,
     )
     flange = flange.cut(flange_groove)
     return v1.vertical_sleeve_with_cable_channel().union(flange)
@@ -481,12 +519,12 @@ def export() -> None:
             "cradle_to_bracket": {
                 "method": "adhesive bond",
                 "nominal_area_mm2": CRADLE_BRACKET_BOND_AREA,
-                "alignment": "matching cross grooves plus one printed alignment key",
+                "alignment": "matching cross grooves plus one loose-fit printed alignment key",
             },
             "bracket_to_sleeve": {
                 "method": "adhesive bond",
                 "nominal_area_mm2": BRACKET_SLEEVE_BOND_AREA,
-                "alignment": "matching cross grooves plus one printed alignment key",
+                "alignment": "matching cross grooves plus one loose-fit printed alignment key",
             },
         },
         "alignment_key": {
@@ -495,8 +533,15 @@ def export() -> None:
             "short": ALIGNMENT_KEY_SHORT,
             "width": ALIGNMENT_KEY_WIDTH,
             "thickness": ALIGNMENT_KEY_T,
+            "edge_chamfer": ALIGNMENT_KEY_EDGE_CHAMFER,
+            "groove_long": ALIGNMENT_GROOVE_LONG,
+            "groove_short": ALIGNMENT_GROOVE_SHORT,
+            "groove_width": ALIGNMENT_GROOVE_WIDTH,
             "groove_depth_each_side": ALIGNMENT_GROOVE_DEPTH,
-            "total_clearance": ALIGNMENT_KEY_CLEARANCE,
+            "total_clearance_long": ALIGNMENT_GROOVE_LONG - ALIGNMENT_KEY_LONG,
+            "total_clearance_short": ALIGNMENT_GROOVE_SHORT - ALIGNMENT_KEY_SHORT,
+            "total_clearance_width": ALIGNMENT_GROOVE_WIDTH - ALIGNMENT_KEY_WIDTH,
+            "total_clearance_thickness": 2.0 * ALIGNMENT_GROOVE_DEPTH - ALIGNMENT_KEY_T,
         },
         "cable": {
             "braided_cable_diameter": v1.BRAIDED_CABLE_D,

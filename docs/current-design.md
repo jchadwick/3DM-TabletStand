@@ -35,7 +35,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
 | V2 main-body split | Cradle, rear tilt bracket, sleeve | Separates conflicting print axes |
-| V2 glue alignment | 36 × 16 × 2 mm cross key, print quantity 2 | Matching 1.15 mm-deep grooves; 0.25 mm planar clearance |
+| V2 glue alignment | 35 × 15 × 1.8 mm cross key, print quantity 2 | Existing 36.25 × 16.25 × 4.25 mm grooves retained; at least 1.25 mm total planar clearance, 0.50 mm thickness clearance, and 0.4 mm edge relief; user fit-test correction |
 | Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
 | V2 end-stop screw | One M3, vertical local axis outside tablet cavity | Replaces V1 rear-projecting lug; exact length still unconfirmed |
@@ -46,7 +46,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The cradle prints with its complete rear frame datum on the bed. The V1 rear cable clips move to the rear bracket, and the V1 rear-projecting end-stop lug is replaced by a front-accessible vertical boss outside the tablet cavity.
 - The rear bracket prints on a 60 × 28 mm horizontal foot. Its 74 × 36 mm tilted plate bonds to the matching upper region of the cradle center plate and retains the two open braided-cable clips.
 - The sleeve prints upside down on a 60 × 46 mm flange. Its tube-entry bore therefore remains open upward and its 3 mm seating cap becomes a supported floor rather than a 32.2 mm bridge.
-- Both structural joints are adhesive bonds with matching cross grooves. Each uses one 36 × 16 × 2 mm printed key to constrain X/Y alignment during cure. Adhesive must be selected and prepared for the actual filament.
+- Both structural joints are adhesive bonds with matching cross grooves. Each uses one loose-fit 35 × 15 × 1.8 mm printed key to constrain X/Y alignment during cure. The key has at least 1.25 mm total planar clearance, 0.50 mm total thickness clearance, and 0.4 mm edge relief so first-layer flare cannot jam the glue joint. Adhesive—not key friction—carries the joint. Adhesive must be selected and prepared for the actual filament.
 - The holder slides down over the tube using the unchanged closed cylindrical sleeve with a solid seating cap.
 - The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.

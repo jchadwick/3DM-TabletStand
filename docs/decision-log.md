@@ -47,12 +47,19 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - With the tablet nearly vertical, the sleeve is centered left-to-right and offset 24 mm behind the screen plane.
 - The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
-- Both V2 glue joints use matching shallow cross grooves and one 36 × 16 × 2 mm printed key; the alignment-key STL is printed twice. The user confirmed that gluing the main body parts is acceptable.
+- Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
 - The removable V2 end stop retains one M3 screw, now on a local-Z boss outside the tablet cavity so neither the cradle nor stop inherits V1's rear-projecting pad.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Loose-fit glue alignment keys — 2026-08-01
+
+- A user PLA+ print test found the original cross keys would not enter their grooves; the prior 0.25 mm total planar allowance was inadequate in the actual process.
+- Retained the existing 36.25 × 16.25 × 4.25 mm groove profiles so replacement keys remain compatible with modules that may already be printed.
+- Reduced each key to 35 × 15 × 1.8 mm, yielding at least 1.25 mm total in-plane clearance and 0.50 mm total thickness clearance, and added 0.4 mm top/bottom edge relief against first-layer flare.
+- Kept two separate keys: one aligns the cradle-to-bracket joint and the other aligns the bracket-to-sleeve joint. The keys locate parts during cure; adhesive carries the finished joints.
 
 ### Support-minimized keyed-glue V2 — 2026-07-28
 
@@ -60,7 +67,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Split the active V2 main structure into a cradle, rear tilt bracket, and sleeve while preserving the 200 × 123 × 8.4 mm tablet envelope, 80-degree screen angle, 32.2 mm tested bore, 51 mm engagement, 3 mm seating cap, 24 mm rear offset, and Z = -64.53 mm sleeve-bottom alignment.
 - The cradle prints on a 216 × 137.5 mm rear datum; the bracket prints on a 60 × 28 mm foot; and the sleeve prints upside down on a 60 × 46 mm flange with its tube-entry bore open upward.
 - The user confirmed that the main structural parts may be glued. Removed the provisional eight-screw structural scheme and retained only the removable end stop's single M3 screw.
-- Added matching half-depth cross grooves to both glue joints and one 36 × 16 × 2 mm alignment-key STL to print twice. Each groove is 1.15 mm deep with 0.25 mm planar clearance.
+- **Superseded by the 2026-08-01 fit-test correction:** added matching half-depth cross grooves to both glue joints and one 36 × 16 × 2 mm alignment-key STL to print twice. Each groove is 1.15 mm deep with 0.25 mm planar clearance.
 - Relocated the two open cable clips to the rear bracket and moved the end-stop screw to a front-accessible local-Z boss outside the tablet cavity.
 - All five V2 STL files validate as watertight single components. Approximate flagged overhang area is about 2,870 mm² across all parts, primarily short rail lips, shallow groove roofs, and small clip details rather than tall support towers.
 

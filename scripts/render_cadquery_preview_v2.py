@@ -132,6 +132,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
 def print_layout_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     cradle, bracket, sleeve, stop, key = model.print_parts()
     stop_mesh = cq_mesh(stop)
+    second_key_mesh = cq_mesh(key)
     stop_mesh.apply_transform(
         trimesh.transformations.rotation_matrix(math.radians(90.0), [0.0, 0.0, 1.0])
     )
@@ -140,7 +141,8 @@ def print_layout_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, i
         (cq_mesh(bracket), (48, 104, 156, 255), (-80.0, 70.0, 0.0)),
         (cq_mesh(sleeve), (42, 62, 88, 255), (0.0, 70.0, 0.0)),
         (stop_mesh, (16, 112, 220, 255), (80.0, 110.0, 0.0)),
-        (cq_mesh(key), (230, 128, 30, 255), (60.0, 70.0, 0.0)),
+        (cq_mesh(key), (230, 128, 30, 255), (56.0, 61.0, 0.0)),
+        (second_key_mesh, (230, 128, 30, 255), (64.0, 82.0, 0.0)),
     ]
     objects = []
     for mesh, color, offset in placed:

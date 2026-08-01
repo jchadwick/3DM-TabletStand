@@ -33,7 +33,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
 | Clip-to-channel route | Preserve the clips; the free cable span drops outside the right gusset, sweeps behind the sleeve, and enters the channel through its rear opening—never route previewed cable through solids |
 | V2 print split | Active main body is a flat-print cradle, foot-down rear tilt bracket, and flange-down/bore-up sleeve; V1 remains preserved |
-| V2 structural joints | Two adhesive bonds with matching cross grooves; use one 36 × 16 × 2 mm printed key per joint (`alignment_key` STL quantity 2) |
+| V2 structural joints | Two adhesive bonds with matching cross grooves; use one loose-fit 35 × 15 × 1.8 mm printed key per joint (`alignment_key` STL quantity 2). Retained grooves give at least 1.25 mm total planar and 0.50 mm thickness clearance; 0.4 mm edge relief prevents first-layer flare from jamming |
 | V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |

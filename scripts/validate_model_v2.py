@@ -63,6 +63,8 @@ def main() -> None:
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["tube"]["engagement"] == 51.0
     assert metadata["alignment_key"]["quantity"] == 2
+    assert metadata["alignment_key"]["total_clearance_width"] >= 1.0
+    assert metadata["alignment_key"]["total_clearance_thickness"] >= 0.4
     assert metadata["joints"]["cradle_to_bracket"]["method"] == "adhesive bond"
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
 
@@ -125,8 +127,18 @@ def main() -> None:
     assert abs(key_bb.ylen - model.ALIGNMENT_KEY_SHORT) < 1e-6
     assert abs(key_bb.zlen - model.ALIGNMENT_KEY_T) < 1e-6
     assert 2.0 * model.ALIGNMENT_GROOVE_DEPTH > model.ALIGNMENT_KEY_T
+    planar_clearances = (
+        model.ALIGNMENT_GROOVE_LONG - model.ALIGNMENT_KEY_LONG,
+        model.ALIGNMENT_GROOVE_SHORT - model.ALIGNMENT_KEY_SHORT,
+        model.ALIGNMENT_GROOVE_WIDTH - model.ALIGNMENT_KEY_WIDTH,
+    )
+    assert min(planar_clearances) >= 1.0
+    thickness_clearance = 2.0 * model.ALIGNMENT_GROOVE_DEPTH - model.ALIGNMENT_KEY_T
+    assert thickness_clearance >= 0.4
     print(
         f"alignment key={key_bb.xlen:.1f} x {key_bb.ylen:.1f} x {key_bb.zlen:.1f} mm; "
+        f"minimum planar clearance={min(planar_clearances):.2f} mm; "
+        f"thickness clearance={thickness_clearance:.2f} mm; "
         f"print quantity={model.ALIGNMENT_KEY_QUANTITY}"
     )
 
