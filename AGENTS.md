@@ -69,6 +69,17 @@ Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to 
 
 Before calling any version final or print-ready, obtain or verify: cable/connector width; button, speaker, camera, and microphone clearances; M3 end-stop screw length and pilot strategy; available tube length; printer, nozzle, filament, build volume, intended print orientation, and adhesive/surface preparation. Print small rail, sleeve, cable-channel, alignment-key, and end-stop fit coupons before committing to the full holder.
 
+## Printer start workflow
+
+When the user has explicitly authorized a print, check the configured printer camera before asking whether the bed is clear:
+
+1. Query current printer/job status and require the machine to be reachable and ready.
+2. Capture a fresh camera snapshot and inspect the complete visible build plate.
+3. If the view clearly shows an empty plate with no prior part, tools, clips, or other obstruction, treat that visual inspection as the bed-clear confirmation and start the authorized print without asking the user again.
+4. If the camera is unavailable, stale, obstructed, does not show enough of the plate, or the view is ambiguous, do not infer clearance; ask the user before starting.
+
+Camera inspection confirms physical readiness only. It never supplies authorization for a print the user did not request.
+
 ## Git workflow
 
 After every significant completed change or action—such as a design decision, CAD/model update, generated artifact update, documentation restructuring, validation-script change, or reference addition—verify the relevant work, commit the complete coherent change set, and push the active branch to GitHub. Do not leave a significant completed change only in the working tree. Use focused, descriptive commit messages and include regenerated CAD artifacts whenever their source changes.
