@@ -54,6 +54,14 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Right-side tablet and USB-C fit coupon — 2026-08-02
+
+- Selected a right-end coupon instead of a left/end-stop coupon so one small print tests the uncertain production rail fit and the actual USB-C adapter route together.
+- The coupon is an exact X = 78.0–111.5 mm crop of the active V2 cradle, retaining 33.5 mm of both long-edge rails, the full right-side cap and internal stops, the 8.0 mm-clear plug pocket, solid outer wall, and 3 × 16 mm rear-turn slot.
+- The coupon preserves the production cradle's rear-face-down print orientation and its 1.0 mm total X/Y and 0.8 mm Z tablet allowances. PLA is the user-selected test material.
+- Started the physical coupon on the confirmed Ender-3 Pro profile at 0.20 mm layers, three walls, 20% grid infill, 210 °C PLA / 60 °C bed, and no supports. The unsupported short rails and right-side bridges intentionally reproduce the production cradle's print conditions; the validated G-code estimates 1 h 25 min and 18.8 g.
+- A successful physical test requires the tablet to slide without force, seat at the right stop without rocking, accept the USB-C adapter, and let the flat pigtail turn behind the tablet without pinching.
+
 ### Loose-fit glue alignment keys — 2026-08-01
 
 - A user PLA+ print test found the original cross keys would not enter their grooves; the prior 0.25 mm total planar allowance was inadequate in the actual process.

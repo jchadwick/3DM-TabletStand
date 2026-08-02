@@ -28,6 +28,7 @@ REQUIRED = (
     "tablet_stand_v2_sleeve.stl",
     "tablet_stand_v2_end_stop.stl",
     "tablet_stand_v2_alignment_key_print_2.stl",
+    "tablet_stand_v2_right_fit_coupon.stl",
 )
 
 
@@ -67,6 +68,7 @@ def main() -> None:
     assert metadata["alignment_key"]["total_clearance_thickness"] >= 0.4
     assert metadata["joints"]["cradle_to_bracket"]["method"] == "adhesive bond"
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
+    assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -197,6 +199,28 @@ def main() -> None:
         "end-stop boss wall missing",
     )
     print("single M3 end-stop joint aligned outside tablet cavity")
+
+    # The right-side coupon is a literal crop of the production cradle. It
+    # retains both long-edge rails, the full right cap, the plug pocket, and
+    # the open rear-turn slot while omitting the center glue joint.
+    coupon = model.right_fit_coupon().val()
+    coupon_bb = coupon.BoundingBox()
+    assert abs(coupon_bb.xmin - model.RIGHT_FIT_COUPON_X_MIN) < 1e-6
+    assert abs(coupon_bb.xmax - model.RIGHT_FIT_COUPON_X_MAX) < 1e-6
+    assert abs(coupon_bb.ylen - v1.HOLDER_OUTER_Y) < 1e-6
+    assert_open(coupon, (90.0, 0.0, 4.0), "coupon tablet cavity obstructed")
+    assert_open(coupon, (104.0, 0.0, 4.0), "coupon USB-C pocket obstructed")
+    assert_solid(coupon, (110.0, 0.0, 4.0), "coupon outer USB-C wall missing")
+    assert_open(
+        coupon,
+        (v1.TABLET_X / 2.0 + v1.USB_PLUG_PROJECTION, 0.0, -1.5),
+        "coupon rear-turn slot missing",
+    )
+    print(
+        "right fit coupon is an exact cradle crop; "
+        f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
+        f"{coupon_bb.zlen:.2f} mm"
+    )
 
     # Preserve the user-tested tube path and seating cap.
     tube_axis_z = v1.SLEEVE_BOTTOM_Z + v1.SLEEVE_ENGAGEMENT / 2.0

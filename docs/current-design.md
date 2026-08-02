@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires fit coupons, a test slice, and physical hardware/device checks before it is print-ready.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. A right-side production-geometry coupon is provided to test the rails and USB-C route before printing the full cradle.
 
 ## Orientation and coordinates
 
@@ -39,6 +39,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
 | V2 end-stop screw | One M3, vertical local axis outside tablet cavity | Replaces V1 rear-projecting lug; exact length still unconfirmed |
+| Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests both rails, right-edge seating, USB-C pocket, and rear turn |
 
 ## Functional design
 
@@ -60,6 +61,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 - V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
+- Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the pigtail turns through the rear slot without pinching or forcing the tablet.
 
 ## Known unknowns before a full print
 

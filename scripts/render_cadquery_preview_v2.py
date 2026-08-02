@@ -151,6 +151,22 @@ def print_layout_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, i
     return objects
 
 
+def coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Direct in-memory tessellation of the right-side production-geometry crop."""
+    return [(cq_mesh(model.right_fit_coupon_print()), (38, 104, 174, 255))]
+
+
+def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
+    labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "REAR TURN SLOT")
+    canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
+    draw = ImageDraw.Draw(canvas)
+    for index, (path, label) in enumerate(zip(paths, labels, strict=True)):
+        panel = Image.open(path).convert("RGB")
+        canvas.paste(panel, (index * 700, 45))
+        draw.text((index * 700 + 22, 14), label, fill=(225, 232, 240))
+    canvas.save(output)
+
+
 def contact_sheet(installed_path: Path, rear_path: Path, layout_path: Path, output: Path) -> None:
     installed = Image.open(installed_path).convert("RGB")
     rear = Image.open(rear_path).convert("RGB")
@@ -171,6 +187,11 @@ def main() -> None:
     installed = BUILD / "tablet_stand_v2_preview.png"
     rear = BUILD / "tablet_stand_v2_rear_detail.png"
     layout = BUILD / "tablet_stand_v2_print_layout.png"
+    coupon_views = [
+        BUILD / "tablet_stand_v2_right_fit_coupon_entry.png",
+        BUILD / "tablet_stand_v2_right_fit_coupon_outer.png",
+        BUILD / "tablet_stand_v2_right_fit_coupon_rear.png",
+    ]
 
     # One clean child process per camera avoids repeated pyglet capture failures
     # on macOS while keeping every mesh directly tessellated from CadQuery.
@@ -199,6 +220,30 @@ def main() -> None:
                 eye=(0.0, -15.0, 450.0),
                 target=(10.0, 0.0, 0.0),
             )
+        elif sys.argv[2] == "coupon-entry":
+            render_view(
+                coupon_objects(),
+                coupon_views[0],
+                (700, 700),
+                eye=(-85.0, -180.0, 95.0),
+                target=(96.0, 0.0, 4.0),
+            )
+        elif sys.argv[2] == "coupon-outer":
+            render_view(
+                coupon_objects(),
+                coupon_views[1],
+                (700, 700),
+                eye=(260.0, -150.0, 85.0),
+                target=(99.0, 0.0, 3.0),
+            )
+        elif sys.argv[2] == "coupon-rear":
+            render_view(
+                coupon_objects(),
+                coupon_views[2],
+                (700, 700),
+                eye=(190.0, 170.0, -85.0),
+                target=(101.0, 0.0, 3.0),
+            )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")
         return
@@ -206,7 +251,13 @@ def main() -> None:
     subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "installed"], check=True)
     subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "rear"], check=True)
     subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "layout"], check=True)
+    for view in ("coupon-entry", "coupon-outer", "coupon-rear"):
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
     contact_sheet(installed, rear, layout, BUILD / "tablet_stand_v2_multiview.png")
+    coupon_contact_sheet(
+        coupon_views,
+        BUILD / "tablet_stand_v2_right_fit_coupon_multiview.png",
+    )
     print("Rendered V2 CadQuery solids directly with Trimesh (no STL import).")
 
 

@@ -39,7 +39,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
-| Current status | Version 2 is the active support-minimized, geometrically validated concept; it is not yet a production-ready print |
+| Current status | Version 2 is the active support-minimized, geometrically validated concept; a right-side rail/USB-C production-geometry coupon is ready for physical PLA testing before the full cradle |
 
 Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 
@@ -52,7 +52,7 @@ Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to 
 - `docs/design-brief.md`: original context, references, and unresolved details.
 - `scripts/validate_model_v2.py`: active V2 geometry, joint, print-layout, and artifact checks.
 - `scripts/validate_model.py`: preserved V1 checks.
-- `build/v2/`: active generated STEP, five STL files, parameters, and previews. The alignment-key STL is printed twice.
+- `build/v2/`: active generated STEP, five production STL files, one right-side fit-coupon STL, parameters, and previews. The alignment-key STL is printed twice.
 - `build/v1/`: preserved generated V1 artifacts; do not hand-edit either build directory.
 - `reference/tablet/tinker.obj`: user-supplied tablet reference mesh; preserve it unchanged.
 

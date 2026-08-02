@@ -27,7 +27,15 @@
     "rear_bracket": "horizontal sleeve-interface foot on bed",
     "sleeve": "flange on bed; tube-entry bore open upward",
     "end_stop": "screen-facing lip/top face on bed",
-    "alignment_key": "flat on bed; print two identical copies"
+    "alignment_key": "flat on bed; print two identical copies",
+    "right_fit_coupon": "rear face on bed; exact 33.5 mm crop of production cradle right end"
+  },
+  "right_fit_coupon": {
+    "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
+    "x_min": 78.0,
+    "x_max": 111.5,
+    "width": 33.5,
+    "uses_exact_cradle_geometry": true
   },
   "joints": {
     "end_stop": {

@@ -52,4 +52,4 @@ python scripts/render_cadquery_preview_v2.py
 2. V2 splits the cradle, rear tilt bracket, and sleeve onto support-friendly print datums.
 3. Two keyed adhesive joints assemble the main body; print the shared alignment-key STL twice.
 4. All V2 STL files are watertight single solids and the installed geometry preserves the confirmed V1 fit dimensions.
-5. Next: test-slice the documented layouts, print the critical fit/glue coupons, and verify device clearances before a full-size print.
+5. A right-side production-geometry coupon is provided to verify the tablet rails and actual USB-C route before committing to the full cradle.

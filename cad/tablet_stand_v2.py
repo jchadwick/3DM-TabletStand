@@ -103,6 +103,16 @@ BRACKET_FOOT_BOTTOM_Z = SLEEVE_FLANGE_TOP_Z
 LINEAR_TOLERANCE = 0.08
 ANGULAR_TOLERANCE = 0.15
 
+# Right-side fit coupon.  The left cut stays far enough from the USB-C pocket
+# to leave a useful rail lead-in while avoiding the cradle's center plate and
+# glue joint.  The right limit is the production cradle's finished outer wall.
+RIGHT_FIT_COUPON_X_MIN = 78.0
+RIGHT_FIT_COUPON_X_MAX = (
+    (v1.TABLET_X + v1.FIT_X) / 2.0
+    + v1.USB_POCKET_INNER_X
+    + v1.USB_END_WALL_T
+)
+
 
 # ============================================================
 # GEOMETRY HELPERS
@@ -393,6 +403,28 @@ def alignment_key_print() -> cq.Workplane:
     return cross_key(0.0, 0.0, 0.0, ALIGNMENT_KEY_T)
 
 
+def right_fit_coupon() -> cq.Workplane:
+    """Exact right-end cradle crop for tablet-rail and USB-C fit testing."""
+    width = RIGHT_FIT_COUPON_X_MAX - RIGHT_FIT_COUPON_X_MIN
+    cutter = (
+        cq.Workplane("XY")
+        .box(width, v1.HOLDER_OUTER_Y + 4.0, 30.0)
+        .translate(
+            (
+                (RIGHT_FIT_COUPON_X_MIN + RIGHT_FIT_COUPON_X_MAX) / 2.0,
+                0.0,
+                4.0,
+            )
+        )
+    )
+    return flat_cradle().intersect(cutter)
+
+
+def right_fit_coupon_print() -> cq.Workplane:
+    """Return the right-side coupon on the same rear-face print datum as the cradle."""
+    return shift_to_bed(right_fit_coupon())
+
+
 def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Workplane]:
     """Return cradle, rear bracket, sleeve, and end stop in assembly position."""
     cradle = flat_cradle().rotate(
@@ -453,6 +485,7 @@ def export() -> None:
         "tablet_stand_v2_sleeve.stl": sleeve,
         "tablet_stand_v2_end_stop.stl": stop,
         "tablet_stand_v2_alignment_key_print_2.stl": key,
+        "tablet_stand_v2_right_fit_coupon.stl": right_fit_coupon_print(),
     }
     for filename, part in exports.items():
         cq.exporters.export(
@@ -509,6 +542,16 @@ def export() -> None:
             "sleeve": "flange on bed; tube-entry bore open upward",
             "end_stop": "screen-facing lip/top face on bed",
             "alignment_key": "flat on bed; print two identical copies",
+            "right_fit_coupon": (
+                "rear face on bed; exact 33.5 mm crop of production cradle right end"
+            ),
+        },
+        "right_fit_coupon": {
+            "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
+            "x_min": RIGHT_FIT_COUPON_X_MIN,
+            "x_max": RIGHT_FIT_COUPON_X_MAX,
+            "width": RIGHT_FIT_COUPON_X_MAX - RIGHT_FIT_COUPON_X_MIN,
+            "uses_exact_cradle_geometry": True,
         },
         "joints": {
             "end_stop": {
