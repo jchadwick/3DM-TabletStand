@@ -156,8 +156,24 @@ def coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     return [(cq_mesh(model.right_fit_coupon_print()), (38, 104, 174, 255))]
 
 
+def button_coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Direct in-memory tessellation of the top-left production-rail crop."""
+    return [(cq_mesh(model.button_fit_coupon_print()), (44, 132, 116, 255))]
+
+
 def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
     labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 8 MM RECTANGLE")
+    canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
+    draw = ImageDraw.Draw(canvas)
+    for index, (path, label) in enumerate(zip(paths, labels, strict=True)):
+        panel = Image.open(path).convert("RGB")
+        canvas.paste(panel, (index * 700, 45))
+        draw.text((index * 700 + 22, 14), label, fill=(225, 232, 240))
+    canvas.save(output)
+
+
+def button_coupon_contact_sheet(paths: list[Path], output: Path) -> None:
+    labels = ("OPEN SLIDE-IN ENTRANCE", "3 MM-HIGH BUTTON CHANNEL", "INTACT WALL AFTER 5 MM OVERRUN")
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
     for index, (path, label) in enumerate(zip(paths, labels, strict=True)):
@@ -191,6 +207,11 @@ def main() -> None:
         BUILD / "tablet_stand_v2_right_fit_coupon_entry.png",
         BUILD / "tablet_stand_v2_right_fit_coupon_outer.png",
         BUILD / "tablet_stand_v2_right_fit_coupon_rear.png",
+    ]
+    button_coupon_views = [
+        BUILD / "tablet_stand_v2_button_fit_coupon_entry.png",
+        BUILD / "tablet_stand_v2_button_fit_coupon_channel.png",
+        BUILD / "tablet_stand_v2_button_fit_coupon_end.png",
     ]
 
     # One clean child process per camera avoids repeated pyglet capture failures
@@ -244,6 +265,30 @@ def main() -> None:
                 eye=(190.0, 170.0, -85.0),
                 target=(101.0, 0.0, 3.0),
             )
+        elif sys.argv[2] == "button-coupon-entry":
+            render_view(
+                button_coupon_objects(),
+                button_coupon_views[0],
+                (700, 700),
+                eye=(-170.0, -80.0, 55.0),
+                target=(-88.0, 61.0, 4.0),
+            )
+        elif sys.argv[2] == "button-coupon-channel":
+            render_view(
+                button_coupon_objects(),
+                button_coupon_views[1],
+                (700, 700),
+                eye=(-65.0, 175.0, 45.0),
+                target=(-67.0, 62.0, 4.0),
+            )
+        elif sys.argv[2] == "button-coupon-end":
+            render_view(
+                button_coupon_objects(),
+                button_coupon_views[2],
+                (700, 700),
+                eye=(40.0, 145.0, 38.0),
+                target=(-35.0, 62.0, 4.0),
+            )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")
         return
@@ -253,10 +298,16 @@ def main() -> None:
     subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", "layout"], check=True)
     for view in ("coupon-entry", "coupon-outer", "coupon-rear"):
         subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
+    for view in ("button-coupon-entry", "button-coupon-channel", "button-coupon-end"):
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
     contact_sheet(installed, rear, layout, BUILD / "tablet_stand_v2_multiview.png")
     coupon_contact_sheet(
         coupon_views,
         BUILD / "tablet_stand_v2_right_fit_coupon_multiview.png",
+    )
+    button_coupon_contact_sheet(
+        button_coupon_views,
+        BUILD / "tablet_stand_v2_button_fit_coupon_multiview.png",
     )
     print("Rendered V2 CadQuery solids directly with Trimesh (no STL import).")
 

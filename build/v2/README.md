@@ -15,10 +15,20 @@ modules while preserving the confirmed tablet, tube, tilt, and cable geometry.
   cradle; it is an exact 33.5 mm-wide crop of the production right end and
   tests the restored production rail allowances, right-edge stops, USB-C
   pocket, and the open 16 mm-wide × 8 mm-deep cable rectangle.
+- `tablet_stand_v2_button_fit_coupon.stl`: print rear face down before the full
+  cradle; it is an exact 73.5 × 11 × 14.2 mm crop of the production top-left
+  rail. Slide it along the landscape-top tablet edge to verify that the
+  measured 20–60 mm button group passes freely through the 3 mm-high channel
+  without being pressed. The channel is open at the insertion end and extends
+  5 mm beyond the seated button group.
+- `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
+  button-coupon job in the exact production orientation; 0.20 mm layers, three
+  walls, 20% grid infill, no supports, approximately 22 min and 4.8 g. The
+  slicer warns about the intentionally unsupported production rail lip; inspect
+  that short 3 mm cantilever after printing.
 - `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
-  approximately 1 h 25 min and 18.6 g. Prepared only; do not print the full
-  cradle until the top button channel and seated-button relief are measured.
+  approximately 1 h 25 min and 18.6 g. Prepared only.
 
 `tablet_stand_v2.step` is the installed assembly. `model_parameters.json`
 records the module orientations, glue joints, key dimensions, and preserved
@@ -45,7 +55,7 @@ bond faces according to the adhesive instructions.
 
 ## Printability
 
-All five production STL files and the right-side fit-coupon STL are single
+All five production STL files and both fit-coupon STLs are single
 watertight solids. The alignment-key STL is printed twice. The cradle has a
 broad 216 × 137.5 mm rear datum, the bracket has a 60 × 28 mm foot, and the
 sleeve has a 60 × 46 mm flange. The split removes the V1 tall rail-support

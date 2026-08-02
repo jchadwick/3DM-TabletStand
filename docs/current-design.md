@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. A right-side production-geometry fit-test piece (often called a coupon) is provided to test the rails and USB-C route before printing the full cradle.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. Exact-production fit coupons are provided for the right-side rails/USB-C route and the landscape-top button channel before printing the full cradle.
 
 ## Orientation and coordinates
 
@@ -31,6 +31,8 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Round braided cable diameter | 3.45 mm | User measurement |
 | USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection plus provisional clearance |
 | Rear cable opening | 16 × 8 mm (Y × X) open rectangle | Replaces the undersized T-shaped slot/notch; spans the full pocket depth from tablet cavity to outer wall |
+| Power/volume group | 20–60 mm from landscape top-left; 2 mm wide across tablet thickness; centered; 1 mm edge protrusion | User measurements |
+| Top button channel | 3 mm high; open from left slide-in end through 5 mm beyond the seated button group | 0.5 mm clearance above/below the 2 mm buttons; retaining lip remains continuous |
 | Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
 | Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
@@ -40,6 +42,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
 | V2 end-stop screw | One M3, vertical local axis outside tablet cavity | Replaces V1 rear-projecting lug; exact length still unconfirmed |
 | Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests restored rail fit, right-edge seating, USB-C pocket, and open 16 × 8 mm cable rectangle |
+| Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.2 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
 
 ## Functional design
 
@@ -52,6 +55,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
+- The landscape-top rail has a 3 mm-high side channel centered on the tablet's thickness. It is open at the left slide-in entrance and continues to 5 mm past the measured end of the seated 20–60 mm power/volume group, so the 1 mm-projecting buttons never have to pass beneath solid wall. The retaining lip above the channel remains continuous.
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
 - A continuous screen-facing cap covers the right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug. The cap remains structurally continuous because the cable opening is in the rear pocket floor, not through the cap.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
@@ -62,13 +66,13 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 - V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
+- Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the open channel without being pressed, while the rail still captures the tablet above and below the slot.
 
 ## Known unknowns before a full print
 
 - Flat cable and connector-body width.
 - Whether the photo's 9.6 mm annotation is connector width, height, or another measurement.
-- Power, volume, speaker, camera, microphone, and any other edge clearances.
-- The current top long-edge rail is continuous and has no power/volume-button channel. Obtain the button group's near/far positions from the landscape top-left corner, maximum protrusion, and requested extra top-left clearance before designing the required slide-through channel and seated-button relief.
+- Speaker, camera, microphone, and any other edge clearances not covered by the measured power/volume group.
 - M3 end-stop screw length and whether its 2.7 mm printed pilot should be drilled for the selected screw.
 - Unobstructed tube length above its existing mounting point.
 - Printer, nozzle, material, usable build area, and desired print orientation.

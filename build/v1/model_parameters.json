@@ -27,6 +27,16 @@
   },
   "retention": "left slide-in; one M3 screw end stop",
   "right_edge": "solid outer wall with continuous full-depth screen-facing cap",
+  "buttons": {
+    "edge": "landscape top",
+    "group_start_from_top_left": 20.0,
+    "group_end_from_top_left": 60.0,
+    "width_across_tablet_thickness": 2.0,
+    "protrusion_from_tablet_edge": 1.0,
+    "channel_z_clearance_each_side": 0.5,
+    "channel_end_clearance": 5.0,
+    "channel_open_to_slide_in_end": true
+  },
   "usb_c": {
     "side": "right",
     "position": "center",

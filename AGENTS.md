@@ -38,10 +38,10 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
-| Button clearance | The top long-edge rail is currently continuous and has no button channel; do not print the full cradle until the power/volume group positions, protrusion, slide-through path, and extra landscape-top-left seated clearance are measured and modeled |
+| Button clearance | Power/volume group is **20–60 mm from landscape top-left**, **2 mm wide across tablet thickness**, centered, and **1 mm protruding**; a **3 mm-high** channel is open from the left slide-in end through **5 mm beyond** the seated group while preserving the upper retaining lip |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
-| Current status | Version 2 is the active support-minimized, geometrically validated concept; a right-side rail/USB-C production-geometry coupon is ready for physical PLA testing before the full cradle |
+| Current status | Version 2 is the active support-minimized, geometrically validated concept; right-side rail/USB-C and top-button production-geometry coupons require physical PLA testing before the full cradle |
 
 Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 
@@ -54,7 +54,7 @@ Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to 
 - `docs/design-brief.md`: original context, references, and unresolved details.
 - `scripts/validate_model_v2.py`: active V2 geometry, joint, print-layout, and artifact checks.
 - `scripts/validate_model.py`: preserved V1 checks.
-- `build/v2/`: active generated STEP, five production STL files, one right-side fit-coupon STL, parameters, and previews. The alignment-key STL is printed twice.
+- `build/v2/`: active generated STEP, five production STL files, right-side and button fit-coupon STLs, parameters, and previews. The alignment-key STL is printed twice.
 - `build/v1/`: preserved generated V1 artifacts; do not hand-edit either build directory.
 - `reference/tablet/tinker.obj`: user-supplied tablet reference mesh; preserve it unchanged.
 

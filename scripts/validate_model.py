@@ -64,6 +64,11 @@ def main() -> None:
     assert metadata["usb_c"]["rear_turn_open_rectangle"] == {"x": 8.0, "y": 16.0}
     assert metadata["usb_c"]["braided_cable_diameter"] == 3.45
     assert metadata["usb_c"]["braided_channel_id"] > metadata["usb_c"]["braided_cable_diameter"]
+    assert metadata["buttons"]["group_start_from_top_left"] == 20.0
+    assert metadata["buttons"]["group_end_from_top_left"] == 60.0
+    assert metadata["buttons"]["width_across_tablet_thickness"] == 2.0
+    assert metadata["buttons"]["protrusion_from_tablet_edge"] == 1.0
+    assert metadata["buttons"]["channel_open_to_slide_in_end"] is True
 
     # Check the right-side concept in its unrotated construction plane: the
     # outer end and full-depth screen-facing cap are continuous, its rear turn
@@ -90,6 +95,29 @@ def main() -> None:
             model.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0,
             -model.BASE_T / 2.0,
         )
+    )
+    top_wall_y = (model.TABLET_Y + model.FIT_Y) / 2.0 + model.WALL_T / 2.0
+    button_center_z = model.TABLET_Z / 2.0
+    seated_button_start_x = -model.TABLET_X / 2.0 + model.BUTTON_GROUP_START_FROM_LEFT
+    seated_button_end_x = -model.TABLET_X / 2.0 + model.BUTTON_GROUP_END_FROM_LEFT
+    for button_x in (seated_button_start_x, seated_button_end_x):
+        assert not flat_holder.isInside(cq.Vector(button_x, top_wall_y, button_center_z))
+    assert not flat_holder.isInside(
+        cq.Vector(
+            -(model.TABLET_X + model.FIT_X + 2.0 * model.WALL_T) / 2.0 + 0.5,
+            top_wall_y,
+            button_center_z,
+        )
+    )
+    assert flat_holder.isInside(
+        cq.Vector(model.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_y, button_center_z)
+    )
+    assert flat_holder.isInside(
+        cq.Vector(seated_button_start_x, top_wall_y, model.BUTTON_CHANNEL_Z0 - 0.5)
+    )
+    print(
+        "top button channel open from slide-in end through 5 mm beyond the "
+        "20-60 mm seated button group"
     )
     clip_x = model.REAR_CLIP_X[-1]
     assert not flat_holder.isInside(cq.Vector(clip_x, 0.0, model.REAR_CLIP_CENTER_Z))

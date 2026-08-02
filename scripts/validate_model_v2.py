@@ -29,6 +29,7 @@ REQUIRED = (
     "tablet_stand_v2_end_stop.stl",
     "tablet_stand_v2_alignment_key_print_2.stl",
     "tablet_stand_v2_right_fit_coupon.stl",
+    "tablet_stand_v2_button_fit_coupon.stl",
 )
 
 
@@ -70,7 +71,13 @@ def main() -> None:
     assert metadata["joints"]["cradle_to_bracket"]["method"] == "adhesive bond"
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
+    assert metadata["button_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {"x": 8.0, "y": 16.0}
+    assert metadata["buttons"]["group_start_from_top_left"] == 20.0
+    assert metadata["buttons"]["group_end_from_top_left"] == 60.0
+    assert metadata["buttons"]["width_across_tablet_thickness"] == 2.0
+    assert metadata["buttons"]["protrusion_from_tablet_edge"] == 1.0
+    assert metadata["buttons"]["channel_open_to_slide_in_end"] is True
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -235,6 +242,45 @@ def main() -> None:
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
         f"{coupon_bb.zlen:.2f} mm; open cable rectangle="
         f"{v1.USB_REAR_TURN_SLOT_Y:.1f} x {v1.USB_REAR_TURN_SLOT_X:.1f} mm"
+    )
+
+    # The top-left coupon is a literal crop of the production rail. Its slot
+    # remains open at the slide-in end, clears the entire measured seated
+    # button group, and ends in intact wall after the 5 mm overrun.
+    button_coupon = model.button_fit_coupon().val()
+    button_coupon_bb = button_coupon.BoundingBox()
+    assert abs(button_coupon_bb.xmin - model.BUTTON_FIT_COUPON_X_MIN) < 1e-6
+    assert abs(button_coupon_bb.xmax - model.BUTTON_FIT_COUPON_X_MAX) < 1e-6
+    assert abs(button_coupon_bb.ymin - model.BUTTON_FIT_COUPON_Y_MIN) < 1e-6
+    top_wall_y = (v1.TABLET_Y + v1.FIT_Y) / 2.0 + v1.WALL_T / 2.0
+    button_center_z = v1.TABLET_Z / 2.0
+    seated_button_start_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_START_FROM_LEFT
+    seated_button_end_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_END_FROM_LEFT
+    assert_open(
+        button_coupon,
+        (model.BUTTON_FIT_COUPON_X_MIN + 0.5, top_wall_y, button_center_z),
+        "button channel is not open at the slide-in end",
+    )
+    for button_x in (seated_button_start_x, seated_button_end_x):
+        assert_open(
+            button_coupon,
+            (button_x, top_wall_y, button_center_z),
+            "button channel obstructs the measured seated button group",
+        )
+    assert_solid(
+        button_coupon,
+        (v1.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_y, button_center_z),
+        "button coupon does not retain wall beyond the relief",
+    )
+    assert_solid(
+        button_coupon,
+        (seated_button_start_x, top_wall_y, v1.BUTTON_CHANNEL_Z0 - 0.5),
+        "button channel removes the lower rail wall",
+    )
+    print(
+        "button fit coupon is an exact top-rail crop; "
+        f"envelope={button_coupon_bb.xlen:.2f} x {button_coupon_bb.ylen:.2f} x "
+        f"{button_coupon_bb.zlen:.2f} mm; channel height={v1.BUTTON_CHANNEL_Z:.1f} mm"
     )
 
     # Preserve the user-tested tube path and seating cap.

@@ -113,6 +113,15 @@ RIGHT_FIT_COUPON_X_MAX = (
     + v1.USB_END_WALL_T
 )
 
+# Small exact crop of the production top rail for verifying the measured
+# power/volume-button slide-through channel before committing to the cradle.
+BUTTON_FIT_COUPON_X_MIN = -(
+    v1.TABLET_X + v1.FIT_X + 2.0 * v1.WALL_T
+) / 2.0
+BUTTON_FIT_COUPON_X_MAX = v1.BUTTON_CHANNEL_FINAL_X + 5.0
+BUTTON_FIT_COUPON_Y_MIN = (v1.TABLET_Y + v1.FIT_Y) / 2.0 - 8.0
+BUTTON_FIT_COUPON_Y_MAX = v1.HOLDER_OUTER_Y / 2.0
+
 
 # ============================================================
 # GEOMETRY HELPERS
@@ -425,6 +434,29 @@ def right_fit_coupon_print() -> cq.Workplane:
     return shift_to_bed(right_fit_coupon())
 
 
+def button_fit_coupon() -> cq.Workplane:
+    """Exact top-left rail crop for button-path and seated-clearance testing."""
+    width = BUTTON_FIT_COUPON_X_MAX - BUTTON_FIT_COUPON_X_MIN
+    depth = BUTTON_FIT_COUPON_Y_MAX - BUTTON_FIT_COUPON_Y_MIN
+    cutter = (
+        cq.Workplane("XY")
+        .box(width, depth, 30.0)
+        .translate(
+            (
+                (BUTTON_FIT_COUPON_X_MIN + BUTTON_FIT_COUPON_X_MAX) / 2.0,
+                (BUTTON_FIT_COUPON_Y_MIN + BUTTON_FIT_COUPON_Y_MAX) / 2.0,
+                4.0,
+            )
+        )
+    )
+    return flat_cradle().intersect(cutter)
+
+
+def button_fit_coupon_print() -> cq.Workplane:
+    """Return the button coupon on the production cradle's rear-face datum."""
+    return shift_to_bed(button_fit_coupon())
+
+
 def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Workplane]:
     """Return cradle, rear bracket, sleeve, and end stop in assembly position."""
     cradle = flat_cradle().rotate(
@@ -486,6 +518,7 @@ def export() -> None:
         "tablet_stand_v2_end_stop.stl": stop,
         "tablet_stand_v2_alignment_key_print_2.stl": key,
         "tablet_stand_v2_right_fit_coupon.stl": right_fit_coupon_print(),
+        "tablet_stand_v2_button_fit_coupon.stl": button_fit_coupon_print(),
     }
     for filename, part in exports.items():
         cq.exporters.export(
@@ -545,6 +578,9 @@ def export() -> None:
             "right_fit_coupon": (
                 "rear face on bed; exact 33.5 mm crop of production cradle right end"
             ),
+            "button_fit_coupon": (
+                "rear face on bed; exact top-left production rail crop"
+            ),
         },
         "right_fit_coupon": {
             "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
@@ -552,6 +588,25 @@ def export() -> None:
             "x_max": RIGHT_FIT_COUPON_X_MAX,
             "width": RIGHT_FIT_COUPON_X_MAX - RIGHT_FIT_COUPON_X_MIN,
             "uses_exact_cradle_geometry": True,
+        },
+        "button_fit_coupon": {
+            "purpose": "verify button slide-through path and seated clearance",
+            "x_min": BUTTON_FIT_COUPON_X_MIN,
+            "x_max": BUTTON_FIT_COUPON_X_MAX,
+            "y_min": BUTTON_FIT_COUPON_Y_MIN,
+            "y_max": BUTTON_FIT_COUPON_Y_MAX,
+            "uses_exact_cradle_geometry": True,
+        },
+        "buttons": {
+            "edge": "landscape top",
+            "group_start_from_top_left": v1.BUTTON_GROUP_START_FROM_LEFT,
+            "group_end_from_top_left": v1.BUTTON_GROUP_END_FROM_LEFT,
+            "width_across_tablet_thickness": v1.BUTTON_WIDTH_Z,
+            "protrusion_from_tablet_edge": v1.BUTTON_PROTRUSION_Y,
+            "channel_z_clearance_each_side": v1.BUTTON_CHANNEL_Z_CLEARANCE,
+            "channel_height": v1.BUTTON_CHANNEL_Z,
+            "channel_end_clearance": v1.BUTTON_CHANNEL_END_CLEARANCE_X,
+            "channel_open_to_slide_in_end": True,
         },
         "joints": {
             "end_stop": {

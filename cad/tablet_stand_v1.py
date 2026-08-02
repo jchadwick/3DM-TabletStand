@@ -53,6 +53,25 @@ HOLDER_BOTTOM_Z = (
     - BASE_T * math.cos(math.radians(SCREEN_ANGLE_FROM_HORIZONTAL_DEG))
 )
 
+# User-measured power/volume group on the landscape top edge. Distances run
+# rightward from the tablet's top-left corner. The buttons project outward from
+# the long edge and are centered across the tablet's 8.4 mm thickness.
+BUTTON_GROUP_START_FROM_LEFT = 20.0
+BUTTON_GROUP_END_FROM_LEFT = 60.0
+BUTTON_WIDTH_Z = 2.0
+BUTTON_PROTRUSION_Y = 1.0
+BUTTON_CHANNEL_Z_CLEARANCE = 0.5
+BUTTON_CHANNEL_END_CLEARANCE_X = 5.0
+BUTTON_CHANNEL_FINAL_X = (
+    -TABLET_X / 2.0
+    + BUTTON_GROUP_END_FROM_LEFT
+    + BUTTON_CHANNEL_END_CLEARANCE_X
+)
+BUTTON_CHANNEL_Z0 = (
+    (TABLET_Z - BUTTON_WIDTH_Z) / 2.0 - BUTTON_CHANNEL_Z_CLEARANCE
+)
+BUTTON_CHANNEL_Z = BUTTON_WIDTH_Z + 2.0 * BUTTON_CHANNEL_Z_CLEARANCE
+
 # USB-C plug pocket and rear-hidden cable route.
 USB_PLUG_PROJECTION = 6.50
 USB_POCKET_X_CLEARANCE = 1.50
@@ -165,6 +184,28 @@ def flat_main_holder(
             (rail_center_x, lip_y, 0)
         )
         main = main.union(wall).union(lip)
+
+    # Open the top-rail wall at button height from the slide-in entrance all
+    # the way past the final seated button position. This gives the buttons an
+    # unobstructed insertion path as well as 5 mm of clearance beyond the
+    # measured 20-60 mm group. The screen-facing lip above the slot remains
+    # continuous and still retains the tablet.
+    button_channel_x0 = rail_left_x - 0.2
+    button_channel_x = BUTTON_CHANNEL_FINAL_X - button_channel_x0
+    button_channel = (
+        cq.Workplane("XY")
+        .workplane(offset=BUTTON_CHANNEL_Z0)
+        .rect(button_channel_x, WALL_T + 0.4)
+        .extrude(BUTTON_CHANNEL_Z)
+        .translate(
+            (
+                (button_channel_x0 + BUTTON_CHANNEL_FINAL_X) / 2.0,
+                cavity_y / 2.0 + WALL_T / 2.0,
+                0.0,
+            )
+        )
+    )
+    main = main.cut(button_channel)
 
     # A continuous, full-depth screen-facing cap covers the complete right side
     # from the tablet edge to the solid outer USB-C wall. Behind it, two
@@ -400,6 +441,16 @@ def export() -> None:
         },
         "retention": "left slide-in; one M3 screw end stop",
         "right_edge": "solid outer wall with continuous full-depth screen-facing cap",
+        "buttons": {
+            "edge": "landscape top",
+            "group_start_from_top_left": BUTTON_GROUP_START_FROM_LEFT,
+            "group_end_from_top_left": BUTTON_GROUP_END_FROM_LEFT,
+            "width_across_tablet_thickness": BUTTON_WIDTH_Z,
+            "protrusion_from_tablet_edge": BUTTON_PROTRUSION_Y,
+            "channel_z_clearance_each_side": BUTTON_CHANNEL_Z_CLEARANCE,
+            "channel_end_clearance": BUTTON_CHANNEL_END_CLEARANCE_X,
+            "channel_open_to_slide_in_end": True,
+        },
         "usb_c": {
             "side": "right",
             "position": "center",

@@ -28,7 +28,8 @@
     "sleeve": "flange on bed; tube-entry bore open upward",
     "end_stop": "screen-facing lip/top face on bed",
     "alignment_key": "flat on bed; print two identical copies",
-    "right_fit_coupon": "rear face on bed; exact 33.5 mm crop of production cradle right end"
+    "right_fit_coupon": "rear face on bed; exact 33.5 mm crop of production cradle right end",
+    "button_fit_coupon": "rear face on bed; exact top-left production rail crop"
   },
   "right_fit_coupon": {
     "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
@@ -36,6 +37,25 @@
     "x_max": 111.5,
     "width": 33.5,
     "uses_exact_cradle_geometry": true
+  },
+  "button_fit_coupon": {
+    "purpose": "verify button slide-through path and seated clearance",
+    "x_min": -103.5,
+    "x_max": -30.0,
+    "y_min": 54.0,
+    "y_max": 65.0,
+    "uses_exact_cradle_geometry": true
+  },
+  "buttons": {
+    "edge": "landscape top",
+    "group_start_from_top_left": 20.0,
+    "group_end_from_top_left": 60.0,
+    "width_across_tablet_thickness": 2.0,
+    "protrusion_from_tablet_edge": 1.0,
+    "channel_z_clearance_each_side": 0.5,
+    "channel_height": 3.0,
+    "channel_end_clearance": 5.0,
+    "channel_open_to_slide_in_end": true
   },
   "joints": {
     "end_stop": {
