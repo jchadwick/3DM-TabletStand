@@ -157,7 +157,7 @@ def coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
 
 
 def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
-    labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN CABLE NOTCH")
+    labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 8 MM RECTANGLE")
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
     for index, (path, label) in enumerate(zip(paths, labels, strict=True)):

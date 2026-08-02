@@ -63,14 +63,14 @@ def main() -> None:
     metadata = json.loads((BUILD / "model_parameters.json").read_text())
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["tube"]["engagement"] == 51.0
-    assert metadata["fit_allowance_total"] == {"x": 1.0, "y": 0.0, "z": 0.0}
+    assert metadata["fit_allowance_total"] == {"x": 1.0, "y": 1.0, "z": 0.8}
     assert metadata["alignment_key"]["quantity"] == 2
     assert metadata["alignment_key"]["total_clearance_width"] >= 1.0
     assert metadata["alignment_key"]["total_clearance_thickness"] >= 0.4
     assert metadata["joints"]["cradle_to_bracket"]["method"] == "adhesive bond"
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
-    assert metadata["cable"]["usb_rear_turn_open_notch"] == {"x": 6.0, "y": 8.5}
+    assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {"x": 8.0, "y": 16.0}
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -212,10 +212,6 @@ def main() -> None:
     assert abs(coupon_bb.xmax - model.RIGHT_FIT_COUPON_X_MAX) < 1e-6
     assert abs(coupon_bb.ylen - v1.HOLDER_OUTER_Y) < 1e-6
     assert_open(coupon, (90.0, 0.0, 4.0), "coupon tablet cavity obstructed")
-    assert_open(coupon, (90.0, v1.TABLET_Y / 2.0 - 0.25, 4.0), "coupon Y cavity too tight")
-    assert_solid(coupon, (90.0, v1.TABLET_Y / 2.0 + 0.25, 4.0), "coupon Y rail too loose")
-    assert_open(coupon, (90.0, v1.TABLET_Y / 2.0 - 1.0, v1.TABLET_Z - 0.2), "coupon Z cavity too tight")
-    assert_solid(coupon, (90.0, v1.TABLET_Y / 2.0 - 1.0, v1.TABLET_Z + 0.2), "coupon Z lip too loose")
     assert_open(coupon, (104.0, 0.0, 4.0), "coupon USB-C pocket obstructed")
     assert_solid(coupon, (110.0, 0.0, 4.0), "coupon outer USB-C wall missing")
     assert_open(
@@ -223,22 +219,22 @@ def main() -> None:
         (v1.TABLET_X / 2.0 + v1.USB_PLUG_PROJECTION, 0.0, -1.5),
         "coupon rear-turn slot missing",
     )
-    notch_entry_x = (v1.TABLET_X + v1.FIT_X) / 2.0 + 0.5
+    rectangle_entry_x = (v1.TABLET_X + v1.FIT_X) / 2.0 + 0.5
     assert_open(
         coupon,
-        (notch_entry_x, 0.0, -1.5),
-        "coupon cable notch is not open to tablet cavity",
+        (rectangle_entry_x, 0.0, -1.5),
+        "coupon cable rectangle is not open to tablet cavity",
     )
     assert_solid(
         coupon,
-        (notch_entry_x, v1.USB_REAR_TURN_NOTCH_Y / 2.0 + 1.0, -1.5),
-        "coupon cable notch removes excess pocket floor",
+        (rectangle_entry_x, v1.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, -1.5),
+        "coupon cable rectangle removes excess pocket floor",
     )
     print(
         "right fit coupon is an exact cradle crop; "
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
-        f"{coupon_bb.zlen:.2f} mm; cable notch="
-        f"{v1.USB_REAR_TURN_NOTCH_Y:.1f} x {v1.USB_REAR_TURN_NOTCH_X:.1f} mm"
+        f"{coupon_bb.zlen:.2f} mm; open cable rectangle="
+        f"{v1.USB_REAR_TURN_SLOT_Y:.1f} x {v1.USB_REAR_TURN_SLOT_X:.1f} mm"
     )
 
     # Preserve the user-tested tube path and seating cap.

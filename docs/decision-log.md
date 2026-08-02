@@ -54,6 +54,14 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Restore rail allowances and simplify cable opening — 2026-08-02
+
+- The second physical fit test showed that removing the Y/Z allowances was the wrong direction. Restored the original 1.0 mm total X/Y and 0.8 mm Z tablet allowances.
+- The cable still could not pass through the T-shaped combination of a 3 × 16 mm slot and 6 × 8.5 mm notch because the original narrow section would not accept the cable's thick portion.
+- Replaced the complete T-shaped opening with one rectangular opening that retains the original 16 mm width and spans the full 8 mm pocket depth from the tablet cavity to the outer wall.
+- Confirmed that the current top long-edge rail is continuous: it does not yet have a power/volume-button slide-through channel or extra seated-button relief at the landscape top-left. Button-group positions, protrusion, and requested extra clearance are required before adding those features.
+- Regenerated and validated the PLA right-side fit-test G-code at 0.20 mm layers, three walls, 20% infill, and no supports. It estimates 1 h 25 min and 18.6 g and was not started.
+
 ### Tightened tablet rail fit on both tested axes — 2026-08-02
 
 - The user confirmed that the first PLA right-side coupon was loose both between the two long-edge rails and front-to-back under the retaining lips.
@@ -62,7 +70,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Started the second PLA right-side test piece after a fresh camera check showed the complete build plate clearly empty. It uses the established 0.20 mm, three-wall, 20% grid, support-free process and is estimated at 1 h 23 min and 18.0 g.
 - This is intentionally a physical-test-driven nominal fit; verify that the second PLA coupon slides without force before committing to the full cradle.
 
-### Open cable-body notch from physical coupon test — 2026-08-02
+### Open cable-body notch from physical coupon test — 2026-08-02 (superseded)
 
 - The user reported that the first PLA right-side coupon fit the tablet reasonably well but the attached right-angle USB-C cable body could not enter the closed rear-turn slot.
 - The user's physical test and photo establish an 8.5 × 6 mm required notch. The active design now opens that measured Y × X notch from the tablet cavity into the existing 3 × 16 mm rear pigtail slot.

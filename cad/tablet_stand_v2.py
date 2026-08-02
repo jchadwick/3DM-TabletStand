@@ -591,13 +591,9 @@ def export() -> None:
             "bracket_clip_x": BRACKET_CLIP_X,
             "sleeve_channel_id": v1.BRAIDED_CHANNEL_ID,
             "sleeve_channel_slot": v1.BRAIDED_CHANNEL_SLOT,
-            "usb_rear_turn_slot": {
+            "usb_rear_turn_open_rectangle": {
                 "x": v1.USB_REAR_TURN_SLOT_X,
                 "y": v1.USB_REAR_TURN_SLOT_Y,
-            },
-            "usb_rear_turn_open_notch": {
-                "x": v1.USB_REAR_TURN_NOTCH_X,
-                "y": v1.USB_REAR_TURN_NOTCH_Y,
             },
         },
     }

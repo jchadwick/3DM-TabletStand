@@ -7,8 +7,8 @@
   },
   "fit_allowance_total": {
     "x": 1.0,
-    "y": 0.0,
-    "z": 0.0
+    "y": 1.0,
+    "z": 0.8
   },
   "tilt_degrees_from_vertical": 10.0,
   "screen_angle_degrees_above_horizontal": 80.0,
@@ -35,13 +35,9 @@
     "right_angle_pigtail_length": 51.4,
     "flat_cable_thickness": 0.6,
     "downstream_connector_body_marked_dimension": 9.6,
-    "rear_turn_slot": {
-      "x": 3.0,
+    "rear_turn_open_rectangle": {
+      "x": 8.0,
       "y": 16.0
-    },
-    "rear_turn_open_notch": {
-      "x": 6.0,
-      "y": 8.5
     },
     "braided_cable_diameter": 3.45,
     "braided_channel_id": 4.15,

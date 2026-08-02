@@ -28,12 +28,8 @@ TABLET_X = 200.0
 TABLET_Y = 123.0
 TABLET_Z = 8.4
 FIT_X = 1.0
-# Physical PLA right-side coupon test: the original Y and Z allowances were
-# loose by about 1 mm in both directions. Preserve the 1.0 mm X allowance for
-# insertion/end-stop tolerance, but use the measured tablet envelope directly
-# between the long-edge rails and retaining lips.
-FIT_Y = 0.0
-FIT_Z = 0.0
+FIT_Y = 1.0
+FIT_Z = 0.8
 TILT_FROM_VERTICAL_DEG = 10.0
 SCREEN_ANGLE_FROM_HORIZONTAL_DEG = 90.0 - TILT_FROM_VERTICAL_DEG
 
@@ -51,9 +47,7 @@ RIGHT_STOP_SPAN = 25.0
 CENTER_PLATE_X = 74.0
 CENTER_PLATE_Y = 64.0
 SPINE_W = 12.0
-# Preserve the proven 130 mm outer holder span and its sleeve-bottom alignment
-# while tightening only the internal rail cavity.
-HOLDER_OUTER_Y = 130.0
+HOLDER_OUTER_Y = TABLET_Y + FIT_Y + 2.0 * WALL_T
 HOLDER_BOTTOM_Z = (
     -HOLDER_OUTER_Y / 2.0 * math.sin(math.radians(SCREEN_ANGLE_FROM_HORIZONTAL_DEG))
     - BASE_T * math.cos(math.radians(SCREEN_ANGLE_FROM_HORIZONTAL_DEG))
@@ -66,13 +60,11 @@ USB_POCKET_INNER_X = USB_PLUG_PROJECTION + USB_POCKET_X_CLEARANCE
 USB_POCKET_Y = 30.0
 USB_END_WALL_T = 3.0
 USB_POCKET_CEILING_T = 2.0
-USB_REAR_TURN_SLOT_X = 3.0
+# Physical cable tests superseded the earlier T-shaped 3 x 16 mm slot plus
+# 6 x 8.5 mm entry notch. Use one open rectangle spanning the full 16 mm
+# pocket width and the complete 8 mm pocket depth from cavity to outer wall.
+USB_REAR_TURN_SLOT_X = 8.0
 USB_REAR_TURN_SLOT_Y = 16.0
-# Physical coupon test: the attached right-angle cable body cannot enter the
-# closed rear slot laterally. This measured notch opens the slot to the tablet
-# cavity without removing the slot's wider flat-pigtail clearance.
-USB_REAR_TURN_NOTCH_X = 6.0
-USB_REAR_TURN_NOTCH_Y = 8.5
 RIGHT_ANGLE_PIGTAIL_LENGTH = 51.4
 RIGHT_ANGLE_FLAT_T = 0.6
 DOWNSTREAM_CONNECTOR_BODY = 9.6
@@ -137,7 +129,6 @@ def flat_main_holder(
     cavity_y = TABLET_Y + FIT_Y
     outer_x = cavity_x + 2.0 * WALL_T
     outer_y = HOLDER_OUTER_Y
-    rail_wall_t = (outer_y - cavity_y) / 2.0
     rail_top = TABLET_Z + FIT_Z + LIP_T
 
     # Open-backed perimeter with a central plate and four connecting spokes.
@@ -165,8 +156,8 @@ def flat_main_holder(
     rail_x = usb_outer_x - rail_left_x
     rail_center_x = (usb_outer_x + rail_left_x) / 2.0
     for sign in (-1.0, 1.0):
-        wall_y = sign * (cavity_y / 2.0 + rail_wall_t / 2.0)
-        wall = rounded_plate(rail_x, rail_wall_t, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(
+        wall_y = sign * (cavity_y / 2.0 + WALL_T / 2.0)
+        wall = rounded_plate(rail_x, WALL_T, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(
             (rail_center_x, wall_y, 0)
         )
         lip_y = sign * (cavity_y / 2.0 - LIP_OVERLAP / 2.0)
@@ -207,26 +198,20 @@ def flat_main_holder(
     rear_turn_slot = (
         cq.Workplane("XY")
         .box(USB_REAR_TURN_SLOT_X, USB_REAR_TURN_SLOT_Y, BASE_T + 2.0)
-        .translate((TABLET_X / 2.0 + USB_PLUG_PROJECTION, 0, -BASE_T / 2.0))
-    )
-    rear_turn_notch = (
-        cq.Workplane("XY")
-        .box(USB_REAR_TURN_NOTCH_X, USB_REAR_TURN_NOTCH_Y, BASE_T + 2.0)
         .translate(
             (
-                cavity_x / 2.0 + USB_REAR_TURN_NOTCH_X / 2.0,
+                cavity_x / 2.0 + USB_REAR_TURN_SLOT_X / 2.0,
                 0.0,
                 -BASE_T / 2.0,
             )
         )
     )
-    # Cut after unioning so the open notch also clears the cradle perimeter
-    # material that overlaps the tablet-side edge of the pocket floor.
+    # Cut after unioning so the open rectangle also clears the cradle perimeter
+    # material overlapping the tablet-side edge of the pocket floor.
     main = (
         main.union(cable_floor)
         .union(usb_end_wall)
         .cut(rear_turn_slot)
-        .cut(rear_turn_notch)
     )
 
     if include_rear_clips:
@@ -266,7 +251,7 @@ def flat_main_holder(
 def flat_end_stop(include_screw_pad: bool = True) -> cq.Workplane:
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
-    outer_y = HOLDER_OUTER_Y
+    outer_y = cavity_y + 2.0 * WALL_T
     rail_top = TABLET_Z + FIT_Z + LIP_T
     wall_h = BASE_T + rail_top
     stop_x = -cavity_x / 2.0 - WALL_T / 2.0
@@ -423,10 +408,9 @@ def export() -> None:
             "right_angle_pigtail_length": RIGHT_ANGLE_PIGTAIL_LENGTH,
             "flat_cable_thickness": RIGHT_ANGLE_FLAT_T,
             "downstream_connector_body_marked_dimension": DOWNSTREAM_CONNECTOR_BODY,
-            "rear_turn_slot": {"x": USB_REAR_TURN_SLOT_X, "y": USB_REAR_TURN_SLOT_Y},
-            "rear_turn_open_notch": {
-                "x": USB_REAR_TURN_NOTCH_X,
-                "y": USB_REAR_TURN_NOTCH_Y,
+            "rear_turn_open_rectangle": {
+                "x": USB_REAR_TURN_SLOT_X,
+                "y": USB_REAR_TURN_SLOT_Y,
             },
             "braided_cable_diameter": BRAIDED_CABLE_D,
             "braided_channel_id": BRAIDED_CHANNEL_ID,

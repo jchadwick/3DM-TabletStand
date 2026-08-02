@@ -19,7 +19,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Item | Active value / decision |
 |---|---|
 | Tablet | 2024 onn. 8-inch; supplied OBJ envelope is **200 × 123 × 8.4 mm** |
-| Tablet fit | **1.0 mm total X allowance; 0.0 mm nominal Y/Z allowance** after the physical PLA coupon was loose on both rail axes; preserve the 130 mm outside holder span |
+| Tablet fit | **1.0 mm total X/Y allowance; 0.8 mm Z allowance** — restored after the zero-nominal Y/Z physical test proved too tight |
 | Orientation | Landscape; screen faces the user |
 | Screen tilt | **10° back from vertical / 80° above horizontal** — not 10° above horizontal |
 | Edge direction | Bottom long edge is lower and closer to user; top long edge is higher and farther away |
@@ -29,7 +29,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Sleeve vertical alignment | Sleeve/collet bottom is level with the holder's lower long edge at **Z = -64.53 mm**; rear assembly is 14.53 mm below its prior position |
 | Tablet retention | Left-side slide-in through narrow long-edge rails; removable left end stop retained by one local-Z M3 screw outside the tablet cavity; right edge has a continuous full-depth screen-facing cap and solid outer wall |
-| USB-C | Center of right short edge from the front; the right-angle adapter enters through a user-measured 8.5 × 6 mm open notch in the rear pocket floor and turns immediately behind the tablet rather than exiting straight out to the right |
+| USB-C | Center of right short edge from the front; one **16 mm wide × 8 mm deep** open rectangle replaces the undersized T-shaped rear-floor opening and spans from tablet cavity to outer wall |
 | Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
 | Clip-to-channel route | Preserve the clips; the free cable span drops outside the right gusset, sweeps behind the sleeve, and enters the channel through its rear opening—never route previewed cable through solids |
@@ -38,6 +38,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
+| Button clearance | The top long-edge rail is currently continuous and has no button channel; do not print the full cradle until the power/volume group positions, protrusion, slide-through path, and extra landscape-top-left seated clearance are measured and modeled |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
 | Current status | Version 2 is the active support-minimized, geometrically validated concept; a right-side rail/USB-C production-geometry coupon is ready for physical PLA testing before the full cradle |
