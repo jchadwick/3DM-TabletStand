@@ -7,8 +7,8 @@
   },
   "fit_allowance_total": {
     "x": 1.0,
-    "y": 1.0,
-    "z": 0.8
+    "y": 0.0,
+    "z": 0.0
   },
   "tilt_degrees_from_vertical": 10.0,
   "screen_angle_degrees_above_horizontal": 80.0,

@@ -63,6 +63,7 @@ def main() -> None:
     metadata = json.loads((BUILD / "model_parameters.json").read_text())
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["tube"]["engagement"] == 51.0
+    assert metadata["fit_allowance_total"] == {"x": 1.0, "y": 0.0, "z": 0.0}
     assert metadata["alignment_key"]["quantity"] == 2
     assert metadata["alignment_key"]["total_clearance_width"] >= 1.0
     assert metadata["alignment_key"]["total_clearance_thickness"] >= 0.4
@@ -82,6 +83,7 @@ def main() -> None:
     # cable clips nor the V1 end-stop lug may protrude behind it.
     assert abs(cradle_flat.BoundingBox().zmin + v1.BASE_T) < 1e-6
     assert cradle_flat.BoundingBox().xlen <= 216.1
+    assert abs(cradle_flat.BoundingBox().ylen - 137.5) < 1e-6
     print(
         "cradle rear datum clear; "
         f"flat envelope={cradle_flat.BoundingBox().xlen:.2f} x "
@@ -210,6 +212,10 @@ def main() -> None:
     assert abs(coupon_bb.xmax - model.RIGHT_FIT_COUPON_X_MAX) < 1e-6
     assert abs(coupon_bb.ylen - v1.HOLDER_OUTER_Y) < 1e-6
     assert_open(coupon, (90.0, 0.0, 4.0), "coupon tablet cavity obstructed")
+    assert_open(coupon, (90.0, v1.TABLET_Y / 2.0 - 0.25, 4.0), "coupon Y cavity too tight")
+    assert_solid(coupon, (90.0, v1.TABLET_Y / 2.0 + 0.25, 4.0), "coupon Y rail too loose")
+    assert_open(coupon, (90.0, v1.TABLET_Y / 2.0 - 1.0, v1.TABLET_Z - 0.2), "coupon Z cavity too tight")
+    assert_solid(coupon, (90.0, v1.TABLET_Y / 2.0 - 1.0, v1.TABLET_Z + 0.2), "coupon Z lip too loose")
     assert_open(coupon, (104.0, 0.0, 4.0), "coupon USB-C pocket obstructed")
     assert_solid(coupon, (110.0, 0.0, 4.0), "coupon outer USB-C wall missing")
     assert_open(

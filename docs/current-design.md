@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. A right-side production-geometry coupon is provided to test the rails and USB-C route before printing the full cradle.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. A right-side production-geometry fit-test piece (often called a coupon) is provided to test the rails and USB-C route before printing the full cradle.
 
 ## Orientation and coordinates
 
@@ -15,7 +15,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Feature | Value | Status |
 |---|---:|---|
 | Tablet envelope | 200 × 123 × 8.4 mm | Measured from supplied OBJ |
-| Tablet allowance | 1.0 mm total in X/Y; 0.8 mm in Z | V1 design value; requires coupon |
+| Tablet allowance | 1.0 mm total in X; 0.0 mm nominal in Y/Z | Physical PLA coupon test: retain insertion/end-stop tolerance but tighten both loose rail axes to the measured tablet envelope |
 | Existing tube | 32.0 mm OD | User measurement |
 | Sleeve ID | 32.2 mm | User fit-tested; preserve |
 | Sleeve OD / wall | 40.2 mm / 4.0 mm | V1 design value |
@@ -40,7 +40,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
 | V2 end-stop screw | One M3, vertical local axis outside tablet cavity | Replaces V1 rear-projecting lug; exact length still unconfirmed |
-| Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests both rails, right-edge seating, USB-C pocket, and rear turn |
+| Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests zero-nominal Y/Z rail fit, right-edge seating, USB-C pocket, open notch, and rear turn |
 
 ## Functional design
 

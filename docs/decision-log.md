@@ -54,13 +54,21 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Tightened tablet rail fit on both tested axes — 2026-08-02
+
+- The user confirmed that the first PLA right-side coupon was loose both between the two long-edge rails and front-to-back under the retaining lips.
+- Reduced total Y allowance from 1.0 mm to 0.0 mm and Z allowance from 0.8 mm to 0.0 mm, using the measured 123 × 8.4 mm tablet envelope directly on both tested rail axes. Preserved the 1.0 mm total X allowance for slide-in length and end-stop tolerance.
+- Kept the holder's 130 mm outer Y span fixed. Each long-edge wall grows inward by 0.5 mm, avoiding any change to the outside frame, Z = -64.53 mm lower-edge/sleeve alignment, or already-printed rear bracket and sleeve.
+- Started the second PLA right-side test piece after a fresh camera check showed the complete build plate clearly empty. It uses the established 0.20 mm, three-wall, 20% grid, support-free process and is estimated at 1 h 23 min and 18.0 g.
+- This is intentionally a physical-test-driven nominal fit; verify that the second PLA coupon slides without force before committing to the full cradle.
+
 ### Open cable-body notch from physical coupon test — 2026-08-02
 
 - The user reported that the first PLA right-side coupon fit the tablet reasonably well but the attached right-angle USB-C cable body could not enter the closed rear-turn slot.
 - The user's physical test and photo establish an 8.5 × 6 mm required notch. The active design now opens that measured Y × X notch from the tablet cavity into the existing 3 × 16 mm rear pigtail slot.
 - Preserved the continuous screen-facing cap, solid outer USB-C wall, 8.0 mm-clear plug pocket, and existing broad flat-pigtail slot. The new notch is confined to the rear pocket floor and provides a lateral installation path for the attached cable.
 - Regenerated the PLA coupon G-code with the established 0.20 mm, three-wall, 20% infill, support-free process. The revised validated job estimates 1 h 25 min and 18.7 g; it was prepared but not started.
-- The user also reported that tablet retention is slightly loose by about 1 mm; the fit axis must be confirmed before changing the active allowance.
+- The user also reported that tablet retention was slightly loose by about 1 mm on both rail axes; the subsequent fit revision supersedes the original Y/Z allowances.
 
 ### Right-side tablet and USB-C fit coupon — 2026-08-02
 

@@ -19,6 +19,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Item | Active value / decision |
 |---|---|
 | Tablet | 2024 onn. 8-inch; supplied OBJ envelope is **200 × 123 × 8.4 mm** |
+| Tablet fit | **1.0 mm total X allowance; 0.0 mm nominal Y/Z allowance** after the physical PLA coupon was loose on both rail axes; preserve the 130 mm outside holder span |
 | Orientation | Landscape; screen faces the user |
 | Screen tilt | **10° back from vertical / 80° above horizontal** — not 10° above horizontal |
 | Edge direction | Bottom long edge is lower and closer to user; top long edge is higher and farther away |

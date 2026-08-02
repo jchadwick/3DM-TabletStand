@@ -58,6 +58,7 @@ def main() -> None:
     metadata = json.loads((BUILD / "model_parameters.json").read_text())
     assert metadata["tilt_degrees_from_vertical"] == 10.0
     assert metadata["screen_angle_degrees_above_horizontal"] == 80.0
+    assert metadata["fit_allowance_total"] == {"x": 1.0, "y": 0.0, "z": 0.0}
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["usb_c"]["plug_projection"] == 6.5
     assert metadata["usb_c"]["rear_turn_open_notch"] == {"x": 6.0, "y": 8.5}
@@ -69,6 +70,7 @@ def main() -> None:
     # slot is open, and the plug chamber plus supporting floor remain
     # clear/solid where expected.
     flat_holder = model.flat_main_holder().val()
+    assert abs(flat_holder.BoundingBox().ylen - 130.0) < 1e-6
     cavity_right_x = (model.TABLET_X + model.FIT_X) / 2.0
     end_wall_center_x = cavity_right_x + model.USB_POCKET_INNER_X + model.USB_END_WALL_T / 2.0
     assert flat_holder.isInside(cq.Vector(end_wall_center_x, 30.0, model.TABLET_Z / 2.0))
