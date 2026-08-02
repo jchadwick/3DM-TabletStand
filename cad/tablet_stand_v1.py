@@ -62,6 +62,11 @@ USB_END_WALL_T = 3.0
 USB_POCKET_CEILING_T = 2.0
 USB_REAR_TURN_SLOT_X = 3.0
 USB_REAR_TURN_SLOT_Y = 16.0
+# Physical coupon test: the attached right-angle cable body cannot enter the
+# closed rear slot laterally. This measured notch opens the slot to the tablet
+# cavity without removing the slot's wider flat-pigtail clearance.
+USB_REAR_TURN_NOTCH_X = 6.0
+USB_REAR_TURN_NOTCH_Y = 8.5
 RIGHT_ANGLE_PIGTAIL_LENGTH = 51.4
 RIGHT_ANGLE_FLAT_T = 0.6
 DOWNSTREAM_CONNECTOR_BODY = 9.6
@@ -197,7 +202,25 @@ def flat_main_holder(
         .box(USB_REAR_TURN_SLOT_X, USB_REAR_TURN_SLOT_Y, BASE_T + 2.0)
         .translate((TABLET_X / 2.0 + USB_PLUG_PROJECTION, 0, -BASE_T / 2.0))
     )
-    main = main.union(cable_floor.cut(rear_turn_slot)).union(usb_end_wall)
+    rear_turn_notch = (
+        cq.Workplane("XY")
+        .box(USB_REAR_TURN_NOTCH_X, USB_REAR_TURN_NOTCH_Y, BASE_T + 2.0)
+        .translate(
+            (
+                cavity_x / 2.0 + USB_REAR_TURN_NOTCH_X / 2.0,
+                0.0,
+                -BASE_T / 2.0,
+            )
+        )
+    )
+    # Cut after unioning so the open notch also clears the cradle perimeter
+    # material that overlaps the tablet-side edge of the pocket floor.
+    main = (
+        main.union(cable_floor)
+        .union(usb_end_wall)
+        .cut(rear_turn_slot)
+        .cut(rear_turn_notch)
+    )
 
     if include_rear_clips:
         # Two open C-clips on the rear X spine retain only the 3.45 mm braided
@@ -393,6 +416,11 @@ def export() -> None:
             "right_angle_pigtail_length": RIGHT_ANGLE_PIGTAIL_LENGTH,
             "flat_cable_thickness": RIGHT_ANGLE_FLAT_T,
             "downstream_connector_body_marked_dimension": DOWNSTREAM_CONNECTOR_BODY,
+            "rear_turn_slot": {"x": USB_REAR_TURN_SLOT_X, "y": USB_REAR_TURN_SLOT_Y},
+            "rear_turn_open_notch": {
+                "x": USB_REAR_TURN_NOTCH_X,
+                "y": USB_REAR_TURN_NOTCH_Y,
+            },
             "braided_cable_diameter": BRAIDED_CABLE_D,
             "braided_channel_id": BRAIDED_CHANNEL_ID,
             "braided_channel_slot": BRAIDED_CHANNEL_SLOT,

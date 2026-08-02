@@ -60,6 +60,7 @@ def main() -> None:
     assert metadata["screen_angle_degrees_above_horizontal"] == 80.0
     assert metadata["tube"]["sleeve_id"] == 32.2
     assert metadata["usb_c"]["plug_projection"] == 6.5
+    assert metadata["usb_c"]["rear_turn_open_notch"] == {"x": 6.0, "y": 8.5}
     assert metadata["usb_c"]["braided_cable_diameter"] == 3.45
     assert metadata["usb_c"]["braided_channel_id"] > metadata["usb_c"]["braided_cable_diameter"]
 
@@ -79,7 +80,15 @@ def main() -> None:
     assert not flat_holder.isInside(cq.Vector(cavity_right_x + 3.0, 0.0, model.TABLET_Z / 2.0))
     rear_turn_x = model.TABLET_X / 2.0 + model.USB_PLUG_PROJECTION
     assert not flat_holder.isInside(cq.Vector(rear_turn_x, 0.0, -model.BASE_T / 2.0))
-    assert flat_holder.isInside(cq.Vector(rear_turn_x - 3.0, 0.0, -model.BASE_T / 2.0))
+    notch_entry_x = cavity_right_x + 0.5
+    assert not flat_holder.isInside(cq.Vector(notch_entry_x, 0.0, -model.BASE_T / 2.0))
+    assert flat_holder.isInside(
+        cq.Vector(
+            notch_entry_x,
+            model.USB_REAR_TURN_NOTCH_Y / 2.0 + 1.0,
+            -model.BASE_T / 2.0,
+        )
+    )
     clip_x = model.REAR_CLIP_X[-1]
     assert not flat_holder.isInside(cq.Vector(clip_x, 0.0, model.REAR_CLIP_CENTER_Z))
     assert flat_holder.isInside(cq.Vector(clip_x, 3.0, model.REAR_CLIP_CENTER_Z))

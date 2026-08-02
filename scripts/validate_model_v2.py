@@ -69,6 +69,7 @@ def main() -> None:
     assert metadata["joints"]["cradle_to_bracket"]["method"] == "adhesive bond"
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
+    assert metadata["cable"]["usb_rear_turn_open_notch"] == {"x": 6.0, "y": 8.5}
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -216,10 +217,22 @@ def main() -> None:
         (v1.TABLET_X / 2.0 + v1.USB_PLUG_PROJECTION, 0.0, -1.5),
         "coupon rear-turn slot missing",
     )
+    notch_entry_x = (v1.TABLET_X + v1.FIT_X) / 2.0 + 0.5
+    assert_open(
+        coupon,
+        (notch_entry_x, 0.0, -1.5),
+        "coupon cable notch is not open to tablet cavity",
+    )
+    assert_solid(
+        coupon,
+        (notch_entry_x, v1.USB_REAR_TURN_NOTCH_Y / 2.0 + 1.0, -1.5),
+        "coupon cable notch removes excess pocket floor",
+    )
     print(
         "right fit coupon is an exact cradle crop; "
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
-        f"{coupon_bb.zlen:.2f} mm"
+        f"{coupon_bb.zlen:.2f} mm; cable notch="
+        f"{v1.USB_REAR_TURN_NOTCH_Y:.1f} x {v1.USB_REAR_TURN_NOTCH_X:.1f} mm"
     )
 
     # Preserve the user-tested tube path and seating cap.

@@ -77,6 +77,14 @@
       34.0
     ],
     "sleeve_channel_id": 4.15,
-    "sleeve_channel_slot": 2.8
+    "sleeve_channel_slot": 2.8,
+    "usb_rear_turn_slot": {
+      "x": 3.0,
+      "y": 16.0
+    },
+    "usb_rear_turn_open_notch": {
+      "x": 6.0,
+      "y": 8.5
+    }
   }
 }

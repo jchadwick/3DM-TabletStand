@@ -54,6 +54,14 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Open cable-body notch from physical coupon test — 2026-08-02
+
+- The user reported that the first PLA right-side coupon fit the tablet reasonably well but the attached right-angle USB-C cable body could not enter the closed rear-turn slot.
+- The user's physical test and photo establish an 8.5 × 6 mm required notch. The active design now opens that measured Y × X notch from the tablet cavity into the existing 3 × 16 mm rear pigtail slot.
+- Preserved the continuous screen-facing cap, solid outer USB-C wall, 8.0 mm-clear plug pocket, and existing broad flat-pigtail slot. The new notch is confined to the rear pocket floor and provides a lateral installation path for the attached cable.
+- Regenerated the PLA coupon G-code with the established 0.20 mm, three-wall, 20% infill, support-free process. The revised validated job estimates 1 h 25 min and 18.7 g; it was prepared but not started.
+- The user also reported that tablet retention is slightly loose by about 1 mm; the fit axis must be confirmed before changing the active allowance.
+
 ### Right-side tablet and USB-C fit coupon — 2026-08-02
 
 - Selected a right-end coupon instead of a left/end-stop coupon so one small print tests the uncertain production rail fit and the actual USB-C adapter route together.

@@ -13,10 +13,12 @@ modules while preserving the confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_alignment_key_print_2.stl`: print **two copies** flat.
 - `tablet_stand_v2_right_fit_coupon.stl`: print rear face down before the full
   cradle; it is an exact 33.5 mm-wide crop of the production right end and
-  tests the rails, right-edge stops, USB-C pocket, and rear pigtail turn.
+  tests the rails, right-edge stops, USB-C pocket, 8.5 × 6 mm open cable-body
+  notch, and rear pigtail turn.
 - `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
-  approximately 1 h 25 min and 18.8 g.
+  approximately 1 h 25 min and 18.7 g. Prepared only; starting it requires a
+  fresh printer-readiness and bed-clear check.
 
 `tablet_stand_v2.step` is the installed assembly. `model_parameters.json`
 records the module orientations, glue joints, key dimensions, and preserved

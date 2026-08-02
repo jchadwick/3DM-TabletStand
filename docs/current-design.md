@@ -31,6 +31,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Round braided cable diameter | 3.45 mm | User measurement |
 | USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection plus provisional clearance |
 | Rear turn slot | 3 × 16 mm | Broad opening for the 0.6 mm pigtail to turn behind the tablet |
+| Rear turn open notch | 8.5 × 6 mm (Y × X) | User-measured cable-body path; opens the rear slot to the tablet cavity |
 | Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
 | Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
@@ -53,15 +54,15 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
-- A continuous full-depth screen-facing cap covers the complete right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug.
+- A continuous screen-facing cap covers the right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug. The cap remains structurally continuous because the cable installation notch is in the rear pocket floor, not through the cap.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
-- The right side presents a continuous enclosed face: the outer wall is solid and a full-depth screen-facing cap spans the entire short edge with no exposed center or recessed-pocket gaps. The plug chamber remains open only toward the tablet cavity, and a broad slot through its rear floor lets the 0.6 mm pigtail turn behind the tablet.
+- The right side presents a continuous enclosed screen-facing face: the outer wall is solid and a full-depth cap spans the entire short edge. The plug chamber remains open toward the tablet cavity. Its rear floor retains the 3 × 16 mm flat-pigtail slot and adds a user-measured 8.5 × 6 mm open notch from the tablet cavity so the attached right-angle cable body can enter laterally before turning behind the tablet.
 - The 3.45 mm braided section snaps into two open C-clips on the rear spine. From the nearer clip it drops through open space outside the right gusset, sweeps behind the sleeve, and enters the rear-facing external sleeve channel through its snap opening. No segment passes through a holder, gusset, or sleeve solid, and the 9.6 mm-marked connector body remains accessible outside all captive features.
 - The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 - V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
-- Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the pigtail turns through the rear slot without pinching or forcing the tablet.
+- Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the cable body enters the 8.5 × 6 mm open notch and the pigtail turns through the rear slot without pinching or forcing the tablet.
 
 ## Known unknowns before a full print
 
