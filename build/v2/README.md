@@ -18,14 +18,14 @@ modules while preserving the confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_button_fit_coupon.stl`: print rear face down before the full
   cradle; it is an exact 73.5 × 11 × 14.2 mm crop of the production top-left
   rail. Slide it along the landscape-top tablet edge to verify that the
-  measured 20–60 mm button group passes freely through the 3 mm-high channel
-  without being pressed. The channel is open at the insertion end and extends
-  5 mm beyond the seated button group.
+  measured 20–60 mm button group passes freely through the concealed 2 mm-high
+  × 1.2 mm-deep inner groove without being pressed. The groove begins at the
+  insertion end, extends 5 mm beyond the seated button group, and preserves a
+  solid 1.8 mm exterior rail wall.
 - `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   button-coupon job in the exact production orientation; 0.20 mm layers, three
-  walls, 20% grid infill, no supports, approximately 22 min and 4.8 g. The
-  slicer warns about the intentionally unsupported production rail lip; inspect
-  that short 3 mm cantilever after printing.
+  walls, 20% grid infill, no supports, approximately 23 min and 5.3 g. Inspect
+  the short internal groove and smooth closed outside wall after printing.
 - `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
   approximately 1 h 25 min and 18.6 g. Prepared only.

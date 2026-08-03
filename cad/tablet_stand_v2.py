@@ -603,10 +603,12 @@ def export() -> None:
             "group_end_from_top_left": v1.BUTTON_GROUP_END_FROM_LEFT,
             "width_across_tablet_thickness": v1.BUTTON_WIDTH_Z,
             "protrusion_from_tablet_edge": v1.BUTTON_PROTRUSION_Y,
-            "channel_z_clearance_each_side": v1.BUTTON_CHANNEL_Z_CLEARANCE,
             "channel_height": v1.BUTTON_CHANNEL_Z,
+            "channel_depth_into_inner_wall": v1.BUTTON_CHANNEL_DEPTH_Y,
+            "remaining_outer_wall": v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL,
             "channel_end_clearance": v1.BUTTON_CHANNEL_END_CLEARANCE_X,
             "channel_open_to_slide_in_end": True,
+            "channel_open_through_outer_wall": False,
         },
         "joints": {
             "end_stop": {

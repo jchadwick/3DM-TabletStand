@@ -173,7 +173,11 @@ def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
 
 
 def button_coupon_contact_sheet(paths: list[Path], output: Path) -> None:
-    labels = ("OPEN SLIDE-IN ENTRANCE", "3 MM-HIGH BUTTON CHANNEL", "INTACT WALL AFTER 5 MM OVERRUN")
+    labels = (
+        "INTERNAL GROOVE AT SLIDE-IN ENTRANCE",
+        "2 MM-HIGH x 1.2 MM-DEEP GROOVE",
+        "SOLID 1.8 MM EXTERIOR WALL",
+    )
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
     for index, (path, label) in enumerate(zip(paths, labels, strict=True)):
@@ -278,7 +282,7 @@ def main() -> None:
                 button_coupon_objects(),
                 button_coupon_views[1],
                 (700, 700),
-                eye=(-65.0, 175.0, 45.0),
+                eye=(-65.0, -75.0, 45.0),
                 target=(-67.0, 62.0, 4.0),
             )
         elif sys.argv[2] == "button-coupon-end":
@@ -286,7 +290,7 @@ def main() -> None:
                 button_coupon_objects(),
                 button_coupon_views[2],
                 (700, 700),
-                eye=(40.0, 145.0, 38.0),
+                eye=(40.0, -55.0, 38.0),
                 target=(-35.0, 62.0, 4.0),
             )
         else:

@@ -60,17 +60,16 @@ BUTTON_GROUP_START_FROM_LEFT = 20.0
 BUTTON_GROUP_END_FROM_LEFT = 60.0
 BUTTON_WIDTH_Z = 2.0
 BUTTON_PROTRUSION_Y = 1.0
-BUTTON_CHANNEL_Z_CLEARANCE = 0.5
+BUTTON_CHANNEL_DEPTH_Y = 1.2
 BUTTON_CHANNEL_END_CLEARANCE_X = 5.0
 BUTTON_CHANNEL_FINAL_X = (
     -TABLET_X / 2.0
     + BUTTON_GROUP_END_FROM_LEFT
     + BUTTON_CHANNEL_END_CLEARANCE_X
 )
-BUTTON_CHANNEL_Z0 = (
-    (TABLET_Z - BUTTON_WIDTH_Z) / 2.0 - BUTTON_CHANNEL_Z_CLEARANCE
-)
-BUTTON_CHANNEL_Z = BUTTON_WIDTH_Z + 2.0 * BUTTON_CHANNEL_Z_CLEARANCE
+BUTTON_CHANNEL_Z0 = (TABLET_Z - BUTTON_WIDTH_Z) / 2.0
+BUTTON_CHANNEL_Z = BUTTON_WIDTH_Z
+BUTTON_CHANNEL_REMAINING_OUTER_WALL = WALL_T - BUTTON_CHANNEL_DEPTH_Y
 
 # USB-C plug pocket and rear-hidden cable route.
 USB_PLUG_PROJECTION = 6.50
@@ -185,22 +184,23 @@ def flat_main_holder(
         )
         main = main.union(wall).union(lip)
 
-    # Open the top-rail wall at button height from the slide-in entrance all
-    # the way past the final seated button position. This gives the buttons an
-    # unobstructed insertion path as well as 5 mm of clearance beyond the
-    # measured 20-60 mm group. The screen-facing lip above the slot remains
-    # continuous and still retains the tablet.
+    # Recess only the inner face of the top rail at button height from the
+    # slide-in entrance through 5 mm past the final seated button position.
+    # The 1.2 mm-deep groove clears the 1 mm projection while preserving a
+    # continuous 1.8 mm exterior wall and the full screen-facing retaining lip.
     button_channel_x0 = rail_left_x - 0.2
     button_channel_x = BUTTON_CHANNEL_FINAL_X - button_channel_x0
+    button_channel_y0 = cavity_y / 2.0 - 0.2
+    button_channel_y1 = cavity_y / 2.0 + BUTTON_CHANNEL_DEPTH_Y
     button_channel = (
         cq.Workplane("XY")
         .workplane(offset=BUTTON_CHANNEL_Z0)
-        .rect(button_channel_x, WALL_T + 0.4)
+        .rect(button_channel_x, button_channel_y1 - button_channel_y0)
         .extrude(BUTTON_CHANNEL_Z)
         .translate(
             (
                 (button_channel_x0 + BUTTON_CHANNEL_FINAL_X) / 2.0,
-                cavity_y / 2.0 + WALL_T / 2.0,
+                (button_channel_y0 + button_channel_y1) / 2.0,
                 0.0,
             )
         )
@@ -447,9 +447,12 @@ def export() -> None:
             "group_end_from_top_left": BUTTON_GROUP_END_FROM_LEFT,
             "width_across_tablet_thickness": BUTTON_WIDTH_Z,
             "protrusion_from_tablet_edge": BUTTON_PROTRUSION_Y,
-            "channel_z_clearance_each_side": BUTTON_CHANNEL_Z_CLEARANCE,
+            "channel_height": BUTTON_CHANNEL_Z,
+            "channel_depth_into_inner_wall": BUTTON_CHANNEL_DEPTH_Y,
+            "remaining_outer_wall": BUTTON_CHANNEL_REMAINING_OUTER_WALL,
             "channel_end_clearance": BUTTON_CHANNEL_END_CLEARANCE_X,
             "channel_open_to_slide_in_end": True,
+            "channel_open_through_outer_wall": False,
         },
         "usb_c": {
             "side": "right",

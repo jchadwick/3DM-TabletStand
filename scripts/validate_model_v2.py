@@ -77,7 +77,11 @@ def main() -> None:
     assert metadata["buttons"]["group_end_from_top_left"] == 60.0
     assert metadata["buttons"]["width_across_tablet_thickness"] == 2.0
     assert metadata["buttons"]["protrusion_from_tablet_edge"] == 1.0
+    assert metadata["buttons"]["channel_height"] == 2.0
+    assert metadata["buttons"]["channel_depth_into_inner_wall"] == 1.2
+    assert metadata["buttons"]["remaining_outer_wall"] == 1.8
     assert metadata["buttons"]["channel_open_to_slide_in_end"] is True
+    assert metadata["buttons"]["channel_open_through_outer_wall"] is False
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -252,35 +256,49 @@ def main() -> None:
     assert abs(button_coupon_bb.xmin - model.BUTTON_FIT_COUPON_X_MIN) < 1e-6
     assert abs(button_coupon_bb.xmax - model.BUTTON_FIT_COUPON_X_MAX) < 1e-6
     assert abs(button_coupon_bb.ymin - model.BUTTON_FIT_COUPON_Y_MIN) < 1e-6
-    top_wall_y = (v1.TABLET_Y + v1.FIT_Y) / 2.0 + v1.WALL_T / 2.0
+    top_wall_inner_y = (
+        (v1.TABLET_Y + v1.FIT_Y) / 2.0 + v1.BUTTON_CHANNEL_DEPTH_Y / 2.0
+    )
+    top_wall_outer_y = (
+        (v1.TABLET_Y + v1.FIT_Y) / 2.0
+        + v1.BUTTON_CHANNEL_DEPTH_Y
+        + v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL / 2.0
+    )
     button_center_z = v1.TABLET_Z / 2.0
     seated_button_start_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_START_FROM_LEFT
     seated_button_end_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_END_FROM_LEFT
     assert_open(
         button_coupon,
-        (model.BUTTON_FIT_COUPON_X_MIN + 0.5, top_wall_y, button_center_z),
-        "button channel is not open at the slide-in end",
+        (model.BUTTON_FIT_COUPON_X_MIN + 0.5, top_wall_inner_y, button_center_z),
+        "internal button groove is not open at the slide-in end",
     )
     for button_x in (seated_button_start_x, seated_button_end_x):
         assert_open(
             button_coupon,
-            (button_x, top_wall_y, button_center_z),
-            "button channel obstructs the measured seated button group",
+            (button_x, top_wall_inner_y, button_center_z),
+            "internal button groove obstructs the measured seated button group",
+        )
+        assert_solid(
+            button_coupon,
+            (button_x, top_wall_outer_y, button_center_z),
+            "button groove breaks through the exterior rail wall",
         )
     assert_solid(
         button_coupon,
-        (v1.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_y, button_center_z),
+        (v1.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_inner_y, button_center_z),
         "button coupon does not retain wall beyond the relief",
     )
     assert_solid(
         button_coupon,
-        (seated_button_start_x, top_wall_y, v1.BUTTON_CHANNEL_Z0 - 0.5),
+        (seated_button_start_x, top_wall_inner_y, v1.BUTTON_CHANNEL_Z0 - 0.5),
         "button channel removes the lower rail wall",
     )
     print(
         "button fit coupon is an exact top-rail crop; "
         f"envelope={button_coupon_bb.xlen:.2f} x {button_coupon_bb.ylen:.2f} x "
-        f"{button_coupon_bb.zlen:.2f} mm; channel height={v1.BUTTON_CHANNEL_Z:.1f} mm"
+        f"{button_coupon_bb.zlen:.2f} mm; internal channel="
+        f"{v1.BUTTON_CHANNEL_Z:.1f} mm high x {v1.BUTTON_CHANNEL_DEPTH_Y:.1f} mm deep; "
+        f"outer wall={v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL:.1f} mm"
     )
 
     # Preserve the user-tested tube path and seating cap.

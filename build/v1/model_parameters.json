@@ -33,9 +33,12 @@
     "group_end_from_top_left": 60.0,
     "width_across_tablet_thickness": 2.0,
     "protrusion_from_tablet_edge": 1.0,
-    "channel_z_clearance_each_side": 0.5,
+    "channel_height": 2.0,
+    "channel_depth_into_inner_wall": 1.2,
+    "remaining_outer_wall": 1.8,
     "channel_end_clearance": 5.0,
-    "channel_open_to_slide_in_end": true
+    "channel_open_to_slide_in_end": true,
+    "channel_open_through_outer_wall": false
   },
   "usb_c": {
     "side": "right",

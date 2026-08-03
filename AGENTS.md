@@ -38,7 +38,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
-| Button clearance | Power/volume group is **20–60 mm from landscape top-left**, **2 mm wide across tablet thickness**, centered, and **1 mm protruding**; a **3 mm-high** channel is open from the left slide-in end through **5 mm beyond** the seated group while preserving the upper retaining lip |
+| Button clearance | Power/volume group is **20–60 mm from landscape top-left**, **2 mm wide across tablet thickness**, centered, and **1 mm protruding**; use a concealed inner groove **2 mm high × 1.2 mm deep** from the left slide-in end through **5 mm beyond** the seated group, preserving a solid **1.8 mm exterior rail wall** and the upper retaining lip |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
 | Current status | Version 2 is the active support-minimized, geometrically validated concept; right-side rail/USB-C and top-button production-geometry coupons require physical PLA testing before the full cradle |

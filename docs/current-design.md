@@ -32,7 +32,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | USB-C plug-pocket depth | 8.0 mm clear | 6.50 mm projection plus provisional clearance |
 | Rear cable opening | 16 × 8 mm (Y × X) open rectangle | Replaces the undersized T-shaped slot/notch; spans the full pocket depth from tablet cavity to outer wall |
 | Power/volume group | 20–60 mm from landscape top-left; 2 mm wide across tablet thickness; centered; 1 mm edge protrusion | User measurements |
-| Top button channel | 3 mm high; open from left slide-in end through 5 mm beyond the seated button group | 0.5 mm clearance above/below the 2 mm buttons; retaining lip remains continuous |
+| Top button channel | Concealed internal groove, 2 mm high × 1.2 mm deep; runs from left slide-in end through 5 mm beyond the seated button group | Clears the 1 mm button projection while preserving a solid 1.8 mm exterior rail wall and continuous retaining lip |
 | Braided-cable channel | 4.15 mm ID / 2.8 mm snap opening | 0.70 mm total clearance around confirmed cable diameter |
 | Sleeve channel embed / remaining wall | 1.2 mm / 2.8 mm minimum | Keeps the 32.2 mm tube bore intact |
 | Exposed corner radii | 1.2 mm rails/walls; 0.8 mm lips | Rounded to remove sharp outside corners |
@@ -55,7 +55,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
-- The landscape-top rail has a 3 mm-high side channel centered on the tablet's thickness. It is open at the left slide-in entrance and continues to 5 mm past the measured end of the seated 20–60 mm power/volume group, so the 1 mm-projecting buttons never have to pass beneath solid wall. The retaining lip above the channel remains continuous.
+- The landscape-top rail has a concealed 2 mm-high × 1.2 mm-deep groove in its inner face, centered on the tablet's thickness. It begins at the left slide-in entrance and continues to 5 mm past the measured end of the seated 20–60 mm power/volume group. The groove clears the 1 mm button projection without breaking through the rail: a solid 1.8 mm exterior wall and the complete retaining lip remain.
 - A removable left end stop secured by one M3 screw prevents the tablet from sliding out.
 - A continuous screen-facing cap covers the right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug. The cap remains structurally continuous because the cable opening is in the rear pocket floor, not through the cap.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
@@ -66,7 +66,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 - V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
-- Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the open channel without being pressed, while the rail still captures the tablet above and below the slot.
+- Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
 
 ## Known unknowns before a full print
 

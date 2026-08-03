@@ -56,10 +56,18 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
-### Power/volume slide-through channel — 2026-08-02
+### Concealed 2 mm internal button groove — 2026-08-02
+
+- The user rejected the exposed through-slot: the power/volume relief must be a small internal channel rather than an opening through the top rail's outer face.
+- Replaced the prior 3 mm through-slot with a 2 mm-high × 1.2 mm-deep groove in the rail's inner face, centered on the measured buttons. The groove clears their 1 mm projection with 0.2 mm depth allowance.
+- Preserved a continuous 1.8 mm exterior wall, above the 1.26 mm recommended PLA wall for the confirmed 0.4 mm-nozzle process, plus the complete screen-facing retaining lip.
+- Kept the groove open only at the left slide-in entrance and continued it 5 mm beyond the measured seated button group so the insertion path remains unobstructed without exposing the channel on the outside of the holder.
+- Regenerated the production-orientation PLA coupon G-code at 0.20 mm layers, three walls, 20% grid infill, and no supports. Validation found 7.5 mm³/s peak flow, a 23 min 20 s estimate, and about 5.3 g of filament; it was not uploaded or started.
+
+### Power/volume slide-through channel — 2026-08-02 (superseded)
 
 - The user measured the complete landscape-top power/volume group from 20 to 60 mm rightward from the tablet's top-left corner. The buttons are 2 mm wide across the 8.4 mm tablet thickness, centered on that thickness, and protrude 1 mm from the tablet edge.
-- Added a 3 mm-high opening centered on the buttons, giving 0.5 mm PLA process clearance above and below. The channel is open at the left rail entrance so the buttons cannot be pressed during insertion and continues 5 mm past the measured seated group end.
+- Added a 3 mm-high opening centered on the buttons, giving 0.5 mm PLA process clearance above and below. This exposed through-slot was rejected and replaced by the concealed 2 mm internal groove above.
 - Preserved the continuous screen-facing retaining lip and the lower rail wall outside the button-height band. The channel ends in intact top-rail wall after its 5 mm overrun.
 - Added `tablet_stand_v2_button_fit_coupon.stl`, an exact 73.5 × 11 × 14.2 mm crop of the production top-left rail, for physical insertion and seated-clearance testing before a full cradle print.
 - Prepared its production-orientation PLA G-code at 0.20 mm layers, three walls, 20% grid infill, and no supports. Validation found 7.5 mm³/s peak flow, a 21 min 51 s estimate, and about 4.8 g of filament; it was not uploaded or started.
