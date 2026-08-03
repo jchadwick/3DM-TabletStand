@@ -56,6 +56,22 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Archive superseded V1 from the active tree — 2026-08-02
+
+- The user confirmed that V1 is superseded and should no longer consume maintenance or review effort.
+- Removed the generated `build/v1/` artifacts, V1 validator, V1 preview entrypoint, and legacy Blender renderer from the active working tree. The complete prior state remains recoverable at Git commit `560c6e8`.
+- Renamed and trimmed the former shared source into `cad/tablet_stand_core.py`, which now contains only active measured parameters plus the cradle and sleeve geometry required by V2. V2 no longer imports a module named for V1.
+- Reduced the mandatory model workflow to the three active V2 build, validation, and direct-preview commands.
+
+### Full cradle PLA slice and support review — 2026-08-02
+
+- The user authorized preparation of the full tablet-holder print but required visual review of the slice and supports before any printer upload.
+- Kept the cradle on its production rear-face datum. Standing it vertically would fit the conservative 210 mm safe envelope but create extensive support, a 216 mm-tall weak print, and poorer rail dimensional fidelity.
+- The 216 mm cradle fits the configured 220 mm bed at X = 2–218 mm only after disabling the profile's optional 6 mm skirt. The no-support candidate validates at 4 h 39 min, about 61.8 g, and 7.5 mm³/s peak flow.
+- Generated a snug 45-degree support comparison. It adds about 29 minutes and 9.4 g, reaches the complete X = 0–220 mm span, and places support along the long retaining rails and right-end features.
+- Selected the support-free slice as the recommended candidate because production-orientation coupons already validated the short unsupported rail geometry, while supports consume all bed margin and contact fit-critical surfaces. Neither slice was uploaded or started.
+- Added `scripts/render_gcode_support_preview.py` and `tablet_stand_v2_cradle_support_review.png` to visualize actual PrusaSlicer model paths in blue and support paths in orange.
+
 ### Concealed 2 mm internal button groove — 2026-08-02
 
 - The user rejected the exposed through-slot: the power/volume relief must be a small internal channel rather than an opening through the top rail's outer face.

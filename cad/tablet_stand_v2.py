@@ -1,6 +1,6 @@
 """Support-minimized V2 tablet stand with four main modules and two keys.
 
-Installed coordinates match V1:
+Installed coordinates:
     X: tablet left (-) to right / USB-C side (+)
     Y: viewer / bottom edge (-) to far / top edge (+)
     Z: up
@@ -11,8 +11,8 @@ Print orientations:
     sleeve: flange face on the bed, tube-entry bore open upward
     end stop: screen-facing lip/top face on the bed
 
-All dimensions are millimeters. V1 remains the source for confirmed tablet,
-tube, rail, USB-C, cable, and tilt dimensions; this file owns the V2 joints.
+All dimensions are millimeters. ``tablet_stand_core`` owns confirmed tablet,
+tube, rail, USB-C, cable, and tilt geometry; this file owns the modular joints.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "build" / "v2"
 sys.path.insert(0, str(ROOT))
 
-from cad import tablet_stand_v1 as v1  # noqa: E402
+from cad import tablet_stand_core as core  # noqa: E402
 
 # ============================================================
 # PARAMETERS - V2 module joints and print-oriented features
@@ -91,8 +91,8 @@ SLEEVE_FLANGE_Y = 46.0
 SLEEVE_FLANGE_CENTER_Y = 26.0
 SLEEVE_FLANGE_T = 4.0
 SLEEVE_FLANGE_CORNER_R = 5.0
-SLEEVE_FLANGE_TOP_Z = v1.SLEEVE_TOP_Z + SLEEVE_FLANGE_T
-SLEEVE_FLANGE_BOTTOM_Z = v1.SLEEVE_TOP_Z - 0.10
+SLEEVE_FLANGE_TOP_Z = core.SLEEVE_TOP_Z + SLEEVE_FLANGE_T
+SLEEVE_FLANGE_BOTTOM_Z = core.SLEEVE_TOP_Z - 0.10
 BRACKET_FOOT_X = 60.0
 BRACKET_FOOT_Y = 28.0
 BRACKET_FOOT_T = 4.0
@@ -108,19 +108,19 @@ ANGULAR_TOLERANCE = 0.15
 # glue joint.  The right limit is the production cradle's finished outer wall.
 RIGHT_FIT_COUPON_X_MIN = 78.0
 RIGHT_FIT_COUPON_X_MAX = (
-    (v1.TABLET_X + v1.FIT_X) / 2.0
-    + v1.USB_POCKET_INNER_X
-    + v1.USB_END_WALL_T
+    (core.TABLET_X + core.FIT_X) / 2.0
+    + core.USB_POCKET_INNER_X
+    + core.USB_END_WALL_T
 )
 
 # Small exact crop of the production top rail for verifying the measured
 # power/volume-button slide-through channel before committing to the cradle.
 BUTTON_FIT_COUPON_X_MIN = -(
-    v1.TABLET_X + v1.FIT_X + 2.0 * v1.WALL_T
+    core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
 ) / 2.0
-BUTTON_FIT_COUPON_X_MAX = v1.BUTTON_CHANNEL_FINAL_X + 5.0
-BUTTON_FIT_COUPON_Y_MIN = (v1.TABLET_Y + v1.FIT_Y) / 2.0 - 8.0
-BUTTON_FIT_COUPON_Y_MAX = v1.HOLDER_OUTER_Y / 2.0
+BUTTON_FIT_COUPON_X_MAX = core.BUTTON_CHANNEL_FINAL_X + 5.0
+BUTTON_FIT_COUPON_Y_MIN = (core.TABLET_Y + core.FIT_Y) / 2.0 - 8.0
+BUTTON_FIT_COUPON_Y_MAX = core.HOLDER_OUTER_Y / 2.0
 
 
 # ============================================================
@@ -202,30 +202,27 @@ def cross_key(
 # ============================================================
 
 def flat_cradle() -> cq.Workplane:
-    """V1 tablet cradle without rear clips, plus the V2 flush screw pattern."""
-    cradle = v1.flat_main_holder(
-        include_rear_clips=False,
-        include_endstop_lug=False,
-    )
-    endstop_boss = v1.rounded_plate(
+    """Active tablet cradle plus the modular flush screw pattern."""
+    cradle = core.flat_main_holder()
+    endstop_boss = core.rounded_plate(
         ENDSTOP_BOSS_X_SIZE,
         ENDSTOP_BOSS_Y_SIZE,
         ENDSTOP_BOSS_HEIGHT,
-        -v1.BASE_T,
-        v1.EXPOSED_CORNER_R,
+        -core.BASE_T,
+        core.EXPOSED_CORNER_R,
     ).translate((ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y, 0.0))
     endstop_pilot = (
         cq.Workplane("XY")
-        .workplane(offset=-v1.BASE_T - 1.0)
+        .workplane(offset=-core.BASE_T - 1.0)
         .center(ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y)
-        .circle(v1.M3_PILOT / 2.0)
+        .circle(core.M3_PILOT / 2.0)
         .extrude(ENDSTOP_BOSS_HEIGHT + 2.0)
     )
     cradle = cradle.union(endstop_boss).cut(endstop_pilot)
     cradle_groove = cross_groove(
         0.0,
         BRACKET_PLATE_CENTER_Y,
-        -v1.BASE_T - 0.05,
+        -core.BASE_T - 0.05,
         ALIGNMENT_GROOVE_DEPTH + 0.05,
     )
     return cradle.cut(cradle_groove)
@@ -233,68 +230,68 @@ def flat_cradle() -> cq.Workplane:
 
 def flat_end_stop() -> cq.Workplane:
     """V2 stop adjacent to, rather than overlapping, the cradle rail ends."""
-    cavity_x = v1.TABLET_X + v1.FIT_X
-    cavity_y = v1.TABLET_Y + v1.FIT_Y
-    rail_top = v1.TABLET_Z + v1.FIT_Z + v1.LIP_T
-    wall_h = v1.BASE_T + rail_top
-    cradle_left_x = -(cavity_x + 2.0 * v1.WALL_T) / 2.0
+    cavity_x = core.TABLET_X + core.FIT_X
+    cavity_y = core.TABLET_Y + core.FIT_Y
+    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
+    wall_h = core.BASE_T + rail_top
+    cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
 
     outer_wall_center_x = cradle_left_x - ENDSTOP_OUTER_WALL_X / 2.0
     outer_wall_center_y = (ENDSTOP_OUTER_WALL_Y_MIN + ENDSTOP_OUTER_WALL_Y_MAX) / 2.0
-    outer_wall = v1.rounded_plate(
+    outer_wall = core.rounded_plate(
         ENDSTOP_OUTER_WALL_X,
         ENDSTOP_OUTER_WALL_Y_MAX - ENDSTOP_OUTER_WALL_Y_MIN,
         wall_h,
-        -v1.BASE_T,
-        v1.EXPOSED_CORNER_R,
+        -core.BASE_T,
+        core.EXPOSED_CORNER_R,
     ).translate((outer_wall_center_x, outer_wall_center_y, 0.0))
 
     # The screen-facing cap stops short of the long-edge rail lips. Two local
     # pads below it contact the tablet edge through the otherwise open left end.
     cap_left_x = cradle_left_x - 0.5
-    cap_right_x = -cavity_x / 2.0 + v1.LIP_OVERLAP
-    cap = v1.rounded_plate(
+    cap_right_x = -cavity_x / 2.0 + core.LIP_OVERLAP
+    cap = core.rounded_plate(
         cap_right_x - cap_left_x,
         ENDSTOP_CAP_Y,
-        v1.LIP_T,
-        v1.TABLET_Z + v1.FIT_Z,
-        v1.LIP_CORNER_R,
+        core.LIP_T,
+        core.TABLET_Z + core.FIT_Z,
+        core.LIP_CORNER_R,
     ).translate(((cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
     locator = None
     for locator_y in ENDSTOP_LOCATOR_Y:
-        pad = v1.rounded_plate(
-            v1.WALL_T,
+        pad = core.rounded_plate(
+            core.WALL_T,
             ENDSTOP_LOCATOR_Y_SIZE,
-            v1.TABLET_Z + v1.FIT_Z,
+            core.TABLET_Z + core.FIT_Z,
             0.0,
-            v1.EXPOSED_CORNER_R,
-        ).translate((cradle_left_x + v1.WALL_T / 2.0, locator_y, 0.0))
+            core.EXPOSED_CORNER_R,
+        ).translate((cradle_left_x + core.WALL_T / 2.0, locator_y, 0.0))
         locator = pad if locator is None else locator.union(pad)
     assert locator is not None
 
-    tab = v1.rounded_plate(
+    tab = core.rounded_plate(
         ENDSTOP_BOSS_X_SIZE,
         ENDSTOP_BOSS_Y_SIZE,
         ENDSTOP_TAB_T,
-        -v1.BASE_T + ENDSTOP_BOSS_HEIGHT,
-        v1.EXPOSED_CORNER_R,
+        -core.BASE_T + ENDSTOP_BOSS_HEIGHT,
+        core.EXPOSED_CORNER_R,
     ).translate((ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y, 0.0))
     clearance = (
         cq.Workplane("XY")
-        .workplane(offset=-v1.BASE_T + ENDSTOP_BOSS_HEIGHT - 1.0)
+        .workplane(offset=-core.BASE_T + ENDSTOP_BOSS_HEIGHT - 1.0)
         .center(ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y)
         .circle(M3_CLEARANCE / 2.0)
         .extrude(ENDSTOP_TAB_T + 2.0)
     )
     stop = outer_wall.union(cap).union(locator).union(tab).cut(clearance)
     # Remove any residual rail-corner contact volume while retaining adjacent
-    # faces; split parts must never depend on V1's overlapping assembly solids.
+    # faces; split parts must never depend on overlapping assembly solids.
     return stop.cut(flat_cradle())
 
 
 def rear_bracket_local_plate() -> cq.Workplane:
     """Cradle-parallel mounting plate with captive nuts and open cable clips."""
-    plate = v1.rounded_plate(
+    plate = core.rounded_plate(
         BRACKET_PLATE_X,
         BRACKET_PLATE_Y,
         BRACKET_PLATE_T,
@@ -311,31 +308,31 @@ def rear_bracket_local_plate() -> cq.Workplane:
     # The clips attach to the rear face of the plate rather than the cradle,
     # leaving the cradle's complete rear frame surface available as a print bed.
     rear_face_z = BRACKET_PLATE_Z0
-    clip_center_z = rear_face_z - v1.REAR_CLIP_OUTER_Z / 2.0 + 0.05
+    clip_center_z = rear_face_z - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
     for clip_x in BRACKET_CLIP_X:
         clip_outer = cq.Workplane("XY").box(
-            v1.REAR_CLIP_LENGTH,
-            v1.REAR_CLIP_OUTER_Y,
-            v1.REAR_CLIP_OUTER_Z,
+            core.REAR_CLIP_LENGTH,
+            core.REAR_CLIP_OUTER_Y,
+            core.REAR_CLIP_OUTER_Z,
         ).translate((clip_x, BRACKET_CLIP_LOCAL_Y, clip_center_z))
-        clip_cavity = v1.x_cylinder(
-            v1.BRAIDED_CHANNEL_ID,
-            v1.REAR_CLIP_LENGTH + 2.0,
+        clip_cavity = core.x_cylinder(
+            core.BRAIDED_CHANNEL_ID,
+            core.REAR_CLIP_LENGTH + 2.0,
             (
-                clip_x - v1.REAR_CLIP_LENGTH / 2.0 - 1.0,
+                clip_x - core.REAR_CLIP_LENGTH / 2.0 - 1.0,
                 BRACKET_CLIP_LOCAL_Y,
                 clip_center_z,
             ),
         )
         clip_opening = cq.Workplane("XY").box(
-            v1.REAR_CLIP_LENGTH + 2.0,
-            v1.BRAIDED_CHANNEL_SLOT,
-            v1.REAR_CLIP_OUTER_Z,
+            core.REAR_CLIP_LENGTH + 2.0,
+            core.BRAIDED_CHANNEL_SLOT,
+            core.REAR_CLIP_OUTER_Z,
         ).translate(
             (
                 clip_x,
                 BRACKET_CLIP_LOCAL_Y,
-                clip_center_z - v1.REAR_CLIP_OUTER_Z / 2.0,
+                clip_center_z - core.REAR_CLIP_OUTER_Z / 2.0,
             )
         )
         plate = plate.union(clip_outer.cut(clip_cavity).cut(clip_opening))
@@ -347,10 +344,10 @@ def rear_bracket_installed() -> cq.Workplane:
     plate = rear_bracket_local_plate().rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
-        v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
     )
 
-    foot = v1.rounded_plate(
+    foot = core.rounded_plate(
         BRACKET_FOOT_X,
         BRACKET_FOOT_Y,
         BRACKET_FOOT_T,
@@ -389,8 +386,8 @@ def rear_bracket_installed() -> cq.Workplane:
 
 
 def pedestal_sleeve_installed() -> cq.Workplane:
-    """Closed V1 sleeve plus a print bed and captive-nut mounting flange."""
-    flange = v1.rounded_plate(
+    """Closed active sleeve plus a print bed and mounting flange."""
+    flange = core.rounded_plate(
         SLEEVE_FLANGE_X,
         SLEEVE_FLANGE_Y,
         SLEEVE_FLANGE_TOP_Z - SLEEVE_FLANGE_BOTTOM_Z,
@@ -404,7 +401,7 @@ def pedestal_sleeve_installed() -> cq.Workplane:
         ALIGNMENT_GROOVE_DEPTH + 0.05,
     )
     flange = flange.cut(flange_groove)
-    return v1.vertical_sleeve_with_cable_channel().union(flange)
+    return core.vertical_sleeve_with_cable_channel().union(flange)
 
 
 def alignment_key_print() -> cq.Workplane:
@@ -417,7 +414,7 @@ def right_fit_coupon() -> cq.Workplane:
     width = RIGHT_FIT_COUPON_X_MAX - RIGHT_FIT_COUPON_X_MIN
     cutter = (
         cq.Workplane("XY")
-        .box(width, v1.HOLDER_OUTER_Y + 4.0, 30.0)
+        .box(width, core.HOLDER_OUTER_Y + 4.0, 30.0)
         .translate(
             (
                 (RIGHT_FIT_COUPON_X_MIN + RIGHT_FIT_COUPON_X_MAX) / 2.0,
@@ -462,14 +459,14 @@ def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Work
     cradle = flat_cradle().rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
-        v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
     )
     bracket = rear_bracket_installed()
     sleeve = pedestal_sleeve_installed()
     stop = flat_end_stop().rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
-        v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
     )
     return cradle, bracket, sleeve, stop
 
@@ -536,12 +533,12 @@ def export() -> None:
     cradle_key_installed = cross_key(
         0.0,
         BRACKET_PLATE_CENTER_Y,
-        -v1.BASE_T - ALIGNMENT_KEY_T / 2.0,
+        -core.BASE_T - ALIGNMENT_KEY_T / 2.0,
         ALIGNMENT_KEY_T,
     ).rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
-        v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
     )
     sleeve_key_installed = cross_key(
         0.0,
@@ -556,18 +553,18 @@ def export() -> None:
     metadata = {
         "units": "mm",
         "revision": "v2 support-minimized modular concept",
-        "tablet": {"x": v1.TABLET_X, "y": v1.TABLET_Y, "z": v1.TABLET_Z},
-        "fit_allowance_total": {"x": v1.FIT_X, "y": v1.FIT_Y, "z": v1.FIT_Z},
-        "tilt_degrees_from_vertical": v1.TILT_FROM_VERTICAL_DEG,
-        "screen_angle_degrees_above_horizontal": v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        "tablet": {"x": core.TABLET_X, "y": core.TABLET_Y, "z": core.TABLET_Z},
+        "fit_allowance_total": {"x": core.FIT_X, "y": core.FIT_Y, "z": core.FIT_Z},
+        "tilt_degrees_from_vertical": core.TILT_FROM_VERTICAL_DEG,
+        "screen_angle_degrees_above_horizontal": core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
         "tube": {
             "od": 32.0,
-            "sleeve_id": v1.SLEEVE_ID,
-            "sleeve_od": v1.SLEEVE_OD,
-            "engagement": v1.SLEEVE_ENGAGEMENT,
-            "seating_cap_thickness": v1.SLEEVE_CAP_T,
-            "center_offset_behind_screen_plane_y": v1.SLEEVE_CENTER_Y,
-            "bottom_z": v1.SLEEVE_BOTTOM_Z,
+            "sleeve_id": core.SLEEVE_ID,
+            "sleeve_od": core.SLEEVE_OD,
+            "engagement": core.SLEEVE_ENGAGEMENT,
+            "seating_cap_thickness": core.SLEEVE_CAP_T,
+            "center_offset_behind_screen_plane_y": core.SLEEVE_CENTER_Y,
+            "bottom_z": core.SLEEVE_BOTTOM_Z,
         },
         "modules": {
             "cradle": "rear frame face on bed; rail and end-stop features face up",
@@ -599,14 +596,14 @@ def export() -> None:
         },
         "buttons": {
             "edge": "landscape top",
-            "group_start_from_top_left": v1.BUTTON_GROUP_START_FROM_LEFT,
-            "group_end_from_top_left": v1.BUTTON_GROUP_END_FROM_LEFT,
-            "width_across_tablet_thickness": v1.BUTTON_WIDTH_Z,
-            "protrusion_from_tablet_edge": v1.BUTTON_PROTRUSION_Y,
-            "channel_height": v1.BUTTON_CHANNEL_Z,
-            "channel_depth_into_inner_wall": v1.BUTTON_CHANNEL_DEPTH_Y,
-            "remaining_outer_wall": v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL,
-            "channel_end_clearance": v1.BUTTON_CHANNEL_END_CLEARANCE_X,
+            "group_start_from_top_left": core.BUTTON_GROUP_START_FROM_LEFT,
+            "group_end_from_top_left": core.BUTTON_GROUP_END_FROM_LEFT,
+            "width_across_tablet_thickness": core.BUTTON_WIDTH_Z,
+            "protrusion_from_tablet_edge": core.BUTTON_PROTRUSION_Y,
+            "channel_height": core.BUTTON_CHANNEL_Z,
+            "channel_depth_into_inner_wall": core.BUTTON_CHANNEL_DEPTH_Y,
+            "remaining_outer_wall": core.BUTTON_CHANNEL_REMAINING_OUTER_WALL,
+            "channel_end_clearance": core.BUTTON_CHANNEL_END_CLEARANCE_X,
             "channel_open_to_slide_in_end": True,
             "channel_open_through_outer_wall": False,
         },
@@ -644,13 +641,13 @@ def export() -> None:
             "total_clearance_thickness": 2.0 * ALIGNMENT_GROOVE_DEPTH - ALIGNMENT_KEY_T,
         },
         "cable": {
-            "braided_cable_diameter": v1.BRAIDED_CABLE_D,
+            "braided_cable_diameter": core.BRAIDED_CABLE_D,
             "bracket_clip_x": BRACKET_CLIP_X,
-            "sleeve_channel_id": v1.BRAIDED_CHANNEL_ID,
-            "sleeve_channel_slot": v1.BRAIDED_CHANNEL_SLOT,
+            "sleeve_channel_id": core.BRAIDED_CHANNEL_ID,
+            "sleeve_channel_slot": core.BRAIDED_CHANNEL_SLOT,
             "usb_rear_turn_open_rectangle": {
-                "x": v1.USB_REAR_TURN_SLOT_X,
-                "y": v1.USB_REAR_TURN_SLOT_Y,
+                "x": core.USB_REAR_TURN_SLOT_X,
+                "y": core.USB_REAR_TURN_SLOT_Y,
             },
         },
     }

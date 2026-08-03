@@ -9,4 +9,4 @@ Use these documents in this order when resuming work:
 5. [`architecture/decisions/`](architecture/decisions/) — accepted cross-cutting design decisions.
 6. [`design-brief.md`](design-brief.md) — original conversation context, source provenance, and open questions.
 
-The `build/v1/README.md` and `build/v2/README.md` files describe generated artifacts only; they are not the authority for design decisions.
+The `build/v2/README.md` file describes generated artifacts only; it is not the authority for design decisions. Superseded V1 documentation remains in Git history at commit `560c6e8` and is not part of the active workflow.

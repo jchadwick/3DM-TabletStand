@@ -15,7 +15,7 @@ import trimesh
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from cad import tablet_stand_v1 as v1  # noqa: E402
+from cad import tablet_stand_core as core  # noqa: E402
 from cad import tablet_stand_v2 as model  # noqa: E402
 
 
@@ -53,10 +53,10 @@ def assert_solid(shape: cq.Shape, point: tuple[float, float, float], message: st
 
 
 def main() -> None:
-    assert v1.TILT_FROM_VERTICAL_DEG == 10.0
-    assert v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG == 80.0
-    assert v1.SLEEVE_ID == 32.2
-    assert v1.SLEEVE_ENGAGEMENT == 51.0
+    assert core.TILT_FROM_VERTICAL_DEG == 10.0
+    assert core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG == 80.0
+    assert core.SLEEVE_ID == 32.2
+    assert core.SLEEVE_ENGAGEMENT == 51.0
 
     missing = [name for name in REQUIRED if not (BUILD / name).is_file()]
     assert not missing, f"missing generated artifacts: {', '.join(missing)}"
@@ -91,8 +91,8 @@ def main() -> None:
     installed_parts = model.installed_parts()
 
     # The cradle's complete back datum is now the lowest face; neither the
-    # cable clips nor the V1 end-stop lug may protrude behind it.
-    assert abs(cradle_flat.BoundingBox().zmin + v1.BASE_T) < 1e-6
+    # cable clips nor the superseded rear-projecting end-stop lug may protrude behind it.
+    assert abs(cradle_flat.BoundingBox().zmin + core.BASE_T) < 1e-6
     assert cradle_flat.BoundingBox().xlen <= 216.1
     assert abs(cradle_flat.BoundingBox().ylen - 137.5) < 1e-6
     print(
@@ -168,12 +168,12 @@ def main() -> None:
     cradle_key = model.cross_key(
         0.0,
         model.BRACKET_PLATE_CENTER_Y,
-        -v1.BASE_T - model.ALIGNMENT_KEY_T / 2.0,
+        -core.BASE_T - model.ALIGNMENT_KEY_T / 2.0,
         model.ALIGNMENT_KEY_T,
     ).rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
-        v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
     )
     sleeve_key = model.cross_key(
         0.0,
@@ -195,7 +195,7 @@ def main() -> None:
     # The relocated end-stop screw is outside the tablet rectangle and aligned
     # through the stop tab and cradle pilot.
     assert model.ENDSTOP_BOSS_Y + model.ENDSTOP_BOSS_Y_SIZE / 2.0 < -(
-        v1.TABLET_Y + v1.FIT_Y
+        core.TABLET_Y + core.FIT_Y
     ) / 2.0
     assert_open(
         cradle_flat,
@@ -221,16 +221,16 @@ def main() -> None:
     coupon_bb = coupon.BoundingBox()
     assert abs(coupon_bb.xmin - model.RIGHT_FIT_COUPON_X_MIN) < 1e-6
     assert abs(coupon_bb.xmax - model.RIGHT_FIT_COUPON_X_MAX) < 1e-6
-    assert abs(coupon_bb.ylen - v1.HOLDER_OUTER_Y) < 1e-6
+    assert abs(coupon_bb.ylen - core.HOLDER_OUTER_Y) < 1e-6
     assert_open(coupon, (90.0, 0.0, 4.0), "coupon tablet cavity obstructed")
     assert_open(coupon, (104.0, 0.0, 4.0), "coupon USB-C pocket obstructed")
     assert_solid(coupon, (110.0, 0.0, 4.0), "coupon outer USB-C wall missing")
     assert_open(
         coupon,
-        (v1.TABLET_X / 2.0 + v1.USB_PLUG_PROJECTION, 0.0, -1.5),
+        (core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION, 0.0, -1.5),
         "coupon rear-turn slot missing",
     )
-    rectangle_entry_x = (v1.TABLET_X + v1.FIT_X) / 2.0 + 0.5
+    rectangle_entry_x = (core.TABLET_X + core.FIT_X) / 2.0 + 0.5
     assert_open(
         coupon,
         (rectangle_entry_x, 0.0, -1.5),
@@ -238,14 +238,14 @@ def main() -> None:
     )
     assert_solid(
         coupon,
-        (rectangle_entry_x, v1.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, -1.5),
+        (rectangle_entry_x, core.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, -1.5),
         "coupon cable rectangle removes excess pocket floor",
     )
     print(
         "right fit coupon is an exact cradle crop; "
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
         f"{coupon_bb.zlen:.2f} mm; open cable rectangle="
-        f"{v1.USB_REAR_TURN_SLOT_Y:.1f} x {v1.USB_REAR_TURN_SLOT_X:.1f} mm"
+        f"{core.USB_REAR_TURN_SLOT_Y:.1f} x {core.USB_REAR_TURN_SLOT_X:.1f} mm"
     )
 
     # The top-left coupon is a literal crop of the production rail. Its slot
@@ -257,16 +257,16 @@ def main() -> None:
     assert abs(button_coupon_bb.xmax - model.BUTTON_FIT_COUPON_X_MAX) < 1e-6
     assert abs(button_coupon_bb.ymin - model.BUTTON_FIT_COUPON_Y_MIN) < 1e-6
     top_wall_inner_y = (
-        (v1.TABLET_Y + v1.FIT_Y) / 2.0 + v1.BUTTON_CHANNEL_DEPTH_Y / 2.0
+        (core.TABLET_Y + core.FIT_Y) / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y / 2.0
     )
     top_wall_outer_y = (
-        (v1.TABLET_Y + v1.FIT_Y) / 2.0
-        + v1.BUTTON_CHANNEL_DEPTH_Y
-        + v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL / 2.0
+        (core.TABLET_Y + core.FIT_Y) / 2.0
+        + core.BUTTON_CHANNEL_DEPTH_Y
+        + core.BUTTON_CHANNEL_REMAINING_OUTER_WALL / 2.0
     )
-    button_center_z = v1.TABLET_Z / 2.0
-    seated_button_start_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_START_FROM_LEFT
-    seated_button_end_x = -v1.TABLET_X / 2.0 + v1.BUTTON_GROUP_END_FROM_LEFT
+    button_center_z = core.TABLET_Z / 2.0
+    seated_button_start_x = -core.TABLET_X / 2.0 + core.BUTTON_GROUP_START_FROM_LEFT
+    seated_button_end_x = -core.TABLET_X / 2.0 + core.BUTTON_GROUP_END_FROM_LEFT
     assert_open(
         button_coupon,
         (model.BUTTON_FIT_COUPON_X_MIN + 0.5, top_wall_inner_y, button_center_z),
@@ -285,36 +285,36 @@ def main() -> None:
         )
     assert_solid(
         button_coupon,
-        (v1.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_inner_y, button_center_z),
+        (core.BUTTON_CHANNEL_FINAL_X + 1.0, top_wall_inner_y, button_center_z),
         "button coupon does not retain wall beyond the relief",
     )
     assert_solid(
         button_coupon,
-        (seated_button_start_x, top_wall_inner_y, v1.BUTTON_CHANNEL_Z0 - 0.5),
+        (seated_button_start_x, top_wall_inner_y, core.BUTTON_CHANNEL_Z0 - 0.5),
         "button channel removes the lower rail wall",
     )
     print(
         "button fit coupon is an exact top-rail crop; "
         f"envelope={button_coupon_bb.xlen:.2f} x {button_coupon_bb.ylen:.2f} x "
         f"{button_coupon_bb.zlen:.2f} mm; internal channel="
-        f"{v1.BUTTON_CHANNEL_Z:.1f} mm high x {v1.BUTTON_CHANNEL_DEPTH_Y:.1f} mm deep; "
-        f"outer wall={v1.BUTTON_CHANNEL_REMAINING_OUTER_WALL:.1f} mm"
+        f"{core.BUTTON_CHANNEL_Z:.1f} mm high x {core.BUTTON_CHANNEL_DEPTH_Y:.1f} mm deep; "
+        f"outer wall={core.BUTTON_CHANNEL_REMAINING_OUTER_WALL:.1f} mm"
     )
 
     # Preserve the user-tested tube path and seating cap.
-    tube_axis_z = v1.SLEEVE_BOTTOM_Z + v1.SLEEVE_ENGAGEMENT / 2.0
-    cap_axis_z = v1.SLEEVE_TOP_Z - v1.SLEEVE_CAP_T / 2.0
+    tube_axis_z = core.SLEEVE_BOTTOM_Z + core.SLEEVE_ENGAGEMENT / 2.0
+    cap_axis_z = core.SLEEVE_TOP_Z - core.SLEEVE_CAP_T / 2.0
     assert_open(
         sleeve_installed,
-        (0.0, v1.SLEEVE_CENTER_Y, tube_axis_z),
+        (0.0, core.SLEEVE_CENTER_Y, tube_axis_z),
         "tube bore obstructed",
     )
     assert_solid(
         sleeve_installed,
-        (0.0, v1.SLEEVE_CENTER_Y, cap_axis_z),
+        (0.0, core.SLEEVE_CENTER_Y, cap_axis_z),
         "seating cap missing",
     )
-    assert abs(sleeve_installed.BoundingBox().zmin - v1.HOLDER_BOTTOM_Z) < 1e-6
+    assert abs(sleeve_installed.BoundingBox().zmin - core.HOLDER_BOTTOM_Z) < 1e-6
     print("32.2 mm bore clear; 51 mm engagement and 3 mm seating cap preserved")
 
     print_parts = model.print_parts()

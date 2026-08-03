@@ -1,7 +1,7 @@
 # Version 2 outputs
 
-V2 separates the support-conflicted V1 main body into glue-aligned printable
-modules while preserving the confirmed tablet, tube, tilt, and cable geometry.
+The active design uses glue-aligned printable modules while preserving the
+confirmed tablet, tube, tilt, and cable geometry.
 
 ## Print files
 
@@ -29,6 +29,16 @@ modules while preserving the confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
   approximately 1 h 25 min and 18.6 g. Prepared only.
+- `tablet_stand_v2_cradle_pla.gcode`: validated full-cradle PLA print candidate;
+  rear face down, 0.20 mm layers, three walls, 20% grid infill, no skirt, no
+  supports, approximately 4 h 39 min and 61.8 g. Its extrusion footprint is
+  X = 2–218 mm and Y = 41–179 mm on the configured 220 mm bed.
+- `tablet_stand_v2_cradle_pla_supports.gcode`: review-only comparison with snug
+  45-degree supports; approximately 5 h 9 min and 71.2 g. Support extrusion
+  reaches X = 0–220 mm and contacts the long rail lips and right-end features,
+  so this is not the recommended upload candidate.
+- `tablet_stand_v2_cradle_support_review.png`: top, front, and per-layer views
+  of actual PrusaSlicer model and support extrusion paths.
 
 `tablet_stand_v2.step` is the installed assembly. `model_parameters.json`
 records the module orientations, glue joints, key dimensions, and preserved
@@ -58,7 +68,7 @@ bond faces according to the adhesive instructions.
 All five production STL files and both fit-coupon STLs are single
 watertight solids. The alignment-key STL is printed twice. The cradle has a
 broad 216 × 137.5 mm rear datum, the bracket has a 60 × 28 mm foot, and the
-sleeve has a 60 × 46 mm flange. The split removes the V1 tall rail-support
+sleeve has a 60 × 46 mm flange. The modular split avoids tall rail-support
 towers and the support ceiling inside the sleeve bore.
 The remaining flagged overhangs are predominantly the cradle's 2.2 mm lips,
 short USB-C bridges, shallow alignment-groove roofs, and the two open cable
@@ -66,8 +76,9 @@ clips.
 
 Start with no supports at 0.20 mm layers and inspect the slicer preview. If the
 printer struggles with the rear clips, paint support only under those two
-features. A 216 mm cradle span is still marginal on a nominal 220 mm bed; rotate
-it diagonally in the slicer and verify the actual printable area.
+features. The cradle cannot be rotated diagonally into a smaller bounding box.
+The validated production plate removes the optional 6 mm skirt and centers the
+216 mm cradle at X = 2–218 mm. Do not add a skirt or brim to this job.
 
 V2 is a validated concept, not a production-ready release. Confirm the remaining
 device clearances, end-stop screw length, printer/material, tube length, and fit

@@ -15,9 +15,9 @@ import trimesh
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from cad import tablet_stand_v1 as v1  # noqa: E402
+from cad import tablet_stand_core as core  # noqa: E402
 from cad import tablet_stand_v2 as model  # noqa: E402
-from scripts.render_cadquery_preview import (  # noqa: E402
+from scripts.render_cadquery_helpers import (  # noqa: E402
     BACKGROUND,
     cable_mesh,
     cq_mesh,
@@ -28,7 +28,7 @@ from scripts.render_cadquery_preview import (  # noqa: E402
 
 
 BUILD = ROOT / "build" / "v2"
-ANGLE_RAD = math.radians(v1.SCREEN_ANGLE_FROM_HORIZONTAL_DEG)
+ANGLE_RAD = math.radians(core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG)
 
 
 def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
@@ -53,20 +53,20 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     objects.append((screen, (5, 9, 15, 255)))
 
     tube = trimesh.creation.cylinder(radius=16.0, height=100.0, sections=72)
-    tube_top_z = v1.SLEEVE_TOP_Z - v1.SLEEVE_CAP_T
-    tube.apply_translation((0.0, v1.SLEEVE_CENTER_Y, tube_top_z - 50.0))
+    tube_top_z = core.SLEEVE_TOP_Z - core.SLEEVE_CAP_T
+    tube.apply_translation((0.0, core.SLEEVE_CENTER_Y, tube_top_z - 50.0))
     objects.append((tube, (118, 127, 140, 255)))
 
     # Schematic V2 cable route through the clips now carried by the rear bracket.
     tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
     flat_end_x = (
-        v1.TABLET_X / 2.0 + v1.USB_PLUG_PROJECTION - v1.RIGHT_ANGLE_PIGTAIL_LENGTH
+        core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION - core.RIGHT_ANGLE_PIGTAIL_LENGTH
     )
     connector_exit = (
-        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, v1.REAR_CLIP_CENTER_Z, 1.0])
+        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, core.REAR_CLIP_CENTER_Z, 1.0])
     )[:3]
     clip_center_z = (
-        model.BRACKET_PLATE_Z0 - v1.REAR_CLIP_OUTER_Z / 2.0 + 0.05
+        model.BRACKET_PLATE_Z0 - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
     )
     bracket_transform = rotation_x(ANGLE_RAD)
     clip_far = (
@@ -97,18 +97,18 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
             [
                 model.BRACKET_CLIP_X[0],
                 model.BRACKET_CLIP_LOCAL_Y,
-                clip_center_z - v1.REAR_CLIP_OUTER_Z / 2.0 - 1.0,
+                clip_center_z - core.REAR_CLIP_OUTER_Z / 2.0 - 1.0,
                 1.0,
             ]
         )
     )[:3]
-    sleeve_back_y = v1.SLEEVE_CENTER_Y + v1.SLEEVE_OD / 2.0
-    channel_y = sleeve_back_y + v1.BRAIDED_CHANNEL_ID / 2.0 - v1.BRAIDED_CHANNEL_EMBED
-    outside_x = v1.SLEEVE_OD / 2.0 + v1.BRAIDED_CABLE_D / 2.0 + 1.0
+    sleeve_back_y = core.SLEEVE_CENTER_Y + core.SLEEVE_OD / 2.0
+    channel_y = sleeve_back_y + core.BRAIDED_CHANNEL_ID / 2.0 - core.BRAIDED_CHANNEL_EMBED
+    outside_x = core.SLEEVE_OD / 2.0 + core.BRAIDED_CABLE_D / 2.0 + 1.0
     rear_clear_y = (
         sleeve_back_y
-        + v1.BRAIDED_CHANNEL_OUTER_Y
-        + v1.BRAIDED_CABLE_D / 2.0
+        + core.BRAIDED_CHANNEL_OUTER_Y
+        + core.BRAIDED_CABLE_D / 2.0
         + 1.0
     )
     transition_z = -36.0
@@ -121,10 +121,10 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
         np.array([outside_x, rear_clear_y, transition_z]),
         np.array([0.0, rear_clear_y, transition_z]),
         np.array([0.0, channel_y, transition_z]),
-        np.array([0.0, channel_y, v1.BRAIDED_CHANNEL_BOTTOM_Z]),
+        np.array([0.0, channel_y, core.BRAIDED_CHANNEL_BOTTOM_Z]),
     ]
     objects.append(
-        (cable_mesh(cable_points, radius=v1.BRAIDED_CABLE_D / 2.0), (7, 7, 8, 255))
+        (cable_mesh(cable_points, radius=core.BRAIDED_CABLE_D / 2.0), (7, 7, 8, 255))
     )
     return objects
 

@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the active support-minimized concept; Version 1 remains preserved for comparison. V2 is geometrically validated but still requires physical fit results and hardware/device checks before it is print-ready. Exact-production fit coupons are provided for the right-side rails/USB-C route and the landscape-top button channel before printing the full cradle.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. Version 2 is the sole active model; superseded V1 is archived only in Git history at commit `560c6e8` and is not maintained. Exact-production fit coupons cover the right-side rails/USB-C route and landscape-top button channel.
 
 ## Orientation and coordinates
 
@@ -18,9 +18,9 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | Tablet allowance | 1.0 mm total in X/Y; 0.8 mm in Z | Restored after the zero-nominal Y/Z fit test proved too tight |
 | Existing tube | 32.0 mm OD | User measurement |
 | Sleeve ID | 32.2 mm | User fit-tested; preserve |
-| Sleeve OD / wall | 40.2 mm / 4.0 mm | V1 design value |
-| Sleeve body / engagement | 50 mm / 51 mm | V1 design value |
-| Seating cap | 3.0 mm | V1 deterministic tube stop |
+| Sleeve OD / wall | 40.2 mm / 4.0 mm | Active design value |
+| Sleeve body / engagement | 50 mm / 51 mm | Active design value |
+| Seating cap | 3.0 mm | Deterministic tube stop |
 | Sleeve rear offset | 24 mm | Keeps tube out of tablet cavity |
 | Sleeve vertical placement | Bottom level with holder's lower long edge (Z = -64.53 mm) | User-requested alignment; rear assembly lowered 14.53 mm |
 | Retaining hardware | M3 screw | User has M3 screws |
@@ -47,7 +47,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 ## Functional design
 
 - The active V2 holder is assembled from a flat-print cradle, a rear tilt bracket, a closed sleeve, and the removable end stop. One identical alignment-key STL is printed twice for the two structural glue joints.
-- The cradle prints with its complete rear frame datum on the bed. The V1 rear cable clips move to the rear bracket, and the V1 rear-projecting end-stop lug is replaced by a front-accessible vertical boss outside the tablet cavity.
+- The cradle prints with its complete rear frame datum on the bed. Cable clips are on the rear bracket, and the end-stop screw uses a front-accessible vertical boss outside the tablet cavity.
 - The rear bracket prints on a 60 × 28 mm horizontal foot. Its 74 × 36 mm tilted plate bonds to the matching upper region of the cradle center plate and retains the two open braided-cable clips.
 - The sleeve prints upside down on a 60 × 46 mm flange. Its tube-entry bore therefore remains open upward and its 3 mm seating cap becomes a supported floor rather than a 32.2 mm bridge.
 - Both structural joints are adhesive bonds with matching cross grooves. Each uses one loose-fit 35 × 15 × 1.8 mm printed key to constrain X/Y alignment during cure. The key has at least 1.25 mm total planar clearance, 0.50 mm total thickness clearance, and 0.4 mm edge relief so first-layer flare cannot jam the glue joint. Adhesive—not key friction—carries the joint. Adhesive must be selected and prepared for the actual filament.
@@ -64,9 +64,16 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
 - Exposed rail, end-wall, and removable-stop corners are lightly rounded so the case does not present sharp outside corners.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
-- V1 remains reproducible under `cad/tablet_stand_v1.py` and `build/v1/`; the active V2 source and outputs are under `cad/tablet_stand_v2.py` and `build/v2/`.
+- Active shared geometry is in `cad/tablet_stand_core.py`, modular assembly/export logic is in `cad/tablet_stand_v2.py`, and generated outputs are under `build/v2/`. Superseded V1 is intentionally maintained only in Git history.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
+
+## Full-cradle slice review
+
+- The active PLA cradle candidate is `build/v2/tablet_stand_v2_cradle_pla.gcode`: rear face down, 0.20 mm layers, three walls, 20% grid infill, no skirt, and no supports. Validation reports X = 2–218 mm and Y = 41–179 mm, 4 h 39 min, about 61.8 g, and 7.5 mm³/s peak flow.
+- `build/v2/tablet_stand_v2_cradle_pla_supports.gcode` is a review-only comparison with snug 45-degree supports. It grows to the complete X = 0–220 mm configured span, adds about 29 minutes and 9.4 g, and places support against the long rail lips and right-end features.
+- Prefer the support-free candidate: earlier production-orientation rail coupons printed successfully without support, the remaining unsupported spans are short, and automatic support would consume all X margin and require removal from fit-critical rail surfaces.
+- The removable end stop cannot share the nearly full-width cradle plate and must be printed as a separate job.
 
 ## Known unknowns before a full print
 
@@ -75,5 +82,5 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Speaker, camera, microphone, and any other edge clearances not covered by the measured power/volume group.
 - M3 end-stop screw length and whether its 2.7 mm printed pilot should be drilled for the selected screw.
 - Unobstructed tube length above its existing mounting point.
-- Printer, nozzle, material, usable build area, and desired print orientation.
+- The confirmed Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are now verified; the support-free cradle uses X = 2–218 mm.
 - Adhesive selection, surface preparation, clamp method, and cure time for the selected filament.

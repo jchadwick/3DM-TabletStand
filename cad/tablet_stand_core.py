@@ -1,4 +1,4 @@
-"""Parametric first concept for the 2024 onn. 8-inch tablet stand.
+"""Active shared measurements and base geometry for the V2 tablet stand.
 
 Coordinates:
     X: tablet left (-) to right / USB-C side (+)
@@ -6,22 +6,15 @@ Coordinates:
     Z: up
 
 The tablet plane is 10 degrees back from vertical (80 degrees above horizontal).
-Its +Y / top edge is higher and farther from the user.  The support tube remains
-vertical and is offset behind the screen plane.
-All dimensions are millimeters.
+All dimensions are millimeters. This module owns the measured cradle, sleeve,
+button, and cable geometry used by the modular V2 assembly.
 """
 
 from __future__ import annotations
 
-import json
 import math
-from pathlib import Path
 
 import cadquery as cq
-
-
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "build" / "v1"
 
 # Tablet and fit
 TABLET_X = 200.0
@@ -96,7 +89,6 @@ BRAIDED_CHANNEL_SLOT = 2.8
 BRAIDED_CHANNEL_OUTER_X = 7.2
 BRAIDED_CHANNEL_OUTER_Y = 4.6
 BRAIDED_CHANNEL_EMBED = 1.2
-REAR_CLIP_X = (16.0, 38.0)
 REAR_CLIP_LENGTH = 6.0
 REAR_CLIP_OUTER_Y = 7.2
 REAR_CLIP_OUTER_Z = 5.2
@@ -115,15 +107,11 @@ SLEEVE_TOP_Z = SLEEVE_BOTTOM_Z + SLEEVE_LENGTH + 4.0
 SLEEVE_CAP_T = 3.0
 SLEEVE_ENGAGEMENT = SLEEVE_TOP_Z - SLEEVE_BOTTOM_Z - SLEEVE_CAP_T
 SLEEVE_CENTER_Y = 24.0
-GUSSET_T = 4.0
 BRAIDED_CHANNEL_TOP_Z = SLEEVE_TOP_Z - 4.0
 BRAIDED_CHANNEL_BOTTOM_Z = BRAIDED_CHANNEL_TOP_Z - 50.0
 
-# M3 removable end stop
-M3_CLEARANCE = 3.4
+# M3 removable V2 end stop
 M3_PILOT = 2.7
-ENDSTOP_PAD_Y = 18.0
-ENDSTOP_PAD_Z = 8.0
 
 
 def rounded_plate(x: float, y: float, z: float, z0: float, radius: float) -> cq.Workplane:
@@ -139,10 +127,8 @@ def x_cylinder(diameter: float, length: float, origin: tuple[float, float, float
     return cq.Workplane("YZ", origin=origin).circle(diameter / 2.0).extrude(length)
 
 
-def flat_main_holder(
-    include_rear_clips: bool = True,
-    include_endstop_lug: bool = True,
-) -> cq.Workplane:
+def flat_main_holder() -> cq.Workplane:
+    """Return the active V2 cradle base before modular joint features."""
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
     outer_x = cavity_x + 2.0 * WALL_T
@@ -255,62 +241,7 @@ def flat_main_holder(
         .cut(rear_turn_slot)
     )
 
-    if include_rear_clips:
-        # Two open C-clips on the rear X spine retain only the 3.45 mm braided
-        # section.  The 9.6 mm downstream connector remains accessible and
-        # never needs to pass through a captive tunnel. V2 relocates equivalent
-        # clips to its separately printed rear bracket so its cradle can lie
-        # flat on the print bed.
-        for clip_x in REAR_CLIP_X:
-            clip_outer = cq.Workplane("XY").box(
-                REAR_CLIP_LENGTH, REAR_CLIP_OUTER_Y, REAR_CLIP_OUTER_Z
-            ).translate((clip_x, 0, REAR_CLIP_CENTER_Z))
-            clip_cavity = x_cylinder(
-                BRAIDED_CHANNEL_ID,
-                REAR_CLIP_LENGTH + 2.0,
-                (clip_x - REAR_CLIP_LENGTH / 2.0 - 1.0, 0, REAR_CLIP_CENTER_Z),
-            )
-            clip_opening = cq.Workplane("XY").box(
-                REAR_CLIP_LENGTH + 2.0, BRAIDED_CHANNEL_SLOT, REAR_CLIP_OUTER_Z
-            ).translate((clip_x, 0, REAR_CLIP_CENTER_Z - REAR_CLIP_OUTER_Z / 2.0))
-            main = main.union(clip_outer.cut(clip_cavity).cut(clip_opening))
-
-    if include_endstop_lug:
-        # Reinforced lug for the single M3 end-stop screw.  The printed pilot
-        # hole is intentionally simple; it can be drilled to suit the actual
-        # screw. V2 replaces this rear projection with a bed-compatible boss.
-        lug_x0 = -outer_x / 2.0 - 1.0
-        lug_length = 28.0
-        lug = cq.Workplane("XY").box(lug_length, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
-            (lug_x0 + lug_length / 2.0, 0, -ENDSTOP_PAD_Z / 2.0)
-        )
-        pilot = x_cylinder(M3_PILOT, 24.0, (lug_x0 - 1.0, 0, -4.0))
-        main = main.union(lug).cut(pilot)
     return main
-
-
-def flat_end_stop(include_screw_pad: bool = True) -> cq.Workplane:
-    cavity_x = TABLET_X + FIT_X
-    cavity_y = TABLET_Y + FIT_Y
-    outer_y = cavity_y + 2.0 * WALL_T
-    rail_top = TABLET_Z + FIT_Z + LIP_T
-    wall_h = BASE_T + rail_top
-    stop_x = -cavity_x / 2.0 - WALL_T / 2.0
-
-    wall = rounded_plate(WALL_T, outer_y, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(
-        (stop_x, 0, 0)
-    )
-    lip = rounded_plate(LIP_OVERLAP, cavity_y, LIP_T, TABLET_Z + FIT_Z, LIP_CORNER_R).translate(
-        (-cavity_x / 2.0 + LIP_OVERLAP / 2.0, 0, 0)
-    )
-    stop = wall.union(lip)
-    if include_screw_pad:
-        pad = cq.Workplane("XY").box(8.0, ENDSTOP_PAD_Y, ENDSTOP_PAD_Z).translate(
-            (-cavity_x / 2.0 - 4.0, 0, -ENDSTOP_PAD_Z / 2.0)
-        )
-        clearance = x_cylinder(M3_CLEARANCE, 12.0, (-cavity_x / 2.0 - 10.0, 0, -4.0))
-        stop = stop.union(pad).cut(clearance)
-    return stop
 
 
 def vertical_sleeve() -> cq.Workplane:
@@ -359,122 +290,3 @@ def vertical_sleeve_with_cable_channel() -> cq.Workplane:
         )
     )
     return vertical_sleeve().union(outer).cut(cavity).cut(opening)
-
-
-def gussets() -> cq.Workplane:
-    # Two triangular ribs connect the nearly vertical backplate to the sleeve,
-    # which is offset behind the tablet so it cannot intrude into the cavity.
-    # Points are (Y, Z) in the installed coordinate system.
-    sleeve_drop = SLEEVE_BOTTOM_Z + SLEEVE_LENGTH
-    rib_profile = [
-        (-2.5, -31.0),
-        (8.5, 31.0),
-        (22.0, 4.0 + sleeve_drop),
-        (22.0, -22.0 + sleeve_drop),
-    ]
-    ribs = None
-    for x in (-13.0, 13.0):
-        rib = (
-            cq.Workplane("YZ", origin=(x - GUSSET_T / 2.0, 0, 0))
-            .polyline(rib_profile)
-            .close()
-            .extrude(GUSSET_T)
-        )
-        ribs = rib if ribs is None else ribs.union(rib)
-    assert ribs is not None
-    return ribs
-
-
-def installed_parts() -> tuple[cq.Workplane, cq.Workplane]:
-    main_tilted = flat_main_holder().rotate(
-        (0, 0, 0), (1, 0, 0), SCREEN_ANGLE_FROM_HORIZONTAL_DEG
-    )
-    stop_tilted = flat_end_stop().rotate(
-        (0, 0, 0), (1, 0, 0), SCREEN_ANGLE_FROM_HORIZONTAL_DEG
-    )
-    main_installed = main_tilted.union(vertical_sleeve_with_cable_channel()).union(gussets())
-    # Re-bore after unioning the gussets so no hidden rib material intrudes into
-    # the tested 32.2 mm tube path.  A deliberate 3 mm seating cap remains.
-    bore = (
-        cq.Workplane("XY")
-        .workplane(offset=SLEEVE_BOTTOM_Z)
-        .circle(SLEEVE_ID / 2.0)
-        .extrude(SLEEVE_ENGAGEMENT)
-        .translate((0, SLEEVE_CENTER_Y, 0))
-    )
-    main_installed = main_installed.cut(bore)
-    return main_installed, stop_tilted
-
-
-def export() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    main, stop_installed = installed_parts()
-    stop_print = flat_end_stop()
-
-    cq.exporters.export(main, str(OUT / "tablet_stand_main.stl"), tolerance=0.08, angularTolerance=0.15)
-    cq.exporters.export(stop_print, str(OUT / "tablet_stand_end_stop.stl"), tolerance=0.08, angularTolerance=0.15)
-    cq.exporters.export(stop_installed, str(OUT / "tablet_stand_end_stop_installed.stl"), tolerance=0.08, angularTolerance=0.15)
-
-    assembly = cq.Assembly(name="tablet_stand_v1")
-    assembly.add(main, name="main_holder", color=cq.Color(0.12, 0.14, 0.17))
-    assembly.add(stop_installed, name="m3_end_stop", color=cq.Color(0.10, 0.32, 0.55))
-    assembly.save(str(OUT / "tablet_stand_v1.step"))
-
-    metadata = {
-        "units": "mm",
-        "tablet": {"x": TABLET_X, "y": TABLET_Y, "z": TABLET_Z},
-        "fit_allowance_total": {"x": FIT_X, "y": FIT_Y, "z": FIT_Z},
-        "tilt_degrees_from_vertical": TILT_FROM_VERTICAL_DEG,
-        "screen_angle_degrees_above_horizontal": SCREEN_ANGLE_FROM_HORIZONTAL_DEG,
-        "orientation": "top edge higher and farther from user; bottom edge lower and nearer",
-        "tube": {
-            "od": 32.0,
-            "sleeve_id": SLEEVE_ID,
-            "sleeve_od": SLEEVE_OD,
-            "body_length": SLEEVE_LENGTH,
-            "engagement": SLEEVE_ENGAGEMENT,
-            "seating_cap_thickness": SLEEVE_CAP_T,
-            "center_offset_behind_screen_plane_y": SLEEVE_CENTER_Y,
-            "bottom_z": SLEEVE_BOTTOM_Z,
-            "holder_bottom_z": HOLDER_BOTTOM_Z,
-            "bottom_alignment": "sleeve bottom level with holder lower long edge",
-        },
-        "retention": "left slide-in; one M3 screw end stop",
-        "right_edge": "solid outer wall with continuous full-depth screen-facing cap",
-        "buttons": {
-            "edge": "landscape top",
-            "group_start_from_top_left": BUTTON_GROUP_START_FROM_LEFT,
-            "group_end_from_top_left": BUTTON_GROUP_END_FROM_LEFT,
-            "width_across_tablet_thickness": BUTTON_WIDTH_Z,
-            "protrusion_from_tablet_edge": BUTTON_PROTRUSION_Y,
-            "channel_height": BUTTON_CHANNEL_Z,
-            "channel_depth_into_inner_wall": BUTTON_CHANNEL_DEPTH_Y,
-            "remaining_outer_wall": BUTTON_CHANNEL_REMAINING_OUTER_WALL,
-            "channel_end_clearance": BUTTON_CHANNEL_END_CLEARANCE_X,
-            "channel_open_to_slide_in_end": True,
-            "channel_open_through_outer_wall": False,
-        },
-        "usb_c": {
-            "side": "right",
-            "position": "center",
-            "plug_projection": USB_PLUG_PROJECTION,
-            "pocket_clearance_x": USB_POCKET_X_CLEARANCE,
-            "right_angle_pigtail_length": RIGHT_ANGLE_PIGTAIL_LENGTH,
-            "flat_cable_thickness": RIGHT_ANGLE_FLAT_T,
-            "downstream_connector_body_marked_dimension": DOWNSTREAM_CONNECTOR_BODY,
-            "rear_turn_open_rectangle": {
-                "x": USB_REAR_TURN_SLOT_X,
-                "y": USB_REAR_TURN_SLOT_Y,
-            },
-            "braided_cable_diameter": BRAIDED_CABLE_D,
-            "braided_channel_id": BRAIDED_CHANNEL_ID,
-            "braided_channel_slot": BRAIDED_CHANNEL_SLOT,
-            "routing": "right-angle pigtail turns behind tablet; braided cable snaps into rear clips and external sleeve channel",
-        },
-    }
-    (OUT / "model_parameters.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    print(f"Exported tablet stand v1 to {OUT}")
-
-
-if __name__ == "__main__":
-    export()

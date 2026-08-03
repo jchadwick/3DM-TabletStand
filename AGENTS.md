@@ -12,7 +12,7 @@ For **every** change to model geometry, fit/tolerance values, CAD exports, or mo
 4. Record any confirmed measurement or design decision in `docs/decision-log.md`; update `docs/current-design.md` and this file when it changes the active specification.
 5. Physical measurements and fit tests from the user override visual estimates, generic specifications, or web research.
 
-Routine previews use direct in-memory CadQuery tessellation through the versioned `scripts/render_cadquery_preview*.py` tools; generated STL is a manufacturing export, not an input to the preview. `scripts/render_preview.py` is optional Blender-only presentation tooling.
+Routine previews use direct in-memory CadQuery tessellation through `scripts/render_cadquery_preview_v2.py` and `scripts/render_cadquery_helpers.py`; generated STL is a manufacturing export, not an input to the preview.
 
 ## Active design — do not regress
 
@@ -33,7 +33,7 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
 | Clip-to-channel route | Preserve the clips; the free cable span drops outside the right gusset, sweeps behind the sleeve, and enters the channel through its rear opening—never route previewed cable through solids |
-| V2 print split | Active main body is a flat-print cradle, foot-down rear tilt bracket, and flange-down/bore-up sleeve; V1 remains preserved |
+| V2 print split | Active main body is a flat-print cradle, foot-down rear tilt bracket, and flange-down/bore-up sleeve; superseded V1 is archived in Git history at commit `560c6e8` and is not maintained |
 | V2 structural joints | Two adhesive bonds with matching cross grooves; use one loose-fit 35 × 15 × 1.8 mm printed key per joint (`alignment_key` STL quantity 2). Retained grooves give at least 1.25 mm total planar and 0.50 mm thickness clearance; 0.4 mm edge relief prevents first-layer flare from jamming |
 | V2 clip ownership | The two open braided-cable clips are on the rear tilt bracket so the cradle retains a complete flat rear print datum |
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; end stop screen-facing lip/top face down |
@@ -41,29 +41,25 @@ Routine previews use direct in-memory CadQuery tessellation through the versione
 | Button clearance | Power/volume group is **20–60 mm from landscape top-left**, **2 mm wide across tablet thickness**, centered, and **1 mm protruding**; use a concealed inner groove **2 mm high × 1.2 mm deep** from the left slide-in end through **5 mm beyond** the seated group, preserving a solid **1.8 mm exterior rail wall** and the upper retaining lip |
 | Outside corners | Lightly rounded: 1.2 mm on exposed rails/walls and 0.8 mm on retaining lips |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
-| Current status | Version 2 is the active support-minimized, geometrically validated concept; right-side rail/USB-C and top-button production-geometry coupons require physical PLA testing before the full cradle |
+| Current status | V2 is the sole active model. A validated support-free PLA cradle candidate and a support-on comparison are prepared for user visual approval; neither has been uploaded. The support-free candidate keeps 2 mm X margin, while automatic supports consume the full 220 mm X span and cover fit-critical rail surfaces |
 
-Coordinate system in `cad/tablet_stand_v2.py` and V1: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
+Coordinate system in `cad/tablet_stand_v2.py` and `cad/tablet_stand_core.py`: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 
 ## Source of truth and generated files
 
 - `cad/tablet_stand_v2.py`: active modular V2 geometry, glue joints, print orientations, and exports.
-- `cad/tablet_stand_v1.py`: preserved V1 source plus shared confirmed dimensions and base holder geometry used by V2.
+- `cad/tablet_stand_core.py`: active shared measurements and base cradle/sleeve geometry used by V2.
 - `docs/current-design.md`: active human-readable design specification.
 - `docs/decision-log.md`: chronological decision history and measurement ledger.
 - `docs/design-brief.md`: original context, references, and unresolved details.
 - `scripts/validate_model_v2.py`: active V2 geometry, joint, print-layout, and artifact checks.
-- `scripts/validate_model.py`: preserved V1 checks.
 - `build/v2/`: active generated STEP, five production STL files, right-side and button fit-coupon STLs, parameters, and previews. The alignment-key STL is printed twice.
-- `build/v1/`: preserved generated V1 artifacts; do not hand-edit either build directory.
 - `reference/tablet/tinker.obj`: user-supplied tablet reference mesh; preserve it unchanged.
+- Superseded V1 source, validators, renders, and artifacts remain recoverable from Git commit `560c6e8`; do not restore or maintain them in the active tree.
 
 ## Required checks after a model change
 
 ```bash
-.venv/bin/python cad/tablet_stand_v1.py
-.venv/bin/python scripts/validate_model.py
-.venv/bin/python scripts/render_cadquery_preview.py
 .venv/bin/python cad/tablet_stand_v2.py
 .venv/bin/python scripts/validate_model_v2.py
 .venv/bin/python scripts/render_cadquery_preview_v2.py
