@@ -39,7 +39,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Landscape tablet orientation.
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
-- A removable left stop slides downward from the landscape top, seats against a lower-left cradle landing, and is retained by shallow friction detents plus rear hooks; no mechanical fastener is used and adhesive is optional.
+- A removable left stop slides downward from the landscape top in one continuous captured dovetail with a closed internal bottom; no mechanical fastener, hook, detent bump, or projecting lower nub is used, and adhesive is optional.
 - The right edge has a continuous full-depth screen-facing cap backed by internal stops and a solid outer USB-C wall. No tablet-edge or recessed plug-pocket segment is exposed from the front; the low-profile right-angle adapter still turns immediately behind the tablet instead of sending the cable straight out through the right wall.
 - The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
 - Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
@@ -51,12 +51,24 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- The cradle provides a lower-left landing, a 4 mm rail-free stop entry, and two detent grooves. The separate stop has two matching friction ribs and two rear hooks that slide below the cradle datum and prevent lateral release.
+- The cradle provides one continuous dovetail groove with a 1.30 mm mouth, 2.30 mm internal head, and closed internal bottom. The separate stop has a 1.80 mm-head tongue, giving 0.25 mm capture per side and 0.50 mm total head clearance. The stop's rounded outside wall remains within the normal cradle envelope.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
 
-### Screw-free slide stop and softened outside edges — 2026-08-02
+### Sleek dovetail stop and clean lower-left corner — 2026-08-03
+
+- The user rejected the first screw-free implementation's visible landing nub, small rear hooks, and detent bumps in favor of a sleek tongue-and-groove joint like the supplied reference image.
+- Replaced the separate hooks and detents with one continuous top-entry dovetail. Its cradle groove has a 1.30 mm mouth and 2.30 mm internal head; its stop tongue has a 1.80 mm head, producing 0.25 mm mechanical capture per side and 0.50 mm total sliding clearance at the head.
+- Closed the groove internally at Y = −54.5 mm to establish the seated position without an external ledge. Removed the entire lower landing/nub and restored the cradle envelope to 215 × 130 × 14.2 mm.
+- Rounded the stop's outside plan corner to 1.70 mm and its exposed edges to 0.70 mm, preserving the clean continuous lower-left outline.
+- Sampled the complete top-down insertion path at thirteen offsets from 130 mm to fully seated; every position has zero solid intersection. The cradle, stop, and exact two-piece coupon remain watertight.
+- Updated ADR-0002 as an implementation refinement: the accepted screw-free guided-slide decision remains, while its former landing/hook/detent implementation is superseded.
+- Regenerated the two-piece left-slide PLA coupon with a 5 mm removable brim and no supports; validation reports 33 min 13 s, about 5.8 g, and 7.6 mm³/s peak flow. It was not uploaded or started.
+- Regenerated the full-cradle support review. The recommended support-free job validates at 4 h 8 min, 60.7 g, and X = 3–217 mm; the snug-support comparison validates at 4 h 28 min, 67.4 g, and places support on the long lips and end features. Neither was uploaded or started.
+- Prepared the separate end stop bridge-face down with a 5 mm brim and no supports; validation reports 49 min 22 s and 9.2 g. It was not uploaded or started.
+
+### Screw-free slide stop and softened outside edges — 2026-08-02 (joint geometry superseded 2026-08-03)
 
 - The user rejected the M3 hole and requested a left edge that simply slides downward, seats on a projecting lower-left cradle edge, stays through friction, and can optionally receive a drop of glue.
 - Removed the complete M3 boss, pilot, stop tab, and clearance hole. Added a 7 × 5.5 × 3 mm lower landing, a 4 mm rail-free insertion lead, two 6 mm friction ribs with 0.05 mm nominal insertion interference, matching 6.4 mm detent grooves, and two rear hooks with 0.20 mm clearance below the cradle datum.

@@ -55,42 +55,40 @@ ALIGNMENT_KEY_EDGE_CHAMFER = 0.4
 ALIGNMENT_GROOVE_DEPTH = 1.15
 ALIGNMENT_KEY_QUANTITY = 2
 
-# The left stop slides down along the tablet's short edge. A lower cradle ledge
-# sets its final position, two shallow rib-and-groove detents provide friction,
-# and rear hooks keep it captured laterally. No mechanical fastener is used.
+# The left stop slides down along one clean, closed-bottom dovetail groove in
+# the cradle's left base edge. The captured tongue guides the slide and blocks
+# lateral release without hooks, bumps, an external landing, or a fastener.
 ENDSTOP_SLIDE_CLEARANCE_X = 0.25
 ENDSTOP_OUTER_WALL_X = 3.5
-ENDSTOP_OUTER_WALL_Y_MIN = -64.5
+ENDSTOP_OUTER_WALL_Y_MIN = -65.0
 ENDSTOP_OUTER_WALL_Y_MAX = 65.0
+ENDSTOP_CORNER_R = 1.70
+ENDSTOP_EDGE_R = 0.70
 ENDSTOP_CAP_Y = 116.0
 ENDSTOP_LOCATOR_Y = (-42.0, 42.0)
 ENDSTOP_LOCATOR_Y_SIZE = 18.0
-ENDSTOP_LANDING_X_MIN = -105.5
-ENDSTOP_LANDING_X_MAX = -98.5
-ENDSTOP_LANDING_Y_MIN = -70.0
-ENDSTOP_LANDING_Y_MAX = ENDSTOP_OUTER_WALL_Y_MIN
-ENDSTOP_GUIDE_Y = (-52.0, 52.0)
-ENDSTOP_GUIDE_Y_SIZE = 10.0
-ENDSTOP_GUIDE_REAR_CLEARANCE_Z = 0.20
-ENDSTOP_GUIDE_HOOK_T = 2.0
-ENDSTOP_GUIDE_HOOK_X_RIGHT = -98.5
-ENDSTOP_DETENT_Y = (-32.0, 32.0)
-ENDSTOP_DETENT_RIB_Y = 6.0
-ENDSTOP_DETENT_RIB_Z = 1.0
-ENDSTOP_DETENT_RIB_PROJECTION_X = 0.30
-ENDSTOP_DETENT_GROOVE_Y = 6.4
-ENDSTOP_DETENT_GROOVE_Z = 1.4
-ENDSTOP_DETENT_GROOVE_DEPTH_X = 0.30
-ENDSTOP_DETENT_CENTER_Z = -1.5
-ENDSTOP_FRICTION_INTERFERENCE_X = (
-    ENDSTOP_DETENT_RIB_PROJECTION_X - ENDSTOP_SLIDE_CLEARANCE_X
-)
+ENDSTOP_DOVETAIL_CENTER_Z = -1.5
+ENDSTOP_DOVETAIL_BOTTOM_Y = -54.5
+ENDSTOP_DOVETAIL_GROOVE_TOP_Y = 65.2
+ENDSTOP_DOVETAIL_TONGUE_TOP_Y = 61.0
+ENDSTOP_DOVETAIL_GROOVE_OUTER_X = -103.8
+ENDSTOP_DOVETAIL_GROOVE_INNER_X = -101.3
+ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z = 1.30
+ENDSTOP_DOVETAIL_GROOVE_HEAD_Z = 2.30
+ENDSTOP_DOVETAIL_TONGUE_OUTER_X = -103.85
+ENDSTOP_DOVETAIL_TONGUE_INNER_X = -101.60
+ENDSTOP_DOVETAIL_TONGUE_NECK_Z = 0.90
+ENDSTOP_DOVETAIL_TONGUE_HEAD_Z = 1.80
+ENDSTOP_DOVETAIL_LEAD_CHAMFER = 0.40
+ENDSTOP_DOVETAIL_CAPTURE_Z = (
+    ENDSTOP_DOVETAIL_TONGUE_HEAD_Z - ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z
+) / 2.0
 
-# Exact crop pair for testing the new ledge, hook, and friction detent before
+# Exact crop pair for testing the closed-bottom tongue and groove before
 # committing the production cradle to a long print.
 LEFT_SLIDE_COUPON_X_MIN = -108.0
 LEFT_SLIDE_COUPON_X_MAX = -90.0
-LEFT_SLIDE_COUPON_Y_MIN = -72.0
+LEFT_SLIDE_COUPON_Y_MIN = -67.0
 LEFT_SLIDE_COUPON_Y_MAX = -20.0
 
 # Rear bracket: a partial-height plate preserves the open back while its lower
@@ -218,46 +216,62 @@ def cross_key(
     return key.faces(">Z").edges().chamfer(ALIGNMENT_KEY_EDGE_CHAMFER)
 
 
+def dovetail_prism(
+    profile: list[tuple[float, float]],
+    y_bottom: float,
+    y_top: float,
+) -> cq.Workplane:
+    """Extrude an X/Z dovetail profile downward along the local Y slide axis."""
+    return (
+        cq.Workplane("XZ", origin=(0.0, y_top, 0.0))
+        .polyline(profile)
+        .close()
+        .extrude(y_top - y_bottom)
+    )
+
+
+def endstop_dovetail_groove() -> cq.Workplane:
+    """Return the cradle cutter with a narrow mouth and captured inner head."""
+    mouth_half = ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z / 2.0
+    head_half = ENDSTOP_DOVETAIL_GROOVE_HEAD_Z / 2.0
+    profile = [
+        (ENDSTOP_DOVETAIL_GROOVE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z - mouth_half),
+        (ENDSTOP_DOVETAIL_GROOVE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z - head_half),
+        (ENDSTOP_DOVETAIL_GROOVE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z + head_half),
+        (ENDSTOP_DOVETAIL_GROOVE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z + mouth_half),
+    ]
+    return dovetail_prism(
+        profile,
+        ENDSTOP_DOVETAIL_BOTTOM_Y,
+        ENDSTOP_DOVETAIL_GROOVE_TOP_Y,
+    )
+
+
+def endstop_dovetail_tongue() -> cq.Workplane:
+    """Return the slightly undersized captured tongue with a chamfered lead."""
+    neck_half = ENDSTOP_DOVETAIL_TONGUE_NECK_Z / 2.0
+    head_half = ENDSTOP_DOVETAIL_TONGUE_HEAD_Z / 2.0
+    profile = [
+        (ENDSTOP_DOVETAIL_TONGUE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z - neck_half),
+        (ENDSTOP_DOVETAIL_TONGUE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z - head_half),
+        (ENDSTOP_DOVETAIL_TONGUE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z + head_half),
+        (ENDSTOP_DOVETAIL_TONGUE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z + neck_half),
+    ]
+    tongue = dovetail_prism(
+        profile,
+        ENDSTOP_DOVETAIL_BOTTOM_Y,
+        ENDSTOP_DOVETAIL_TONGUE_TOP_Y,
+    )
+    return tongue.faces(">Y").edges().chamfer(ENDSTOP_DOVETAIL_LEAD_CHAMFER)
+
+
 # ============================================================
 # PRINTABLE MODULES
 # ============================================================
 
 def flat_cradle() -> cq.Workplane:
-    """Active tablet cradle with a screw-free left-stop landing and detents."""
-    cradle = core.flat_main_holder()
-    landing = core.rounded_plate(
-        ENDSTOP_LANDING_X_MAX - ENDSTOP_LANDING_X_MIN,
-        ENDSTOP_LANDING_Y_MAX - ENDSTOP_LANDING_Y_MIN,
-        core.BASE_T,
-        -core.BASE_T,
-        core.EXPOSED_CORNER_R,
-    ).translate(
-        (
-            (ENDSTOP_LANDING_X_MIN + ENDSTOP_LANDING_X_MAX) / 2.0,
-            (ENDSTOP_LANDING_Y_MIN + ENDSTOP_LANDING_Y_MAX) / 2.0,
-            0.0,
-        )
-    )
-    cradle = cradle.union(landing)
-
-    cradle_left_x = -(core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T) / 2.0
-    for detent_y in ENDSTOP_DETENT_Y:
-        groove = (
-            cq.Workplane("XY")
-            .box(
-                ENDSTOP_DETENT_GROOVE_DEPTH_X + 0.4,
-                ENDSTOP_DETENT_GROOVE_Y,
-                ENDSTOP_DETENT_GROOVE_Z,
-            )
-            .translate(
-                (
-                    cradle_left_x + ENDSTOP_DETENT_GROOVE_DEPTH_X / 2.0,
-                    detent_y,
-                    ENDSTOP_DETENT_CENTER_Z,
-                )
-            )
-        )
-        cradle = cradle.cut(groove)
+    """Active tablet cradle with one clean closed-bottom dovetail groove."""
+    cradle = core.flat_main_holder().cut(endstop_dovetail_groove())
 
     cradle_groove = cross_groove(
         0.0,
@@ -285,8 +299,8 @@ def flat_end_stop() -> cq.Workplane:
         ENDSTOP_OUTER_WALL_Y_MAX - ENDSTOP_OUTER_WALL_Y_MIN,
         wall_h,
         -core.BASE_T,
-        core.EXPOSED_CORNER_R,
-        core.EXPOSED_EDGE_R,
+        ENDSTOP_CORNER_R,
+        ENDSTOP_EDGE_R,
     ).translate((outer_wall_center_x, outer_wall_center_y, 0.0))
 
     # The screen-facing cap stops short of the long-edge rail lips. Two local
@@ -317,63 +331,7 @@ def flat_end_stop() -> cq.Workplane:
         locator = pad if locator is None else locator.union(pad)
     assert locator is not None
 
-    stop = outer_wall.union(cap).union(locator)
-
-    hook_bottom_z = -core.BASE_T - ENDSTOP_GUIDE_HOOK_T - ENDSTOP_GUIDE_REAR_CLEARANCE_Z
-    hook_top_z = -core.BASE_T - ENDSTOP_GUIDE_REAR_CLEARANCE_Z
-    for guide_y in ENDSTOP_GUIDE_Y:
-        # The outside root overlaps the wall so the below-frame tongue remains
-        # one printable solid without invading the cradle's flat rear datum.
-        hook_root = (
-            cq.Workplane("XY")
-            .box(
-                ENDSTOP_OUTER_WALL_X,
-                ENDSTOP_GUIDE_Y_SIZE,
-                ENDSTOP_GUIDE_HOOK_T + 0.4,
-            )
-            .translate(
-                (
-                    outer_wall_center_x,
-                    guide_y,
-                    (hook_bottom_z + hook_top_z + 0.4) / 2.0,
-                )
-            )
-        )
-        hook_tongue = (
-            cq.Workplane("XY")
-            .box(
-                ENDSTOP_GUIDE_HOOK_X_RIGHT - wall_inner_x,
-                ENDSTOP_GUIDE_Y_SIZE,
-                ENDSTOP_GUIDE_HOOK_T,
-            )
-            .translate(
-                (
-                    (wall_inner_x + ENDSTOP_GUIDE_HOOK_X_RIGHT) / 2.0,
-                    guide_y,
-                    (hook_bottom_z + hook_top_z) / 2.0,
-                )
-            )
-        )
-        stop = stop.union(hook_root).union(hook_tongue)
-
-    for detent_y in ENDSTOP_DETENT_Y:
-        rib = (
-            cq.Workplane("XY")
-            .box(
-                ENDSTOP_DETENT_RIB_PROJECTION_X,
-                ENDSTOP_DETENT_RIB_Y,
-                ENDSTOP_DETENT_RIB_Z,
-            )
-            .translate(
-                (
-                    wall_inner_x + ENDSTOP_DETENT_RIB_PROJECTION_X / 2.0,
-                    detent_y,
-                    ENDSTOP_DETENT_CENTER_Z,
-                )
-            )
-        )
-        stop = stop.union(rib)
-    return stop
+    return outer_wall.union(cap).union(locator).union(endstop_dovetail_tongue())
 
 
 def rear_bracket_local_plate() -> cq.Workplane:
@@ -577,10 +535,18 @@ def left_slide_coupon_print_parts() -> tuple[cq.Workplane, cq.Workplane]:
 
 
 def left_slide_coupon_plate() -> cq.Workplane:
-    """Arrange both exact coupon pieces on one compact 33.75 x 50 mm plate."""
+    """Arrange both exact coupon pieces on one compact print plate."""
     cradle_coupon, stop_coupon = left_slide_coupon_print_parts()
-    cradle_placed = cradle_coupon.translate((105.5, 70.0, 0.0))
-    stop_placed = stop_coupon.translate((132.25, -20.0, 0.0))
+    cradle_bb = cradle_coupon.val().BoundingBox()
+    stop_bb = stop_coupon.val().BoundingBox()
+    cradle_placed = cradle_coupon.translate((-cradle_bb.xmin, -cradle_bb.ymin, 0.0))
+    stop_placed = stop_coupon.translate(
+        (
+            -stop_bb.xmin + cradle_bb.xlen + 10.0,
+            -stop_bb.ymin,
+            0.0,
+        )
+    )
     compound = cq.Compound.makeCompound([cradle_placed.val(), stop_placed.val()])
     return cq.Workplane("XY").newObject([compound])
 
@@ -705,7 +671,7 @@ def export() -> None:
             "cradle": "rear frame face on bed; rail and end-stop features face up",
             "rear_bracket": "horizontal sleeve-interface foot on bed",
             "sleeve": "flange on bed; tube-entry bore open upward",
-            "end_stop": "screen-facing bridge/top face on bed; rear hooks face upward",
+            "end_stop": "screen-facing bridge/top face on bed; dovetail tongue faces upward",
             "alignment_key": "flat on bed; print two identical copies",
             "right_fit_coupon": (
                 "rear face on bed; exact 33.5 mm crop of production cradle right end"
@@ -714,7 +680,7 @@ def export() -> None:
                 "rear face on bed; exact top-left production rail crop"
             ),
             "left_slide_coupon": (
-                "two exact lower-left crops; cradle rear face down and stop bridge face down"
+                "two exact lower-left dovetail crops; cradle rear face down and stop bridge face down"
             ),
         },
         "right_fit_coupon": {
@@ -733,7 +699,7 @@ def export() -> None:
             "uses_exact_cradle_geometry": True,
         },
         "left_slide_coupon": {
-            "purpose": "verify downward slide, rear-hook capture, landing, and friction detents",
+            "purpose": "verify the closed-bottom dovetail slide, capture, and printed fit",
             "x_min": LEFT_SLIDE_COUPON_X_MIN,
             "x_max": LEFT_SLIDE_COUPON_X_MAX,
             "y_min": LEFT_SLIDE_COUPON_Y_MIN,
@@ -756,13 +722,25 @@ def export() -> None:
         "joints": {
             "end_stop": {
                 "count": 1,
-                "method": "top-down friction slide; optional adhesive",
+                "method": "top-down closed-bottom dovetail slide; optional adhesive",
                 "mechanical_fasteners": 0,
                 "travel_axis": "local -Y from landscape top to bottom",
-                "landing_y": ENDSTOP_LANDING_Y_MAX,
-                "detent_count": len(ENDSTOP_DETENT_Y),
-                "nominal_rib_interference_x": ENDSTOP_FRICTION_INTERFERENCE_X,
-                "rear_hook_clearance_z": ENDSTOP_GUIDE_REAR_CLEARANCE_Z,
+                "external_landing": False,
+                "rear_hooks": 0,
+                "groove_bottom_y": ENDSTOP_DOVETAIL_BOTTOM_Y,
+                "groove_mouth_z": ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z,
+                "groove_head_z": ENDSTOP_DOVETAIL_GROOVE_HEAD_Z,
+                "tongue_neck_z": ENDSTOP_DOVETAIL_TONGUE_NECK_Z,
+                "tongue_head_z": ENDSTOP_DOVETAIL_TONGUE_HEAD_Z,
+                "capture_per_side_z": ENDSTOP_DOVETAIL_CAPTURE_Z,
+                "head_clearance_total_z": (
+                    ENDSTOP_DOVETAIL_GROOVE_HEAD_Z
+                    - ENDSTOP_DOVETAIL_TONGUE_HEAD_Z
+                ),
+                "depth_clearance_x": (
+                    ENDSTOP_DOVETAIL_TONGUE_INNER_X
+                    - ENDSTOP_DOVETAIL_GROOVE_INNER_X
+                ),
             },
             "cradle_to_bracket": {
                 "method": "adhesive bond",

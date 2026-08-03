@@ -87,8 +87,10 @@ def main() -> None:
     assert metadata["buttons"]["channel_open_to_slide_in_end"] is True
     assert metadata["buttons"]["channel_open_through_outer_wall"] is False
     assert metadata["joints"]["end_stop"]["mechanical_fasteners"] == 0
-    assert metadata["joints"]["end_stop"]["detent_count"] == 2
-    assert metadata["joints"]["end_stop"]["nominal_rib_interference_x"] > 0.0
+    assert metadata["joints"]["end_stop"]["external_landing"] is False
+    assert metadata["joints"]["end_stop"]["rear_hooks"] == 0
+    assert metadata["joints"]["end_stop"]["capture_per_side_z"] >= 0.2
+    assert metadata["joints"]["end_stop"]["head_clearance_total_z"] >= 0.4
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -97,11 +99,11 @@ def main() -> None:
     stop_flat = model.flat_end_stop().val()
     installed_parts = model.installed_parts()
 
-    # The complete cradle, including its new lower-left landing, retains the
-    # broad rear print datum and fits the configured 220 mm bed.
+    # The clean lower-left corner retains the broad rear print datum and the
+    # vestigial fastener/landing projection is completely absent.
     assert abs(cradle_flat.BoundingBox().zmin + core.BASE_T) < 1e-6
-    assert cradle_flat.BoundingBox().xlen <= 217.1
-    assert abs(cradle_flat.BoundingBox().ylen - 135.0) < 1e-5
+    assert cradle_flat.BoundingBox().xlen <= 215.1
+    assert abs(cradle_flat.BoundingBox().ylen - 130.0) < 1e-5
     print(
         "cradle rear datum clear; "
         f"flat envelope={cradle_flat.BoundingBox().xlen:.2f} x "
@@ -199,54 +201,54 @@ def main() -> None:
         assert overlap < 1e-6, f"{label} interference={overlap:.3f} mm3"
     print("installed modules and both alignment keys are interference-free")
 
-    # The screw-free stop slides down the left short edge. Its narrow ribs rub
-    # over the base edge, settle into matching grooves, and the lower cradle
-    # projection provides a hard seating ledge. Rear hooks remain below the
-    # cradle datum and prevent lateral release.
+    # The screw-free stop slides down one sleek dovetail. The groove is open at
+    # the top, closed at the bottom, wider internally than at its mouth, and
+    # contains a smaller matching tongue with no hooks, bumps, or external nub.
     cradle_left_x = -(
         core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
     ) / 2.0
-    assert_solid(
+    assert_open(
         cradle_flat,
         (-104.5, -67.0, -1.5),
-        "lower-left stop landing missing",
+        "vestigial lower-left landing remains",
     )
-    for detent_y in model.ENDSTOP_DETENT_Y:
-        assert_open(
-            cradle_flat,
-            (cradle_left_x + 0.1, detent_y, model.ENDSTOP_DETENT_CENTER_Z),
-            "left-stop detent groove missing",
-        )
-        assert_solid(
-            stop_flat,
-            (
-                cradle_left_x - model.ENDSTOP_SLIDE_CLEARANCE_X + 0.2,
-                detent_y,
-                model.ENDSTOP_DETENT_CENTER_Z,
-            ),
-            "left-stop friction rib missing",
-        )
-    assert_solid(stop_flat, (-101.0, -52.0, -4.2), "lower rear guide hook missing")
-    assert_solid(stop_flat, (-101.0, 52.0, -4.2), "upper rear guide hook missing")
-    assert_open(stop_flat, (-101.0, -52.0, -3.1), "rear hook consumes cradle clearance")
+    assert_open(
+        cradle_flat,
+        (cradle_left_x + 0.1, 0.0, model.ENDSTOP_DOVETAIL_CENTER_Z),
+        "dovetail mouth missing",
+    )
+    assert_open(
+        cradle_flat,
+        (-101.5, 0.0, -2.4),
+        "captured dovetail head cavity missing",
+    )
+    assert_solid(
+        cradle_flat,
+        (-102.0, model.ENDSTOP_DOVETAIL_BOTTOM_Y - 1.0, -1.5),
+        "dovetail groove is not closed at the bottom",
+    )
+    assert_solid(stop_flat, (-101.8, 0.0, -1.5), "captured dovetail tongue missing")
+    assert stop_flat.BoundingBox().zmin >= -core.BASE_T - 1e-6
     assert_solid(stop_flat, (-100.75, -42.0, 4.0), "tablet edge locator missing")
     assert core.LEFT_RAIL_ENTRY_RELIEF_X >= 4.0
+    assert model.ENDSTOP_DOVETAIL_CAPTURE_Z >= 0.2
+    assert (
+        model.ENDSTOP_DOVETAIL_GROOVE_HEAD_Z
+        - model.ENDSTOP_DOVETAIL_TONGUE_HEAD_Z
+    ) >= 0.4
 
-    insertion_overlaps = []
     for slide_offset_y in (90.0, 70.0, 50.0, 30.0, 10.0):
         overlap = model.flat_cradle().intersect(
             model.flat_end_stop().translate((0.0, slide_offset_y, 0.0))
         ).val().Volume()
-        insertion_overlaps.append(overlap)
-        assert overlap < 1.0, (
+        assert overlap < 1e-6, (
             f"hard collision during left-stop insertion at Y+{slide_offset_y:.0f}: "
             f"{overlap:.3f} mm3"
         )
     assert model.flat_cradle().intersect(model.flat_end_stop()).val().Volume() < 1e-6
     print(
-        "screw-free left stop has two friction detents, rear capture hooks, "
-        f"a lower landing, and collision-free slide travel apart from <= "
-        f"{max(insertion_overlaps):.2f} mm3 intentional rib interference"
+        "screw-free left stop has one captured, closed-bottom dovetail with "
+        "collision-free slide travel and no hooks, bumps, nub, or fastener"
     )
 
     # The right-side coupon is a literal crop of the production cradle. It
@@ -341,15 +343,15 @@ def main() -> None:
     assert len(left_coupon_stop.solids().vals()) == 1
     assert_solid(
         left_coupon_cradle.val(),
-        (-104.5, -67.0, -1.5),
-        "slide coupon omits the lower landing",
+        (-102.0, model.ENDSTOP_DOVETAIL_BOTTOM_Y - 1.0, -1.5),
+        "slide coupon omits the closed groove bottom",
     )
     assert_solid(
         left_coupon_stop.val(),
-        (-101.0, -52.0, -4.2),
-        "slide coupon omits the rear hook",
+        (-101.8, -40.0, -1.5),
+        "slide coupon omits the dovetail tongue",
     )
-    print("left-slide coupon pair is an exact production crop of the landing, hook, and detent")
+    print("left-slide coupon pair is an exact production crop of the dovetail and closed bottom")
 
     # Preserve the user-tested tube path and seating cap.
     tube_axis_z = core.SLEEVE_BOTTOM_Z + core.SLEEVE_ENGAGEMENT / 2.0

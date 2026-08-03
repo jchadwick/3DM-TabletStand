@@ -14,7 +14,7 @@ The source tablet mesh and visual references are preserved under [`reference/`](
 - Proven printed fit: **32.2 mm ID closed sleeve**, installed by sliding the holder down over the tube end.
 - Screen angle: **10 degrees back from vertical / 80 degrees above horizontal**, with the near/bottom edge lower and the far/top edge higher and farther from the user.
 - Styling: simple and sleek, with sturdy support but minimal enclosure.
-- Retention direction: slide-in edge rails with a screw-free left stop that slides down onto a lower landing and uses friction detents plus rear capture hooks.
+- Retention direction: slide-in edge rails with a screw-free left stop that slides down in a continuous captured dovetail. The groove has a closed internal bottom, with no projecting nub, hook, or detent bump.
 - Cable: a slim plug protrudes 0.256 in (6.50 mm) from the tablet; its flat cable section is 0.6 mm thick for roughly 2 in before transitioning to confirmed 3.45 mm round braided cable.
 - USB-C handling: the right-angle pigtail turns immediately behind the tablet; its connection and downstream cable stay largely hidden across the open back before entering an open groove/clip on the tube sleeve.
 

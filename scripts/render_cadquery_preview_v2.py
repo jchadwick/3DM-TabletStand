@@ -179,6 +179,21 @@ def left_stop_detail_objects(
     ]
 
 
+def left_stop_section_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Show a thin transverse CAD section with the tongue exploded outward."""
+    section = (
+        cq.Workplane("XY")
+        .box(18.0, 5.0, 22.0)
+        .translate((-102.0, 0.0, 3.0))
+    )
+    cradle = model.flat_cradle().intersect(section)
+    stop = model.flat_end_stop().intersect(section).translate((-8.0, 0.0, 0.0))
+    return [
+        (cq_mesh(cradle), (48, 72, 104, 255)),
+        (cq_mesh(stop), (16, 112, 220, 255)),
+    ]
+
+
 def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
     labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 8 MM RECTANGLE")
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
@@ -207,9 +222,9 @@ def button_coupon_contact_sheet(paths: list[Path], output: Path) -> None:
 
 def left_stop_contact_sheet(paths: list[Path], output: Path) -> None:
     labels = (
-        "SEATED ON LOWER LANDING — NO SCREW",
-        "TOP-DOWN SLIDE — 35 MM EXPLODED",
-        "REAR HOOKS + TWO FRICTION DETENTS",
+        "CLEAN SEATED EDGE — NO SCREW OR NUB",
+        "TOP-DOWN DOVETAIL SLIDE — 35 MM EXPLODED",
+        "DOVETAIL PROFILE — 0.25 MM CAPTURE PER SIDE",
     )
     canvas = Image.new("RGB", (2400, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
@@ -349,11 +364,11 @@ def main() -> None:
             )
         elif sys.argv[2] == "left-stop-rear":
             render_view(
-                left_stop_detail_objects(),
+                left_stop_section_objects(),
                 left_stop_views[2],
                 (800, 700),
-                eye=(-175.0, -145.0, -52.0),
-                target=(-101.0, -4.0, -1.5),
+                eye=(-106.0, -55.0, 2.0),
+                target=(-106.0, 0.0, 2.0),
             )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")

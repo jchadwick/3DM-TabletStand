@@ -10,9 +10,11 @@
 
 ADR-0001 established the support-minimized four-module V2 layout but retained
 one M3 screw for the removable left tablet stop. The user rejected that visible
-fastener and requested a left edge that installs by sliding downward, seats on
-a cradle projection, and remains removable through friction or optionally
-permanent with a small amount of adhesive. The stop must still print separately,
+fastener and requested a left edge that installs by sliding downward and remains
+removable through a guided fit or optionally permanent with a small amount of
+adhesive. After reviewing the first screw-free implementation, the user also
+rejected its projecting landing nub, rear hooks, and detent bumps in favor of a
+sleek tongue-and-groove joint. The stop must still print separately,
 must not collide with either long rail during insertion, and must preserve the
 cradle's broad rear print datum. The user also requested softer exposed edges.
 
@@ -20,13 +22,14 @@ cradle's broad rear print datum. The user also requested softer exposed edges.
 
 Retain ADR-0001's cradle, rear-bracket, sleeve, alignment-key, and print-layout
 decisions, but replace the M3-mounted end stop with a screw-free top-down slide
-stop. The production cradle receives a lower-left landing ledge, a 4 mm rail-free
-entry lead, and two shallow detent grooves. The separate stop receives matching
-friction ribs plus two hooks that travel below the cradle's rear face and prevent
-lateral release. The stop seats against the lower ledge; adhesive is optional.
+stop. Use one continuous captured dovetail: the production cradle receives a
+closed-bottom groove and the separate stop receives a matching undersized tongue.
+The narrow groove mouth captures the wider tongue head; the internal closed
+bottom establishes the seated position. Do not add rear hooks, detent bumps, or
+an external lower landing. Adhesive is optional.
 
-Use an exact two-piece production crop to physically test the slide, detents,
-rear-hook clearance, and final seating before the revised full cradle is printed.
+Use an exact two-piece production crop to physically test the slide clearance,
+dovetail capture, and closed-bottom seating before the revised full cradle is printed.
 Soften exposed perimeter, rail, lip, and stop edges with the active fillet radii
 without changing the confirmed tablet-cavity allowances.
 
@@ -37,18 +40,18 @@ without changing the confirmed tablet-cavity allowances.
 - Eliminates the only visible mechanical fastener and its unconfirmed screw
   length and pilot strategy.
 - The stop remains independently replaceable and can be glued only if desired.
-- The lower landing gives a deterministic seated position while the rear hooks
-  prevent the stop from peeling away from the cradle.
+- The closed-bottom groove gives a deterministic seated position while the
+  dovetail prevents the stop from peeling away from the cradle.
+- Removing the external landing, hooks, and bumps restores a clean rounded
+  lower-left silhouette and the cradle's 215 × 130 mm envelope.
 - Rounded longitudinal edges make the printed holder less sharp in hand.
 
 ### Negative
 
 - The friction fit is printer- and material-dependent and requires a physical
   PLA coupon before the full cradle.
-- The cradle grows to 217 mm wide and therefore retains little spare X margin
-  on the configured 220 mm bed.
-- The stop's small rear hooks require inspection in the slicer and careful
-  removal from the bed.
+- The long, enclosed sliding surfaces remain sensitive to printed PLA clearance
+  and must be physically tested before committing to the full cradle.
 
 ## Alternatives considered
 
@@ -57,10 +60,11 @@ without changing the confirmed tablet-cavity allowances.
 Rejected because the user does not want a visible screw or mechanical fastener
 on the tablet edge.
 
-### Use a snap tab without a lower landing
+### Use separate snap hooks, detents, and a lower landing
 
-Rejected because a cantilever snap would concentrate strain in PLA and provide
-a less deterministic seated position than a guided slide resting on a ledge.
+Initially implemented, then rejected because the small features and projecting
+nub looked vestigial and bulky compared with the requested clean tongue-and-groove
+joint.
 
 ### Glue the stop permanently with no guides
 
@@ -72,10 +76,10 @@ to replace or service the tablet without breaking a bond.
 - `.venv/bin/python cad/tablet_stand_v2.py`
 - `.venv/bin/python scripts/validate_model_v2.py`
 - `.venv/bin/python scripts/render_cadquery_preview_v2.py`
-- Validation samples the complete insertion travel and permits only the tiny
-  intentional friction-rib interference before confirming zero final overlap.
+- Validation samples the complete insertion travel and requires zero solid
+  intersection at every sampled offset.
 - `build/v2/tablet_stand_v2_left_stop_multiview.png` shows the seated, sliding,
-  and rear-hook views.
+  and transverse dovetail-profile views.
 - `tablet_stand_v2_left_slide_coupon_cradle.stl` and
   `tablet_stand_v2_left_slide_coupon_stop.stl` are watertight exact crops for
   the required physical fit test.

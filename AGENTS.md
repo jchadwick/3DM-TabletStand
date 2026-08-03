@@ -28,7 +28,7 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | Sleeve | Closed cylindrical sleeve slides down over an accessible tube end; 40.2 mm OD, 4.0 mm wall, 51 mm clear engagement, 3.0 mm seating cap |
 | Sleeve placement | Centered left-to-right and **24 mm behind the tablet plane**; never move it into the tablet cavity |
 | Sleeve vertical alignment | Sleeve/collet bottom is level with the holder's lower long edge at **Z = -64.53 mm**; rear assembly is 14.53 mm below its prior position |
-| Tablet retention | Tablet slides in from the left through narrow long-edge rails; a separate screw-free left stop then slides downward from the landscape top, seats on the cradle's lower-left landing, and is retained by two shallow friction detents plus two rear capture hooks; adhesive is optional |
+| Tablet retention | Tablet slides in from the left through narrow long-edge rails; a separate screw-free left stop then slides downward in one continuous captured dovetail groove with a closed internal bottom. There is no screw, hook, detent bump, or projecting lower nub; adhesive is optional |
 | USB-C | Center of right short edge from the front; one **16 mm wide × 8 mm deep** open rectangle replaces the undersized T-shaped rear-floor opening and spans from tablet cavity to outer wall |
 | Cable | Right-angle pigtail is photo-marked 51.4 mm long; its 0.6 mm flat section and downstream connection stay behind the tablet, then the confirmed 3.45 mm round braided cable routes through open rear clips to the sleeve |
 | Sleeve cable channel | Rear-facing snap-in channel on the outside of the sleeve: 4.15 mm ID, 2.8 mm opening, 1.2 mm embed; preserves at least 2.8 mm of sleeve wall and the full 32.2 mm bore |
@@ -39,9 +39,9 @@ Routine previews use direct in-memory CadQuery tessellation through `scripts/ren
 | V2 print layouts | Cradle rear face down; bracket foot down; sleeve flange down with tube bore open upward; slide stop screen-facing bridge/top face down |
 | Cable unknown | Photo marks 9.6 mm at the downstream connector body, but the measurement axis remains unconfirmed; keep that connector outside all captive features |
 | Button clearance | Power/volume group is **20–60 mm from landscape top-left**, **2 mm wide across tablet thickness**, centered, and **1 mm protruding**; use a concealed inner groove **2 mm high × 1.2 mm deep** from the left slide-in end through **5 mm beyond** the seated group, preserving a solid **1.8 mm exterior rail wall** and the upper retaining lip |
-| Outside finish | Softer exposed geometry: 1.45 mm plan-corner radius on rails/walls, 0.95 mm on lips, plus 0.65 mm exposed perimeter/rail edge fillets and 0.45 mm lip edge fillets |
+| Outside finish | Softer exposed geometry: 1.45 mm plan-corner radius on rails/walls, 0.95 mm on lips, plus 0.65 mm exposed perimeter/rail edge fillets and 0.45 mm lip edge fillets; the slide stop uses a 1.70 mm outside corner radius and 0.70 mm edge fillet |
 | Style | Simple, sleek, skeletal/open-back support; avoid a bulky full enclosure |
-| Current status | V2 is the sole active model. The M3 stop and hole are removed; the screw-free slide stop, lower landing, friction detents, rear hooks, softened edges, and exact two-piece fit coupon are geometrically validated. Revised support-free and snug-support cradle slices are prepared but not uploaded; physically test the left-slide PLA coupon before the full cradle |
+| Current status | V2 is the sole active model. The M3 stop and hole are removed; the clean closed-bottom dovetail stop, nub-free rounded lower-left corner, softened edges, and exact two-piece fit coupon are geometrically validated. Refreshed support-free and snug-support cradle slices are visually reviewed but not uploaded; physically test the left-slide PLA coupon before the full cradle |
 
 Coordinate system in `cad/tablet_stand_v2.py` and `cad/tablet_stand_core.py`: X is tablet left (−) to right/USB-C (+); Y is user/bottom edge (−) to far/top edge (+); Z is up. The tablet is rotated +80° around X.
 

@@ -40,10 +40,10 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | V2 glue alignment | 35 × 15 × 1.8 mm cross key, print quantity 2 | Existing 36.25 × 16.25 × 4.25 mm grooves retained; at least 1.25 mm total planar clearance, 0.50 mm thickness clearance, and 0.4 mm edge relief; user fit-test correction |
 | Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
-| V2 left stop | Top-down local −Y slide; 0.25 mm wall clearance, two 0.05 mm nominal friction ribs, matching detent grooves, two 0.20 mm-clear rear hooks, and lower landing | No fastener; optional drop of glue after fit confirmation |
+| V2 left stop | Top-down local −Y slide in one continuous closed-bottom dovetail; 1.30 mm groove mouth, 2.30 mm internal head, 1.80 mm tongue head, 0.25 mm capture per side, and 0.50 mm total head clearance | No fastener, hook, detent bump, or external landing nub; optional drop of glue after fit confirmation |
 | Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests restored rail fit, right-edge seating, USB-C pocket, and open 16 × 8 mm cable rectangle |
 | Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.2 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
-| Left-slide coupon | Two exact lower-left production crops | Tests the lower landing, rear-hook capture, downward travel, and both friction detents before the revised cradle |
+| Left-slide coupon | Two exact lower-left production crops | Tests dovetail capture, closed-bottom seating, downward travel, and real PLA sliding fit before the revised cradle |
 
 ## Functional design
 
@@ -57,32 +57,33 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
 - The landscape-top rail has a concealed 2 mm-high × 1.2 mm-deep groove in its inner face, centered on the tablet's thickness. It begins at the left slide-in entrance and continues to 5 mm past the measured end of the seated 20–60 mm power/volume group. The groove clears the 1 mm button projection without breaking through the rail: a solid 1.8 mm exterior wall and the complete retaining lip remain.
-- After the tablet slides in from the left, the separate left stop slides downward from the landscape top. A 4 mm rail-free entry lead prevents collision with the long rails; rear hooks travel below the cradle frame, two shallow ribs settle into matching detent grooves, and the stop rests on a built-in lower-left landing. No mechanical fastener is used. A drop of glue remains optional after the fit is proven.
+- After the tablet slides in from the left, the separate left stop slides downward from the landscape top in one continuous tapered tongue-and-groove joint. The dovetail's narrow mouth captures the wider tongue head, while the groove's closed internal bottom establishes the seated position without any projecting lower nub. There are no hooks, detent bumps, or mechanical fasteners. A drop of glue remains optional after the fit is proven.
 - A continuous screen-facing cap covers the right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug. The cap remains structurally continuous because the cable opening is in the rear pocket floor, not through the cap.
 - The right-angle adapter turns immediately around the tablet's right edge and onto the open back; the flat pigtail and its downstream connection should be largely hidden behind the tablet rather than leaving straight out through the right wall.
 - The right side presents a continuous enclosed screen-facing face: the outer wall is solid and a full-depth cap spans the entire short edge. The plug chamber remains open toward the tablet cavity. One 16 mm-wide × 8 mm-deep rectangle removes the center rear pocket floor from the tablet cavity to the outer wall so the complete thick cable section can pass without threading through the superseded T-shaped opening.
 - The 3.45 mm braided section snaps into two open C-clips on the rear spine. From the nearer clip it drops through open space outside the right gusset, sweeps behind the sleeve, and enters the rear-facing external sleeve channel through its snap opening. No segment passes through a holder, gusset, or sleeve solid, and the 9.6 mm-marked connector body remains accessible outside all captive features.
 - The external sleeve channel has 4.15 mm internal clearance and a 2.8 mm snap opening. Its shallow 1.2 mm embed leaves at least 2.8 mm of the original 4 mm sleeve wall and does not intersect the tested 32.2 mm bore.
-- Exposed perimeter, rail, lip, and removable-stop edges use both larger plan-corner radii and longitudinal fillets so the holder feels softer than the earlier sharp-edged print.
+- Exposed perimeter, rail, lip, and removable-stop edges use both larger plan-corner radii and longitudinal fillets so the holder feels softer than the earlier sharp-edged print. The stop's outside lower corner is a continuous 1.70 mm round with a 0.70 mm edge fillet, and the cradle has no vestigial screw-era projection below it.
 - Keep the rear open for material efficiency, airflow, and access. Do not convert this to a full bezel without confirming all device clearance zones.
 - Active shared geometry is in `cad/tablet_stand_core.py`, modular assembly/export logic is in `cad/tablet_stand_v2.py`, and generated outputs are under `build/v2/`. Superseded V1 is intentionally maintained only in Git history.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
-- Before printing the revised full cradle, print `tablet_stand_v2_left_slide_coupon_cradle.stl` and `tablet_stand_v2_left_slide_coupon_stop.stl`. Confirm that the stop slides downward with firm but hand-removable friction, the rear hook does not bind, both detents seat, and the bottom edge rests fully against the landing. Adjust the parametric friction rib if the coupon is either loose or forceful; do not scale either part in the slicer.
+- Before printing the revised full cradle, print `tablet_stand_v2_left_slide_coupon_cradle.stl` and `tablet_stand_v2_left_slide_coupon_stop.stl`. Confirm that the tongue enters from the top, stays captured laterally, travels to the closed bottom without binding, and remains hand-removable with an acceptable PLA sliding fit. Adjust the parametric dovetail clearance if the coupon is either loose or forceful; do not scale either part in the slicer.
 
 ## Revised full-cradle slice review
 
-- The revised support-free PLA cradle candidate includes the screw-free landing, rail-entry relief, friction grooves, and softened edges: rear face down, 0.20 mm layers, three walls, 20% grid infill, no skirt, and no supports. Validation reports X = 2–218 mm and Y = 43–177 mm extrusion, 4 h 34 min, about 61.1 g, and 7.5 mm³/s peak flow.
-- The updated snug-support comparison validates at the same X = 2–218 mm footprint, 4 h 52 min, and 66.8 g. It places support against the fit-critical long rail lips and right-end features.
-- Prefer the support-free candidate after the left-slide coupon passes. Its short bridges and rails retain the previously tested production orientation, while supports add about 17 minutes and 5.7 g plus cleanup on mating surfaces.
+- The refreshed support-free PLA cradle candidate uses the current 215 × 130 × 14.2 mm dovetail/nub-free geometry: rear face down, 0.20 mm layers, three walls, 20% grid infill, no skirt, and no supports. Validation reports X = 3–217 mm and Y = 45–175 mm extrusion, 4 h 8 min, about 60.7 g, and 8.2 mm³/s peak flow.
+- The refreshed snug-support comparison validates at X = 2–217 mm, 4 h 28 min, and 67.4 g. It places support along the fit-critical long rail lips and end features.
+- Prefer the support-free candidate after the left-slide coupon passes. Its short bridges and rails retain the previously tested production orientation, while supports add about 20 minutes and 6.7 g plus cleanup on mating surfaces.
 - The removable end stop cannot share the nearly full-width cradle plate and must be printed as a separate job.
+- The refreshed end-stop job uses its screen-facing bridge/top face on the bed, a 5 mm removable brim, and no supports; validation reports 49 min and about 9.2 g.
 
 ## Known unknowns before a full print
 
 - Flat cable and connector-body width.
 - Whether the photo's 9.6 mm annotation is connector width, height, or another measurement.
 - Speaker, camera, microphone, and any other edge clearances not covered by the measured power/volume group.
-- Physical result for the new left-slide friction coupon and whether optional adhesive is desired.
+- Physical result for the new dovetail slide coupon and whether optional adhesive is desired.
 - Unobstructed tube length above its existing mounting point.
-- The confirmed Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are now verified; the support-free cradle uses X = 2–218 mm.
+- The confirmed Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are now verified; the support-free cradle uses X = 3–217 mm.
 - Adhesive selection, surface preparation, clamp method, and cure time for the selected filament.
