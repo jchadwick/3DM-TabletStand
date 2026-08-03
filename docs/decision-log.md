@@ -68,6 +68,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Regenerated the full-cradle support review. The recommended support-free job validates at 4 h 8 min, 60.7 g, and X = 3–217 mm; the snug-support comparison validates at 4 h 28 min, 67.4 g, and places support on the long lips and end features. Neither was uploaded or started.
 - Prepared the separate end stop bridge-face down with a 5 mm brim and no supports; validation reports 49 min 22 s and 9.2 g. It was not uploaded or started.
 
+### Supported left-slide coupon retry for string-prone PLA — 2026-08-03
+
+- The first physical two-piece left-slide coupon failed as a print: the stop crop developed loose/collapsed extrusion beneath its ledge and the shared job showed severe travel stringing. This result does not establish dovetail fit and overrides the earlier support-free slice recommendation.
+- Kept the exact production tongue, groove, closed bottom, and fit clearance unchanged. Rotated the stop onto its broad outside wall face so its dovetail builds vertically; this changes only manufacturing orientation, lowers the full stop from 14.2 mm to about 6.8 mm, and increases its estimated bed contact from 803 mm² to 1,778 mm². Increased the combined plate's inter-part spacing from 10 mm to 28 mm, leaving an 18 mm clear gap between separate 5 mm brims.
+- The retry uses 45-degree grid supports, a cooler 200 °C nozzle after a 205 °C first layer, and slower external/perimeter motion for the user's confirmed dry but string-prone PLA. The full cradle and end-stop G-code remain unapproved pending a successful physical coupon.
+- The validated retry uses 0.16 mm layers, three walls, 20% grid infill, 45-degree grid supports with 0.2 mm Z / 0.4 mm XY gaps, a 5 mm brim, 1.0 mm retraction at 40 mm/s, 25 mm/s external perimeters, and 30 mm/s perimeters. It estimates 40 min 49 s and 5.0 g with 7.5 mm³/s peak flow; actual support paths were rendered and visually inspected before upload.
+
 ### Screw-free slide stop and softened outside edges — 2026-08-02 (joint geometry superseded 2026-08-03)
 
 - The user rejected the M3 hole and requested a left edge that simply slides downward, seats on a projecting lower-left cradle edge, stays through friction, and can optionally receive a drop of glue.

@@ -9,7 +9,7 @@ Print orientations:
     cradle: rear frame face on the bed
     rear bracket: horizontal sleeve-interface foot on the bed
     sleeve: flange face on the bed, tube-entry bore open upward
-    slide-on left stop: screen-facing bridge/top face on the bed
+    slide-on left stop: broad outside wall face on the bed
 
 All dimensions are millimeters. ``tablet_stand_core`` owns confirmed tablet,
 tube, rail, USB-C, cable, and tilt geometry; this file owns the modular joints.
@@ -90,6 +90,11 @@ LEFT_SLIDE_COUPON_X_MIN = -108.0
 LEFT_SLIDE_COUPON_X_MAX = -90.0
 LEFT_SLIDE_COUPON_Y_MIN = -67.0
 LEFT_SLIDE_COUPON_Y_MAX = -20.0
+# Keep the two exact-fit pieces well apart on the combined plate.  The first
+# physical coupon used a 10 mm gap and this particular PLA strung heavily
+# across the repeated inter-part travel; 28 mm leaves an 18 mm clear gap even
+# after the 5 mm brim around each piece.
+LEFT_SLIDE_COUPON_PLATE_GAP = 28.0
 
 # Rear bracket: a partial-height plate preserves the open back while its lower
 # installed edge stays above the horizontal print foot.
@@ -524,13 +529,7 @@ def left_slide_coupon_print_parts() -> tuple[cq.Workplane, cq.Workplane]:
     cradle_coupon, stop_coupon = left_slide_coupon_parts()
     return (
         shift_to_bed(cradle_coupon),
-        shift_to_bed(
-            stop_coupon.rotate(
-                (0.0, 0.0, 0.0),
-                (1.0, 0.0, 0.0),
-                180.0,
-            )
-        ),
+        orient_end_stop_for_print(stop_coupon),
     )
 
 
@@ -542,7 +541,7 @@ def left_slide_coupon_plate() -> cq.Workplane:
     cradle_placed = cradle_coupon.translate((-cradle_bb.xmin, -cradle_bb.ymin, 0.0))
     stop_placed = stop_coupon.translate(
         (
-            -stop_bb.xmin + cradle_bb.xlen + 10.0,
+            -stop_bb.xmin + cradle_bb.xlen + LEFT_SLIDE_COUPON_PLATE_GAP,
             -stop_bb.ymin,
             0.0,
         )
@@ -568,6 +567,21 @@ def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Work
     return cradle, bracket, sleeve, stop
 
 
+def orient_end_stop_for_print(stop: cq.Workplane) -> cq.Workplane:
+    """Lay the stop on its broad outside wall so the dovetail grows vertically."""
+    bridge_face_down = stop.rotate(
+        (0.0, 0.0, 0.0),
+        (1.0, 0.0, 0.0),
+        180.0,
+    )
+    outside_wall_down = bridge_face_down.rotate(
+        (0.0, 0.0, 0.0),
+        (0.0, 1.0, 0.0),
+        -90.0,
+    )
+    return shift_to_bed(outside_wall_down)
+
+
 def print_parts() -> tuple[
     cq.Workplane,
     cq.Workplane,
@@ -585,13 +599,7 @@ def print_parts() -> tuple[
             180.0,
         )
     )
-    stop = shift_to_bed(
-        flat_end_stop().rotate(
-            (0.0, 0.0, 0.0),
-            (1.0, 0.0, 0.0),
-            180.0,
-        )
-    )
+    stop = orient_end_stop_for_print(flat_end_stop())
     key = shift_to_bed(alignment_key_print())
     return cradle, bracket, sleeve, stop, key
 
@@ -671,7 +679,7 @@ def export() -> None:
             "cradle": "rear frame face on bed; rail and end-stop features face up",
             "rear_bracket": "horizontal sleeve-interface foot on bed",
             "sleeve": "flange on bed; tube-entry bore open upward",
-            "end_stop": "screen-facing bridge/top face on bed; dovetail tongue faces upward",
+            "end_stop": "broad outside wall face on bed; dovetail tongue builds vertically",
             "alignment_key": "flat on bed; print two identical copies",
             "right_fit_coupon": (
                 "rear face on bed; exact 33.5 mm crop of production cradle right end"
@@ -680,7 +688,7 @@ def export() -> None:
                 "rear face on bed; exact top-left production rail crop"
             ),
             "left_slide_coupon": (
-                "two exact lower-left dovetail crops; cradle rear face down and stop bridge face down"
+                "two exact lower-left dovetail crops; cradle rear face down and stop outside wall down"
             ),
         },
         "right_fit_coupon": {
@@ -704,6 +712,7 @@ def export() -> None:
             "x_max": LEFT_SLIDE_COUPON_X_MAX,
             "y_min": LEFT_SLIDE_COUPON_Y_MIN,
             "y_max": LEFT_SLIDE_COUPON_Y_MAX,
+            "plate_gap": LEFT_SLIDE_COUPON_PLATE_GAP,
             "uses_exact_cradle_geometry": True,
         },
         "buttons": {

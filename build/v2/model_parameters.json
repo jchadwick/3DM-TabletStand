@@ -26,11 +26,11 @@
     "cradle": "rear frame face on bed; rail and end-stop features face up",
     "rear_bracket": "horizontal sleeve-interface foot on bed",
     "sleeve": "flange on bed; tube-entry bore open upward",
-    "end_stop": "screen-facing bridge/top face on bed; dovetail tongue faces upward",
+    "end_stop": "broad outside wall face on bed; dovetail tongue builds vertically",
     "alignment_key": "flat on bed; print two identical copies",
     "right_fit_coupon": "rear face on bed; exact 33.5 mm crop of production cradle right end",
     "button_fit_coupon": "rear face on bed; exact top-left production rail crop",
-    "left_slide_coupon": "two exact lower-left dovetail crops; cradle rear face down and stop bridge face down"
+    "left_slide_coupon": "two exact lower-left dovetail crops; cradle rear face down and stop outside wall down"
   },
   "right_fit_coupon": {
     "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
@@ -53,6 +53,7 @@
     "x_max": -90.0,
     "y_min": -67.0,
     "y_max": -20.0,
+    "plate_gap": 28.0,
     "uses_exact_cradle_geometry": true
   },
   "buttons": {

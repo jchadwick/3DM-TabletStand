@@ -43,7 +43,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | V2 left stop | Top-down local −Y slide in one continuous closed-bottom dovetail; 1.30 mm groove mouth, 2.30 mm internal head, 1.80 mm tongue head, 0.25 mm capture per side, and 0.50 mm total head clearance | No fastener, hook, detent bump, or external landing nub; optional drop of glue after fit confirmation |
 | Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests restored rail fit, right-edge seating, USB-C pocket, and open 16 × 8 mm cable rectangle |
 | Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.2 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
-| Left-slide coupon | Two exact lower-left production crops | Tests dovetail capture, closed-bottom seating, downward travel, and real PLA sliding fit before the revised cradle |
+| Left-slide coupon | Two exact lower-left production crops, arranged with a 28 mm inter-part plate gap | Tests dovetail capture, closed-bottom seating, downward travel, and real PLA sliding fit before the revised cradle; use grid supports with the current string-prone PLA |
 
 ## Functional design
 
@@ -56,6 +56,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The complete rear sleeve/collet assembly is lowered so its bottom is level with the installed holder's lower long edge. The sleeve dimensions and proven tube fit are unchanged.
 - Two rear gussets connect the rear-offset sleeve to the tablet back support.
 - The tablet loads from the left through narrow rails on the long edges.
+- The slide stop prints on its broad outside wall face. This lowers it to about 6.8 mm, substantially increases bed contact, and builds the continuous dovetail vertically instead of cantilevering its head into open air; the rounded exposed edge is retained.
 - The landscape-top rail has a concealed 2 mm-high × 1.2 mm-deep groove in its inner face, centered on the tablet's thickness. It begins at the left slide-in entrance and continues to 5 mm past the measured end of the seated 20–60 mm power/volume group. The groove clears the 1 mm button projection without breaking through the rail: a solid 1.8 mm exterior wall and the complete retaining lip remain.
 - After the tablet slides in from the left, the separate left stop slides downward from the landscape top in one continuous tapered tongue-and-groove joint. The dovetail's narrow mouth captures the wider tongue head, while the groove's closed internal bottom establishes the seated position without any projecting lower nub. There are no hooks, detent bumps, or mechanical fasteners. A drop of glue remains optional after the fit is proven.
 - A continuous screen-facing cap covers the right side from the tablet edge to the solid outer wall; two internal stop walls beneath it locate the tablet while accommodating the 6.50 mm-projecting USB-C plug. The cap remains structurally continuous because the cable opening is in the rear pocket floor, not through the cap.
@@ -68,7 +69,8 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Active shared geometry is in `cad/tablet_stand_core.py`, modular assembly/export logic is in `cad/tablet_stand_v2.py`, and generated outputs are under `build/v2/`. Superseded V1 is intentionally maintained only in Git history.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
-- Before printing the revised full cradle, print `tablet_stand_v2_left_slide_coupon_cradle.stl` and `tablet_stand_v2_left_slide_coupon_stop.stl`. Confirm that the tongue enters from the top, stays captured laterally, travels to the closed bottom without binding, and remains hand-removable with an acceptable PLA sliding fit. Adjust the parametric dovetail clearance if the coupon is either loose or forceful; do not scale either part in the slicer.
+- Before printing the revised full cradle, print `tablet_stand_v2_left_slide_coupon_cradle.stl` and `tablet_stand_v2_left_slide_coupon_stop.stl`. Remove the brim and support, then slide the stop coupon's tongue into the cradle coupon's groove from the open end. Confirm that the tongue stays captured laterally, travels to the closed bottom without binding, and remains hand-removable with an acceptable PLA sliding fit. Adjust the parametric dovetail clearance if the coupon is either loose or forceful; do not scale either part in the slicer.
+- The corrected combined coupon job is 0.16 mm layer PLA with three walls, 20% grid infill, a 5 mm brim, and 45-degree grid supports. For the user's dry but string-prone PLA it runs at 205 °C on the first layer and 200 °C thereafter, with 1.0 mm retraction at 40 mm/s. Validation reports 40 min 49 s, about 5.0 g, 7.5 mm³/s peak flow, and X = 71–149 / Y = 76–144 mm extrusion bounds.
 
 ## Revised full-cradle slice review
 
@@ -76,7 +78,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - The refreshed snug-support comparison validates at X = 2–217 mm, 4 h 28 min, and 67.4 g. It places support along the fit-critical long rail lips and end features.
 - Prefer the support-free candidate after the left-slide coupon passes. Its short bridges and rails retain the previously tested production orientation, while supports add about 20 minutes and 6.7 g plus cleanup on mating surfaces.
 - The removable end stop cannot share the nearly full-width cradle plate and must be printed as a separate job.
-- The refreshed end-stop job uses its screen-facing bridge/top face on the bed, a 5 mm removable brim, and no supports; validation reports 49 min and about 9.2 g.
+- The earlier bridge-face-down end-stop G-code is invalidated by the failed coupon. Re-slice the stop on its broad outside wall face and physically verify the supported coupon retry before printing the full stop.
 
 ## Known unknowns before a full print
 

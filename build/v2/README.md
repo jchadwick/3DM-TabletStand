@@ -9,9 +9,10 @@ confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_rear_bracket.stl`: print the horizontal foot down.
 - `tablet_stand_v2_sleeve.stl`: print the 60 × 46 mm flange down, with the
   32.2 mm tube-entry bore open upward.
-- `tablet_stand_v2_end_stop.stl`: print the screen-facing bridge/top face down;
-  its continuous dovetail tongue slides downward into the cradle's closed-bottom
-  groove with no screw, hook, detent, or projecting lower nub.
+- `tablet_stand_v2_end_stop.stl`: print its broad outside wall face down so the
+  dovetail builds vertically instead of cantilevering into open air. Its tongue
+  slides downward into the cradle's closed-bottom groove with no screw, hook,
+  detent, or projecting lower nub.
 - `tablet_stand_v2_alignment_key_print_2.stl`: print **two copies** flat.
 - `tablet_stand_v2_right_fit_coupon.stl`: print rear face down before the full
   cradle; it is an exact 33.5 mm-wide crop of the production right end and
@@ -28,10 +29,15 @@ confirmed tablet, tube, tilt, and cable geometry.
   `tablet_stand_v2_left_slide_coupon_stop.stl`: exact lower-left production
   crops for checking dovetail capture, downward travel, closed-bottom seating,
   and real PLA slide clearance. `tablet_stand_v2_left_slide_coupon_plate.stl` arranges both pieces
-  together for the prepared coupon job.
-- `tablet_stand_v2_left_slide_coupon_pla.gcode`: both slide-coupon pieces at
-  0.20 mm layers, three walls, 20% grid infill, a removable 5 mm brim, and no
-  supports; approximately 33 min and 5.8 g.
+  together with a 28 mm inter-part gap for the prepared coupon job.
+- `tablet_stand_v2_left_slide_coupon_pla.gcode`: corrected two-piece retry at
+  0.16 mm layers, three walls, 20% grid infill, a removable 5 mm brim, and
+  45-degree grid supports. It uses 205 °C for the first layer, then 200 °C,
+  with 1.0 mm retraction at 40 mm/s; approximately 40 min 49 s and 5.0 g.
+- `tablet_stand_v2_left_slide_coupon_support_review.png`: actual model paths
+  in blue and support paths in orange for the corrected retry.
+- `tablet_stand_v2_left_slide_coupon_plate_preview.png`: six-view mesh review
+  of the separated two-piece coupon plate in its corrected print orientations.
 - `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   button-coupon job in the exact production orientation; 0.20 mm layers, three
   walls, 20% grid infill, no supports, approximately 23 min and 5.3 g. Inspect
@@ -47,9 +53,9 @@ confirmed tablet, tube, tilt, and cable geometry.
   comparison with 0.25 mm XY spacing; approximately 4 h 28 min and 67.4 g. It
   places support on the long rail lips and end features, so it is not the
   recommended upload candidate.
-- `tablet_stand_v2_end_stop_pla.gcode`: the separate dovetail stop with its
-  screen-facing bridge/top face on the bed, a removable 5 mm brim, and no
-  supports; approximately 49 min and 9.2 g.
+- `tablet_stand_v2_end_stop_pla.gcode`: stale bridge-face-down slice invalidated
+  by the first physical coupon failure; do not print it. Re-slice after the
+  outside-wall-down coupon passes.
 - `tablet_stand_v2_cradle_support_review.png`: top, front, and per-layer views
   of actual PrusaSlicer model and support extrusion paths.
 
