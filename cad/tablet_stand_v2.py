@@ -9,7 +9,7 @@ Print orientations:
     cradle: rear frame face on the bed
     rear bracket: horizontal sleeve-interface foot on the bed
     sleeve: flange face on the bed, tube-entry bore open upward
-    end stop: screen-facing lip/top face on the bed
+    slide-on left stop: screen-facing bridge/top face on the bed
 
 All dimensions are millimeters. ``tablet_stand_core`` owns confirmed tablet,
 tube, rail, USB-C, cable, and tilt geometry; this file owns the modular joints.
@@ -36,7 +36,6 @@ from cad import tablet_stand_core as core  # noqa: E402
 # Main structural joints are broad, edge-indexed adhesive bonds. The bracket
 # plate matches the center plate width and top edge; the foot matches the sleeve
 # flange front and side edges.
-M3_CLEARANCE = 3.4
 CRADLE_BRACKET_BOND_AREA = 74.0 * 36.0
 BRACKET_SLEEVE_BOND_AREA = 60.0 * 28.0
 
@@ -56,21 +55,43 @@ ALIGNMENT_KEY_EDGE_CHAMFER = 0.4
 ALIGNMENT_GROOVE_DEPTH = 1.15
 ALIGNMENT_KEY_QUANTITY = 2
 
-# Bed-compatible V2 end-stop joint. The boss sits completely outside the
-# tablet cavity and accepts the same single M3 fastener along local Z.
-ENDSTOP_BOSS_X = -100.5
-ENDSTOP_BOSS_Y = -68.5
-ENDSTOP_BOSS_X_SIZE = 8.0
-ENDSTOP_BOSS_Y_SIZE = 8.0
-ENDSTOP_BOSS_HEIGHT = 6.0
-ENDSTOP_TAB_T = 3.0
-ENDSTOP_OUTER_WALL_X = 3.0
-ENDSTOP_OUTER_WALL_Y_MIN = -72.5
+# The left stop slides down along the tablet's short edge. A lower cradle ledge
+# sets its final position, two shallow rib-and-groove detents provide friction,
+# and rear hooks keep it captured laterally. No mechanical fastener is used.
+ENDSTOP_SLIDE_CLEARANCE_X = 0.25
+ENDSTOP_OUTER_WALL_X = 3.5
+ENDSTOP_OUTER_WALL_Y_MIN = -64.5
 ENDSTOP_OUTER_WALL_Y_MAX = 65.0
 ENDSTOP_CAP_Y = 116.0
 ENDSTOP_LOCATOR_Y = (-42.0, 42.0)
 ENDSTOP_LOCATOR_Y_SIZE = 18.0
-ENDSTOP_SCREW_NOMINAL = "one M3 x 8-10 mm, verify physically"
+ENDSTOP_LANDING_X_MIN = -105.5
+ENDSTOP_LANDING_X_MAX = -98.5
+ENDSTOP_LANDING_Y_MIN = -70.0
+ENDSTOP_LANDING_Y_MAX = ENDSTOP_OUTER_WALL_Y_MIN
+ENDSTOP_GUIDE_Y = (-52.0, 52.0)
+ENDSTOP_GUIDE_Y_SIZE = 10.0
+ENDSTOP_GUIDE_REAR_CLEARANCE_Z = 0.20
+ENDSTOP_GUIDE_HOOK_T = 2.0
+ENDSTOP_GUIDE_HOOK_X_RIGHT = -98.5
+ENDSTOP_DETENT_Y = (-32.0, 32.0)
+ENDSTOP_DETENT_RIB_Y = 6.0
+ENDSTOP_DETENT_RIB_Z = 1.0
+ENDSTOP_DETENT_RIB_PROJECTION_X = 0.30
+ENDSTOP_DETENT_GROOVE_Y = 6.4
+ENDSTOP_DETENT_GROOVE_Z = 1.4
+ENDSTOP_DETENT_GROOVE_DEPTH_X = 0.30
+ENDSTOP_DETENT_CENTER_Z = -1.5
+ENDSTOP_FRICTION_INTERFERENCE_X = (
+    ENDSTOP_DETENT_RIB_PROJECTION_X - ENDSTOP_SLIDE_CLEARANCE_X
+)
+
+# Exact crop pair for testing the new ledge, hook, and friction detent before
+# committing the production cradle to a long print.
+LEFT_SLIDE_COUPON_X_MIN = -108.0
+LEFT_SLIDE_COUPON_X_MAX = -90.0
+LEFT_SLIDE_COUPON_Y_MIN = -72.0
+LEFT_SLIDE_COUPON_Y_MAX = -20.0
 
 # Rear bracket: a partial-height plate preserves the open back while its lower
 # installed edge stays above the horizontal print foot.
@@ -202,23 +223,42 @@ def cross_key(
 # ============================================================
 
 def flat_cradle() -> cq.Workplane:
-    """Active tablet cradle plus the modular flush screw pattern."""
+    """Active tablet cradle with a screw-free left-stop landing and detents."""
     cradle = core.flat_main_holder()
-    endstop_boss = core.rounded_plate(
-        ENDSTOP_BOSS_X_SIZE,
-        ENDSTOP_BOSS_Y_SIZE,
-        ENDSTOP_BOSS_HEIGHT,
+    landing = core.rounded_plate(
+        ENDSTOP_LANDING_X_MAX - ENDSTOP_LANDING_X_MIN,
+        ENDSTOP_LANDING_Y_MAX - ENDSTOP_LANDING_Y_MIN,
+        core.BASE_T,
         -core.BASE_T,
         core.EXPOSED_CORNER_R,
-    ).translate((ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y, 0.0))
-    endstop_pilot = (
-        cq.Workplane("XY")
-        .workplane(offset=-core.BASE_T - 1.0)
-        .center(ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y)
-        .circle(core.M3_PILOT / 2.0)
-        .extrude(ENDSTOP_BOSS_HEIGHT + 2.0)
+    ).translate(
+        (
+            (ENDSTOP_LANDING_X_MIN + ENDSTOP_LANDING_X_MAX) / 2.0,
+            (ENDSTOP_LANDING_Y_MIN + ENDSTOP_LANDING_Y_MAX) / 2.0,
+            0.0,
+        )
     )
-    cradle = cradle.union(endstop_boss).cut(endstop_pilot)
+    cradle = cradle.union(landing)
+
+    cradle_left_x = -(core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T) / 2.0
+    for detent_y in ENDSTOP_DETENT_Y:
+        groove = (
+            cq.Workplane("XY")
+            .box(
+                ENDSTOP_DETENT_GROOVE_DEPTH_X + 0.4,
+                ENDSTOP_DETENT_GROOVE_Y,
+                ENDSTOP_DETENT_GROOVE_Z,
+            )
+            .translate(
+                (
+                    cradle_left_x + ENDSTOP_DETENT_GROOVE_DEPTH_X / 2.0,
+                    detent_y,
+                    ENDSTOP_DETENT_CENTER_Z,
+                )
+            )
+        )
+        cradle = cradle.cut(groove)
+
     cradle_groove = cross_groove(
         0.0,
         BRACKET_PLATE_CENTER_Y,
@@ -229,64 +269,111 @@ def flat_cradle() -> cq.Workplane:
 
 
 def flat_end_stop() -> cq.Workplane:
-    """V2 stop adjacent to, rather than overlapping, the cradle rail ends."""
+    """Return the top-down, screw-free left slide stop in assembly coordinates."""
     cavity_x = core.TABLET_X + core.FIT_X
     cavity_y = core.TABLET_Y + core.FIT_Y
     rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
     wall_h = core.BASE_T + rail_top
     cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
+    wall_inner_x = cradle_left_x - ENDSTOP_SLIDE_CLEARANCE_X
+    wall_outer_x = wall_inner_x - ENDSTOP_OUTER_WALL_X
 
-    outer_wall_center_x = cradle_left_x - ENDSTOP_OUTER_WALL_X / 2.0
+    outer_wall_center_x = (wall_inner_x + wall_outer_x) / 2.0
     outer_wall_center_y = (ENDSTOP_OUTER_WALL_Y_MIN + ENDSTOP_OUTER_WALL_Y_MAX) / 2.0
-    outer_wall = core.rounded_plate(
+    outer_wall = core.softened_plate(
         ENDSTOP_OUTER_WALL_X,
         ENDSTOP_OUTER_WALL_Y_MAX - ENDSTOP_OUTER_WALL_Y_MIN,
         wall_h,
         -core.BASE_T,
         core.EXPOSED_CORNER_R,
+        core.EXPOSED_EDGE_R,
     ).translate((outer_wall_center_x, outer_wall_center_y, 0.0))
 
     # The screen-facing cap stops short of the long-edge rail lips. Two local
     # pads below it contact the tablet edge through the otherwise open left end.
-    cap_left_x = cradle_left_x - 0.5
-    cap_right_x = -cavity_x / 2.0 + core.LIP_OVERLAP
-    cap = core.rounded_plate(
+    cap_left_x = wall_outer_x
+    # This bridge terminates at the tablet edge. The actual edge contact comes
+    # from the two locator pads; avoiding screen overlap lets the whole stop
+    # pass through the rail-free lead-in during top-down installation.
+    cap_right_x = -cavity_x / 2.0
+    cap = core.softened_plate(
         cap_right_x - cap_left_x,
         ENDSTOP_CAP_Y,
         core.LIP_T,
         core.TABLET_Z + core.FIT_Z,
         core.LIP_CORNER_R,
+        core.LIP_EDGE_R,
     ).translate(((cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
     locator = None
     for locator_y in ENDSTOP_LOCATOR_Y:
-        pad = core.rounded_plate(
+        pad = core.softened_plate(
             core.WALL_T,
             ENDSTOP_LOCATOR_Y_SIZE,
             core.TABLET_Z + core.FIT_Z,
             0.0,
             core.EXPOSED_CORNER_R,
+            core.EXPOSED_EDGE_R,
         ).translate((cradle_left_x + core.WALL_T / 2.0, locator_y, 0.0))
         locator = pad if locator is None else locator.union(pad)
     assert locator is not None
 
-    tab = core.rounded_plate(
-        ENDSTOP_BOSS_X_SIZE,
-        ENDSTOP_BOSS_Y_SIZE,
-        ENDSTOP_TAB_T,
-        -core.BASE_T + ENDSTOP_BOSS_HEIGHT,
-        core.EXPOSED_CORNER_R,
-    ).translate((ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y, 0.0))
-    clearance = (
-        cq.Workplane("XY")
-        .workplane(offset=-core.BASE_T + ENDSTOP_BOSS_HEIGHT - 1.0)
-        .center(ENDSTOP_BOSS_X, ENDSTOP_BOSS_Y)
-        .circle(M3_CLEARANCE / 2.0)
-        .extrude(ENDSTOP_TAB_T + 2.0)
-    )
-    stop = outer_wall.union(cap).union(locator).union(tab).cut(clearance)
-    # Remove any residual rail-corner contact volume while retaining adjacent
-    # faces; split parts must never depend on overlapping assembly solids.
-    return stop.cut(flat_cradle())
+    stop = outer_wall.union(cap).union(locator)
+
+    hook_bottom_z = -core.BASE_T - ENDSTOP_GUIDE_HOOK_T - ENDSTOP_GUIDE_REAR_CLEARANCE_Z
+    hook_top_z = -core.BASE_T - ENDSTOP_GUIDE_REAR_CLEARANCE_Z
+    for guide_y in ENDSTOP_GUIDE_Y:
+        # The outside root overlaps the wall so the below-frame tongue remains
+        # one printable solid without invading the cradle's flat rear datum.
+        hook_root = (
+            cq.Workplane("XY")
+            .box(
+                ENDSTOP_OUTER_WALL_X,
+                ENDSTOP_GUIDE_Y_SIZE,
+                ENDSTOP_GUIDE_HOOK_T + 0.4,
+            )
+            .translate(
+                (
+                    outer_wall_center_x,
+                    guide_y,
+                    (hook_bottom_z + hook_top_z + 0.4) / 2.0,
+                )
+            )
+        )
+        hook_tongue = (
+            cq.Workplane("XY")
+            .box(
+                ENDSTOP_GUIDE_HOOK_X_RIGHT - wall_inner_x,
+                ENDSTOP_GUIDE_Y_SIZE,
+                ENDSTOP_GUIDE_HOOK_T,
+            )
+            .translate(
+                (
+                    (wall_inner_x + ENDSTOP_GUIDE_HOOK_X_RIGHT) / 2.0,
+                    guide_y,
+                    (hook_bottom_z + hook_top_z) / 2.0,
+                )
+            )
+        )
+        stop = stop.union(hook_root).union(hook_tongue)
+
+    for detent_y in ENDSTOP_DETENT_Y:
+        rib = (
+            cq.Workplane("XY")
+            .box(
+                ENDSTOP_DETENT_RIB_PROJECTION_X,
+                ENDSTOP_DETENT_RIB_Y,
+                ENDSTOP_DETENT_RIB_Z,
+            )
+            .translate(
+                (
+                    wall_inner_x + ENDSTOP_DETENT_RIB_PROJECTION_X / 2.0,
+                    detent_y,
+                    ENDSTOP_DETENT_CENTER_Z,
+                )
+            )
+        )
+        stop = stop.union(rib)
+    return stop
 
 
 def rear_bracket_local_plate() -> cq.Workplane:
@@ -454,6 +541,50 @@ def button_fit_coupon_print() -> cq.Workplane:
     return shift_to_bed(button_fit_coupon())
 
 
+def left_slide_coupon_parts() -> tuple[cq.Workplane, cq.Workplane]:
+    """Return exact lower-left crops of the cradle and screw-free slide stop."""
+    cutter = (
+        cq.Workplane("XY")
+        .box(
+            LEFT_SLIDE_COUPON_X_MAX - LEFT_SLIDE_COUPON_X_MIN,
+            LEFT_SLIDE_COUPON_Y_MAX - LEFT_SLIDE_COUPON_Y_MIN,
+            30.0,
+        )
+        .translate(
+            (
+                (LEFT_SLIDE_COUPON_X_MIN + LEFT_SLIDE_COUPON_X_MAX) / 2.0,
+                (LEFT_SLIDE_COUPON_Y_MIN + LEFT_SLIDE_COUPON_Y_MAX) / 2.0,
+                3.0,
+            )
+        )
+    )
+    return flat_cradle().intersect(cutter), flat_end_stop().intersect(cutter)
+
+
+def left_slide_coupon_print_parts() -> tuple[cq.Workplane, cq.Workplane]:
+    """Orient the two exact slide-stop coupon pieces like production parts."""
+    cradle_coupon, stop_coupon = left_slide_coupon_parts()
+    return (
+        shift_to_bed(cradle_coupon),
+        shift_to_bed(
+            stop_coupon.rotate(
+                (0.0, 0.0, 0.0),
+                (1.0, 0.0, 0.0),
+                180.0,
+            )
+        ),
+    )
+
+
+def left_slide_coupon_plate() -> cq.Workplane:
+    """Arrange both exact coupon pieces on one compact 33.75 x 50 mm plate."""
+    cradle_coupon, stop_coupon = left_slide_coupon_print_parts()
+    cradle_placed = cradle_coupon.translate((105.5, 70.0, 0.0))
+    stop_placed = stop_coupon.translate((132.25, -20.0, 0.0))
+    compound = cq.Compound.makeCompound([cradle_placed.val(), stop_placed.val()])
+    return cq.Workplane("XY").newObject([compound])
+
+
 def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Workplane]:
     """Return cradle, rear bracket, sleeve, and end stop in assembly position."""
     cradle = flat_cradle().rotate(
@@ -507,6 +638,7 @@ def export() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     cradle, bracket, sleeve, stop, key = print_parts()
     cradle_installed, bracket_installed, sleeve_installed, stop_installed = installed_parts()
+    left_coupon_cradle, left_coupon_stop = left_slide_coupon_print_parts()
 
     exports = {
         "tablet_stand_v2_cradle.stl": cradle,
@@ -516,6 +648,9 @@ def export() -> None:
         "tablet_stand_v2_alignment_key_print_2.stl": key,
         "tablet_stand_v2_right_fit_coupon.stl": right_fit_coupon_print(),
         "tablet_stand_v2_button_fit_coupon.stl": button_fit_coupon_print(),
+        "tablet_stand_v2_left_slide_coupon_cradle.stl": left_coupon_cradle,
+        "tablet_stand_v2_left_slide_coupon_stop.stl": left_coupon_stop,
+        "tablet_stand_v2_left_slide_coupon_plate.stl": left_slide_coupon_plate(),
     }
     for filename, part in exports.items():
         cq.exporters.export(
@@ -529,7 +664,7 @@ def export() -> None:
     assembly.add(cradle_installed, name="cradle", color=cq.Color(0.12, 0.14, 0.17))
     assembly.add(bracket_installed, name="rear_bracket", color=cq.Color(0.20, 0.34, 0.50))
     assembly.add(sleeve_installed, name="sleeve", color=cq.Color(0.18, 0.24, 0.32))
-    assembly.add(stop_installed, name="m3_end_stop", color=cq.Color(0.10, 0.32, 0.55))
+    assembly.add(stop_installed, name="slide_end_stop", color=cq.Color(0.10, 0.32, 0.55))
     cradle_key_installed = cross_key(
         0.0,
         BRACKET_PLATE_CENTER_Y,
@@ -570,13 +705,16 @@ def export() -> None:
             "cradle": "rear frame face on bed; rail and end-stop features face up",
             "rear_bracket": "horizontal sleeve-interface foot on bed",
             "sleeve": "flange on bed; tube-entry bore open upward",
-            "end_stop": "screen-facing lip/top face on bed",
+            "end_stop": "screen-facing bridge/top face on bed; rear hooks face upward",
             "alignment_key": "flat on bed; print two identical copies",
             "right_fit_coupon": (
                 "rear face on bed; exact 33.5 mm crop of production cradle right end"
             ),
             "button_fit_coupon": (
                 "rear face on bed; exact top-left production rail crop"
+            ),
+            "left_slide_coupon": (
+                "two exact lower-left crops; cradle rear face down and stop bridge face down"
             ),
         },
         "right_fit_coupon": {
@@ -592,6 +730,14 @@ def export() -> None:
             "x_max": BUTTON_FIT_COUPON_X_MAX,
             "y_min": BUTTON_FIT_COUPON_Y_MIN,
             "y_max": BUTTON_FIT_COUPON_Y_MAX,
+            "uses_exact_cradle_geometry": True,
+        },
+        "left_slide_coupon": {
+            "purpose": "verify downward slide, rear-hook capture, landing, and friction detents",
+            "x_min": LEFT_SLIDE_COUPON_X_MIN,
+            "x_max": LEFT_SLIDE_COUPON_X_MAX,
+            "y_min": LEFT_SLIDE_COUPON_Y_MIN,
+            "y_max": LEFT_SLIDE_COUPON_Y_MAX,
             "uses_exact_cradle_geometry": True,
         },
         "buttons": {
@@ -610,8 +756,13 @@ def export() -> None:
         "joints": {
             "end_stop": {
                 "count": 1,
-                "screw": ENDSTOP_SCREW_NOMINAL,
-                "axis": "local Z, front-accessible and outside tablet cavity",
+                "method": "top-down friction slide; optional adhesive",
+                "mechanical_fasteners": 0,
+                "travel_axis": "local -Y from landscape top to bottom",
+                "landing_y": ENDSTOP_LANDING_Y_MAX,
+                "detent_count": len(ENDSTOP_DETENT_Y),
+                "nominal_rib_interference_x": ENDSTOP_FRICTION_INTERFERENCE_X,
+                "rear_hook_clearance_z": ENDSTOP_GUIDE_REAR_CLEARANCE_Z,
             },
             "cradle_to_bracket": {
                 "method": "adhesive bond",

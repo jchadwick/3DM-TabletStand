@@ -32,10 +32,13 @@ FRAME_W = 10.0
 WALL_T = 3.0
 FRAME_OUTER_CORNER_R = 4.0
 FRAME_INNER_CORNER_R = 3.0
-EXPOSED_CORNER_R = 1.2
-LIP_CORNER_R = 0.8
+EXPOSED_CORNER_R = 1.45
+LIP_CORNER_R = 0.95
+EXPOSED_EDGE_R = 0.65
+LIP_EDGE_R = 0.45
 LIP_OVERLAP = 2.2
 LIP_T = 2.0
+LEFT_RAIL_ENTRY_RELIEF_X = 4.0
 RIGHT_STOP_SPAN = 25.0
 CENTER_PLATE_X = 74.0
 CENTER_PLATE_Y = 64.0
@@ -110,15 +113,26 @@ SLEEVE_CENTER_Y = 24.0
 BRAIDED_CHANNEL_TOP_Z = SLEEVE_TOP_Z - 4.0
 BRAIDED_CHANNEL_BOTTOM_Z = BRAIDED_CHANNEL_TOP_Z - 50.0
 
-# M3 removable V2 end stop
-M3_PILOT = 2.7
-
-
 def rounded_plate(x: float, y: float, z: float, z0: float, radius: float) -> cq.Workplane:
     """Create a rectangular prism with rounded vertical corners."""
     result = cq.Workplane("XY").workplane(offset=z0).rect(x, y).extrude(z)
     if radius > 0:
         result = result.edges("|Z").fillet(radius)
+    return result
+
+
+def softened_plate(
+    x: float,
+    y: float,
+    z: float,
+    z0: float,
+    corner_radius: float,
+    edge_radius: float,
+) -> cq.Workplane:
+    """Create a rounded plate with its remaining top/bottom edges filleted."""
+    result = rounded_plate(x, y, z, z0, corner_radius)
+    if edge_radius > 0:
+        result = result.edges("not |Z").fillet(edge_radius)
     return result
 
 
@@ -136,7 +150,14 @@ def flat_main_holder() -> cq.Workplane:
     rail_top = TABLET_Z + FIT_Z + LIP_T
 
     # Open-backed perimeter with a central plate and four connecting spokes.
-    outer = rounded_plate(outer_x, outer_y, BASE_T, -BASE_T, FRAME_OUTER_CORNER_R)
+    outer = softened_plate(
+        outer_x,
+        outer_y,
+        BASE_T,
+        -BASE_T,
+        FRAME_OUTER_CORNER_R,
+        EXPOSED_EDGE_R,
+    )
     inner = rounded_plate(
         outer_x - 2.0 * FRAME_W,
         outer_y - 2.0 * FRAME_W,
@@ -153,7 +174,9 @@ def flat_main_holder() -> cq.Workplane:
     # Long-edge U rails.  The left ends remain open so the tablet can slide in.
     # Their right ends reach the closed USB-C housing.
     wall_h = BASE_T + rail_top
-    rail_left_x = -outer_x / 2.0
+    # Leave a short rail-free lead at the left edge so the separate end stop
+    # can slide downward past both long rails without a hard collision.
+    rail_left_x = -outer_x / 2.0 + LEFT_RAIL_ENTRY_RELIEF_X
     usb_end_wall_inner_x = cavity_x / 2.0 + USB_POCKET_INNER_X
     usb_end_wall_center_x = usb_end_wall_inner_x + USB_END_WALL_T / 2.0
     usb_outer_x = usb_end_wall_inner_x + USB_END_WALL_T
@@ -161,11 +184,25 @@ def flat_main_holder() -> cq.Workplane:
     rail_center_x = (usb_outer_x + rail_left_x) / 2.0
     for sign in (-1.0, 1.0):
         wall_y = sign * (cavity_y / 2.0 + WALL_T / 2.0)
-        wall = rounded_plate(rail_x, WALL_T, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(
+        wall = softened_plate(
+            rail_x,
+            WALL_T,
+            wall_h,
+            -BASE_T,
+            EXPOSED_CORNER_R,
+            EXPOSED_EDGE_R,
+        ).translate(
             (rail_center_x, wall_y, 0)
         )
         lip_y = sign * (cavity_y / 2.0 - LIP_OVERLAP / 2.0)
-        lip = rounded_plate(rail_x, LIP_OVERLAP, LIP_T, TABLET_Z + FIT_Z, LIP_CORNER_R).translate(
+        lip = softened_plate(
+            rail_x,
+            LIP_OVERLAP,
+            LIP_T,
+            TABLET_Z + FIT_Z,
+            LIP_CORNER_R,
+            LIP_EDGE_R,
+        ).translate(
             (rail_center_x, lip_y, 0)
         )
         main = main.union(wall).union(lip)

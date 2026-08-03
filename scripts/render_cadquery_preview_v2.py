@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import cadquery as cq
 import numpy as np
 from PIL import Image, ImageDraw
 import trimesh
@@ -161,6 +162,23 @@ def button_coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, 
     return [(cq_mesh(model.button_fit_coupon_print()), (44, 132, 116, 255))]
 
 
+def left_stop_detail_objects(
+    slide_offset_y: float = 0.0,
+) -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Crop the local cradle/stop assembly tightly around the new slide joint."""
+    cutter = (
+        cq.Workplane("XY")
+        .box(28.0, 205.0, 30.0)
+        .translate((-99.0, 25.0, 3.0))
+    )
+    cradle = model.flat_cradle().intersect(cutter)
+    stop = model.flat_end_stop().translate((0.0, slide_offset_y, 0.0)).intersect(cutter)
+    return [
+        (cq_mesh(cradle), (48, 72, 104, 255)),
+        (cq_mesh(stop), (16, 112, 220, 255)),
+    ]
+
+
 def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
     labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 8 MM RECTANGLE")
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
@@ -184,6 +202,21 @@ def button_coupon_contact_sheet(paths: list[Path], output: Path) -> None:
         panel = Image.open(path).convert("RGB")
         canvas.paste(panel, (index * 700, 45))
         draw.text((index * 700 + 22, 14), label, fill=(225, 232, 240))
+    canvas.save(output)
+
+
+def left_stop_contact_sheet(paths: list[Path], output: Path) -> None:
+    labels = (
+        "SEATED ON LOWER LANDING — NO SCREW",
+        "TOP-DOWN SLIDE — 35 MM EXPLODED",
+        "REAR HOOKS + TWO FRICTION DETENTS",
+    )
+    canvas = Image.new("RGB", (2400, 745), BACKGROUND[:3])
+    draw = ImageDraw.Draw(canvas)
+    for index, (path, label) in enumerate(zip(paths, labels, strict=True)):
+        panel = Image.open(path).convert("RGB")
+        canvas.paste(panel, (index * 800, 45))
+        draw.text((index * 800 + 22, 14), label, fill=(225, 232, 240))
     canvas.save(output)
 
 
@@ -216,6 +249,11 @@ def main() -> None:
         BUILD / "tablet_stand_v2_button_fit_coupon_entry.png",
         BUILD / "tablet_stand_v2_button_fit_coupon_channel.png",
         BUILD / "tablet_stand_v2_button_fit_coupon_end.png",
+    ]
+    left_stop_views = [
+        BUILD / "tablet_stand_v2_left_stop_seated.png",
+        BUILD / "tablet_stand_v2_left_stop_sliding.png",
+        BUILD / "tablet_stand_v2_left_stop_rear.png",
     ]
 
     # One clean child process per camera avoids repeated pyglet capture failures
@@ -293,6 +331,30 @@ def main() -> None:
                 eye=(40.0, -55.0, 38.0),
                 target=(-35.0, 62.0, 4.0),
             )
+        elif sys.argv[2] == "left-stop-seated":
+            render_view(
+                left_stop_detail_objects(),
+                left_stop_views[0],
+                (800, 700),
+                eye=(-175.0, -165.0, 62.0),
+                target=(-101.0, -4.0, 2.0),
+            )
+        elif sys.argv[2] == "left-stop-sliding":
+            render_view(
+                left_stop_detail_objects(slide_offset_y=35.0),
+                left_stop_views[1],
+                (800, 700),
+                eye=(-175.0, -170.0, 62.0),
+                target=(-101.0, 14.0, 2.0),
+            )
+        elif sys.argv[2] == "left-stop-rear":
+            render_view(
+                left_stop_detail_objects(),
+                left_stop_views[2],
+                (800, 700),
+                eye=(-175.0, -145.0, -52.0),
+                target=(-101.0, -4.0, -1.5),
+            )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")
         return
@@ -304,6 +366,8 @@ def main() -> None:
         subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
     for view in ("button-coupon-entry", "button-coupon-channel", "button-coupon-end"):
         subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
+    for view in ("left-stop-seated", "left-stop-sliding", "left-stop-rear"):
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "--render-one", view], check=True)
     contact_sheet(installed, rear, layout, BUILD / "tablet_stand_v2_multiview.png")
     coupon_contact_sheet(
         coupon_views,
@@ -312,6 +376,10 @@ def main() -> None:
     button_coupon_contact_sheet(
         button_coupon_views,
         BUILD / "tablet_stand_v2_button_fit_coupon_multiview.png",
+    )
+    left_stop_contact_sheet(
+        left_stop_views,
+        BUILD / "tablet_stand_v2_left_stop_multiview.png",
     )
     print("Rendered V2 CadQuery solids directly with Trimesh (no STL import).")
 

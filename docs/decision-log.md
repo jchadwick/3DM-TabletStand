@@ -30,7 +30,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 | Right-angle pigtail reach | 51.4 mm marked length | User photo; precise endpoints still to confirm |
 | Downstream connector body | 9.6 mm marked dimension | User photo; axis/meaning still to confirm |
 | Round braided cable diameter | 3.45 mm | User measurement; cable after the pictured adapter |
-| Retaining screw | M3 | User hardware |
+| Available screw hardware | M3 | User has it, but the active stop is explicitly screw-free |
 | Power/volume group span | 20–60 mm from landscape top-left | User measurement |
 | Power/volume button section | 2 mm wide across tablet thickness, centered; 1 mm edge protrusion | User measurement |
 
@@ -39,22 +39,33 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Landscape tablet orientation.
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
-- A removable left end stop secured by one M3 screw provides retention more secure than snap clips.
+- A removable left stop slides downward from the landscape top, seats against a lower-left cradle landing, and is retained by shallow friction detents plus rear hooks; no mechanical fastener is used and adhesive is optional.
 - The right edge has a continuous full-depth screen-facing cap backed by internal stops and a solid outer USB-C wall. No tablet-edge or recessed plug-pocket segment is exposed from the front; the low-profile right-angle adapter still turns immediately behind the tablet instead of sending the cable straight out through the right wall.
 - The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
 - Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
 - The sleeve channel uses 4.15 mm internal clearance, a 2.8 mm snap opening, and a shallow 1.2 mm embed. It leaves at least 2.8 mm of sleeve wall and does not cut into the tested 32.2 mm tube bore.
-- Exposed outside corners are lightly filleted to remove sharp edges without making the skeletal holder bulky.
+- Exposed perimeter, rail, lip, and stop edges use larger plan radii plus 0.65/0.45 mm longitudinal edge fillets so the print feels softer without becoming bulky.
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right and offset 24 mm behind the screen plane.
 - The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- The removable V2 end stop retains one M3 screw, now on a local-Z boss outside the tablet cavity so neither the cradle nor stop inherits V1's rear-projecting pad.
+- The cradle provides a lower-left landing, a 4 mm rail-free stop entry, and two detent grooves. The separate stop has two matching friction ribs and two rear hooks that slide below the cradle datum and prevent lateral release.
 - Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Screw-free slide stop and softened outside edges — 2026-08-02
+
+- The user rejected the M3 hole and requested a left edge that simply slides downward, seats on a projecting lower-left cradle edge, stays through friction, and can optionally receive a drop of glue.
+- Removed the complete M3 boss, pilot, stop tab, and clearance hole. Added a 7 × 5.5 × 3 mm lower landing, a 4 mm rail-free insertion lead, two 6 mm friction ribs with 0.05 mm nominal insertion interference, matching 6.4 mm detent grooves, and two rear hooks with 0.20 mm clearance below the cradle datum.
+- Sampled the stop throughout its local −Y insertion path. Hard geometry remains collision-free; only the intended friction ribs overlap the base edge during travel, at no more than 0.60 mm³ combined, and the fully seated stop has zero overlap.
+- Increased exposed plan-corner radii from 1.2 to 1.45 mm on rails/walls and from 0.8 to 0.95 mm on lips. Added 0.65 mm perimeter/rail edge fillets and 0.45 mm lip edge fillets to remove the sharp longitudinal edges reported on the physical print.
+- Added two exact production-crop STLs for testing the landing, hook clearance, downward travel, and friction detents before printing the revised 217 × 135 mm cradle.
+- ADR-0002 supersedes the M3 clause in ADR-0001 while retaining the four-module support-minimized architecture. The previous full-cradle G-code predates this geometry and is invalid for production.
+- Prepared both coupon pieces on one 33.75 × 50 mm plate with a removable 5 mm brim, three walls, 20% grid infill, and no supports. The validated PLA job estimates 38 min 41 s and 6.1 g; it was not uploaded or started.
+- Replaced the stale cradle G-code with revised slices. The recommended support-free job validates at 4 h 34 min, 61.1 g, and X = 2–218 mm extrusion; the snug-support comparison validates at 4 h 52 min and 66.8 g but contacts the long rail lips and right-end features. Neither was uploaded or started.
 
 ### Archive superseded V1 from the active tree — 2026-08-02
 

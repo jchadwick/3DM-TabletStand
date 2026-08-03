@@ -1,10 +1,10 @@
 # ADR-0001: Split V2 into support-minimized printable modules
 
-- Status: accepted
+- Status: superseded
 - Date: 2026-07-28
 - Deciders: Project maintainers
 - Supersedes: None
-- Superseded by: None
+- Superseded by: ADR-0002
 
 ## Context
 

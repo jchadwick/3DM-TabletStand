@@ -14,7 +14,7 @@ The source tablet mesh and visual references are preserved under [`reference/`](
 - Proven printed fit: **32.2 mm ID closed sleeve**, installed by sliding the holder down over the tube end.
 - Screen angle: **10 degrees back from vertical / 80 degrees above horizontal**, with the near/bottom edge lower and the far/top edge higher and farther from the user.
 - Styling: simple and sleek, with sturdy support but minimal enclosure.
-- Retention direction: slide-in edge rails with a removable one-screw end stop using M3 hardware.
+- Retention direction: slide-in edge rails with a screw-free left stop that slides down onto a lower landing and uses friction detents plus rear capture hooks.
 - Cable: a slim plug protrudes 0.256 in (6.50 mm) from the tablet; its flat cable section is 0.6 mm thick for roughly 2 in before transitioning to confirmed 3.45 mm round braided cable.
 - USB-C handling: the right-angle pigtail turns immediately behind the tablet; its connection and downstream cable stay largely hidden across the open back before entering an open groove/clip on the tube sleeve.
 
@@ -47,5 +47,5 @@ python scripts/render_cadquery_preview_v2.py
 1. The active model splits the cradle, rear tilt bracket, and sleeve onto support-friendly print datums.
 2. Two keyed adhesive joints assemble the main body; print the shared alignment-key STL twice.
 3. All active STL files are watertight single solids and preserve the confirmed physical fit dimensions.
-4. Exact-production right-side and button coupons verify the tablet rails, USB-C route, and concealed button groove.
+4. Exact-production right-side, button, and two-piece left-slide coupons verify the rails, USB-C route, concealed button groove, and screw-free stop fit.
 5. Superseded V1 is intentionally absent from the working tree and remains recoverable from Git history.

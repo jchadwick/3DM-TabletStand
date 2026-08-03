@@ -30,6 +30,9 @@ REQUIRED = (
     "tablet_stand_v2_alignment_key_print_2.stl",
     "tablet_stand_v2_right_fit_coupon.stl",
     "tablet_stand_v2_button_fit_coupon.stl",
+    "tablet_stand_v2_left_slide_coupon_cradle.stl",
+    "tablet_stand_v2_left_slide_coupon_stop.stl",
+    "tablet_stand_v2_left_slide_coupon_plate.stl",
 )
 
 
@@ -72,6 +75,7 @@ def main() -> None:
     assert metadata["joints"]["bracket_to_sleeve"]["method"] == "adhesive bond"
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["button_fit_coupon"]["uses_exact_cradle_geometry"] is True
+    assert metadata["left_slide_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {"x": 8.0, "y": 16.0}
     assert metadata["buttons"]["group_start_from_top_left"] == 20.0
     assert metadata["buttons"]["group_end_from_top_left"] == 60.0
@@ -82,6 +86,9 @@ def main() -> None:
     assert metadata["buttons"]["remaining_outer_wall"] == 1.8
     assert metadata["buttons"]["channel_open_to_slide_in_end"] is True
     assert metadata["buttons"]["channel_open_through_outer_wall"] is False
+    assert metadata["joints"]["end_stop"]["mechanical_fasteners"] == 0
+    assert metadata["joints"]["end_stop"]["detent_count"] == 2
+    assert metadata["joints"]["end_stop"]["nominal_rib_interference_x"] > 0.0
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -90,11 +97,11 @@ def main() -> None:
     stop_flat = model.flat_end_stop().val()
     installed_parts = model.installed_parts()
 
-    # The cradle's complete back datum is now the lowest face; neither the
-    # cable clips nor the superseded rear-projecting end-stop lug may protrude behind it.
+    # The complete cradle, including its new lower-left landing, retains the
+    # broad rear print datum and fits the configured 220 mm bed.
     assert abs(cradle_flat.BoundingBox().zmin + core.BASE_T) < 1e-6
-    assert cradle_flat.BoundingBox().xlen <= 216.1
-    assert abs(cradle_flat.BoundingBox().ylen - 137.5) < 1e-6
+    assert cradle_flat.BoundingBox().xlen <= 217.1
+    assert abs(cradle_flat.BoundingBox().ylen - 135.0) < 1e-5
     print(
         "cradle rear datum clear; "
         f"flat envelope={cradle_flat.BoundingBox().xlen:.2f} x "
@@ -192,27 +199,55 @@ def main() -> None:
         assert overlap < 1e-6, f"{label} interference={overlap:.3f} mm3"
     print("installed modules and both alignment keys are interference-free")
 
-    # The relocated end-stop screw is outside the tablet rectangle and aligned
-    # through the stop tab and cradle pilot.
-    assert model.ENDSTOP_BOSS_Y + model.ENDSTOP_BOSS_Y_SIZE / 2.0 < -(
-        core.TABLET_Y + core.FIT_Y
+    # The screw-free stop slides down the left short edge. Its narrow ribs rub
+    # over the base edge, settle into matching grooves, and the lower cradle
+    # projection provides a hard seating ledge. Rear hooks remain below the
+    # cradle datum and prevent lateral release.
+    cradle_left_x = -(
+        core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
     ) / 2.0
-    assert_open(
-        cradle_flat,
-        (model.ENDSTOP_BOSS_X, model.ENDSTOP_BOSS_Y, 0.0),
-        "end-stop pilot missing",
-    )
-    assert_open(
-        stop_flat,
-        (model.ENDSTOP_BOSS_X, model.ENDSTOP_BOSS_Y, 4.5),
-        "end-stop clearance missing",
-    )
     assert_solid(
         cradle_flat,
-        (model.ENDSTOP_BOSS_X + 3.0, model.ENDSTOP_BOSS_Y, 0.0),
-        "end-stop boss wall missing",
+        (-104.5, -67.0, -1.5),
+        "lower-left stop landing missing",
     )
-    print("single M3 end-stop joint aligned outside tablet cavity")
+    for detent_y in model.ENDSTOP_DETENT_Y:
+        assert_open(
+            cradle_flat,
+            (cradle_left_x + 0.1, detent_y, model.ENDSTOP_DETENT_CENTER_Z),
+            "left-stop detent groove missing",
+        )
+        assert_solid(
+            stop_flat,
+            (
+                cradle_left_x - model.ENDSTOP_SLIDE_CLEARANCE_X + 0.2,
+                detent_y,
+                model.ENDSTOP_DETENT_CENTER_Z,
+            ),
+            "left-stop friction rib missing",
+        )
+    assert_solid(stop_flat, (-101.0, -52.0, -4.2), "lower rear guide hook missing")
+    assert_solid(stop_flat, (-101.0, 52.0, -4.2), "upper rear guide hook missing")
+    assert_open(stop_flat, (-101.0, -52.0, -3.1), "rear hook consumes cradle clearance")
+    assert_solid(stop_flat, (-100.75, -42.0, 4.0), "tablet edge locator missing")
+    assert core.LEFT_RAIL_ENTRY_RELIEF_X >= 4.0
+
+    insertion_overlaps = []
+    for slide_offset_y in (90.0, 70.0, 50.0, 30.0, 10.0):
+        overlap = model.flat_cradle().intersect(
+            model.flat_end_stop().translate((0.0, slide_offset_y, 0.0))
+        ).val().Volume()
+        insertion_overlaps.append(overlap)
+        assert overlap < 1.0, (
+            f"hard collision during left-stop insertion at Y+{slide_offset_y:.0f}: "
+            f"{overlap:.3f} mm3"
+        )
+    assert model.flat_cradle().intersect(model.flat_end_stop()).val().Volume() < 1e-6
+    print(
+        "screw-free left stop has two friction detents, rear capture hooks, "
+        f"a lower landing, and collision-free slide travel apart from <= "
+        f"{max(insertion_overlaps):.2f} mm3 intentional rib interference"
+    )
 
     # The right-side coupon is a literal crop of the production cradle. It
     # retains both long-edge rails, the full right cap, the plug pocket, and
@@ -301,6 +336,21 @@ def main() -> None:
         f"outer wall={core.BUTTON_CHANNEL_REMAINING_OUTER_WALL:.1f} mm"
     )
 
+    left_coupon_cradle, left_coupon_stop = model.left_slide_coupon_parts()
+    assert len(left_coupon_cradle.solids().vals()) == 1
+    assert len(left_coupon_stop.solids().vals()) == 1
+    assert_solid(
+        left_coupon_cradle.val(),
+        (-104.5, -67.0, -1.5),
+        "slide coupon omits the lower landing",
+    )
+    assert_solid(
+        left_coupon_stop.val(),
+        (-101.0, -52.0, -4.2),
+        "slide coupon omits the rear hook",
+    )
+    print("left-slide coupon pair is an exact production crop of the landing, hook, and detent")
+
     # Preserve the user-tested tube path and seating cap.
     tube_axis_z = core.SLEEVE_BOTTOM_Z + core.SLEEVE_ENGAGEMENT / 2.0
     cap_axis_z = core.SLEEVE_TOP_Z - core.SLEEVE_CAP_T / 2.0
@@ -325,10 +375,13 @@ def main() -> None:
         mesh = trimesh.load_mesh(path, force="mesh")
         components = len(mesh.split(only_watertight=False))
         assert mesh.is_watertight, f"{path.name} is not watertight"
-        assert components == 1, f"{path.name} has {components} components"
+        expected_components = 2 if path.name == "tablet_stand_v2_left_slide_coupon_plate.stl" else 1
+        assert components == expected_components, (
+            f"{path.name} has {components} components; expected {expected_components}"
+        )
         support_area = approximate_support_area(mesh)
         print(
-            f"{path.name}: watertight, 1 component, "
+            f"{path.name}: watertight, {components} component(s), "
             f"extents={mesh.extents.round(2).tolist()}, "
             f"approx_overhang_area={support_area:.0f} mm2"
         )
