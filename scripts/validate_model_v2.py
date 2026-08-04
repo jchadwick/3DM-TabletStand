@@ -89,8 +89,12 @@ def main() -> None:
     assert metadata["joints"]["end_stop"]["mechanical_fasteners"] == 0
     assert metadata["joints"]["end_stop"]["external_landing"] is False
     assert metadata["joints"]["end_stop"]["rear_hooks"] == 0
-    assert metadata["joints"]["end_stop"]["capture_per_side_z"] >= 0.2
-    assert metadata["joints"]["end_stop"]["head_clearance_total_z"] >= 0.4
+    assert metadata["joints"]["end_stop"]["pin_count"] == 2
+    assert metadata["joints"]["end_stop"]["root_clearance_y_total"] >= 0.2
+    assert metadata["joints"]["end_stop"]["root_clearance_z_total"] >= 0.2
+    assert metadata["joints"]["end_stop"]["tip_clearance_y_total"] >= 0.5
+    assert metadata["joints"]["end_stop"]["tip_clearance_z_total"] >= 0.5
+    assert metadata["joints"]["end_stop"]["receiver_min_wall"] >= 1.2
 
     cradle_flat = model.flat_cradle().val()
     bracket_local = model.rear_bracket_local_plate().val()
@@ -103,7 +107,10 @@ def main() -> None:
     # vestigial fastener/landing projection is completely absent.
     assert abs(cradle_flat.BoundingBox().zmin + core.BASE_T) < 1e-6
     assert cradle_flat.BoundingBox().xlen <= 215.1
-    assert abs(cradle_flat.BoundingBox().ylen - 130.0) < 1e-5
+    expected_receiver_y = 2.0 * (
+        model.ENDSTOP_RECEIVER_INNER_Y + model.ENDSTOP_RECEIVER_Y
+    )
+    assert abs(cradle_flat.BoundingBox().ylen - expected_receiver_y) < 1e-5
     print(
         "cradle rear datum clear; "
         f"flat envelope={cradle_flat.BoundingBox().xlen:.2f} x "
@@ -201,9 +208,9 @@ def main() -> None:
         assert overlap < 1e-6, f"{label} interference={overlap:.3f} mm3"
     print("installed modules and both alignment keys are interference-free")
 
-    # The screw-free stop slides down one sleek dovetail. The groove is open at
-    # the top, closed at the bottom, wider internally than at its mouth, and
-    # contains a smaller matching tongue with no hooks, bumps, or external nub.
+    # The screw-free end cap pushes horizontally into two locally reinforced
+    # rail sockets. Each smaller tapered pin enters a straight pocket with a
+    # forgiving lead, a close seated fit, and no hook, bump, screw, or nub.
     cradle_left_x = -(
         core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
     ) / 2.0
@@ -212,43 +219,54 @@ def main() -> None:
         (-104.5, -67.0, -1.5),
         "vestigial lower-left landing remains",
     )
-    assert_open(
-        cradle_flat,
-        (cradle_left_x + 0.1, 0.0, model.ENDSTOP_DOVETAIL_CENTER_Z),
-        "dovetail mouth missing",
-    )
-    assert_open(
-        cradle_flat,
-        (-101.5, 0.0, -2.4),
-        "captured dovetail head cavity missing",
-    )
-    assert_solid(
-        cradle_flat,
-        (-102.0, model.ENDSTOP_DOVETAIL_BOTTOM_Y - 1.0, -1.5),
-        "dovetail groove is not closed at the bottom",
-    )
-    assert_solid(stop_flat, (-101.8, 0.0, -1.5), "captured dovetail tongue missing")
     assert stop_flat.BoundingBox().zmin >= -core.BASE_T - 1e-6
     assert_solid(stop_flat, (-100.75, -42.0, 4.0), "tablet edge locator missing")
-    assert core.LEFT_RAIL_ENTRY_RELIEF_X >= 4.0
-    assert model.ENDSTOP_DOVETAIL_CAPTURE_Z >= 0.2
-    assert (
-        model.ENDSTOP_DOVETAIL_GROOVE_HEAD_Z
-        - model.ENDSTOP_DOVETAIL_TONGUE_HEAD_Z
-    ) >= 0.4
+    for sign in (-1.0, 1.0):
+        center_y = sign * model.ENDSTOP_RECEIVER_CENTER_Y
+        assert_solid(
+            cradle_flat,
+            (
+                -96.0,
+                center_y + sign * (model.ENDSTOP_POCKET_Y / 2.0 + 0.3),
+                model.ENDSTOP_PIN_CENTER_Z,
+            ),
+            "rail receiver side wall missing",
+        )
+        assert_open(
+            cradle_flat,
+            (-102.0, center_y, model.ENDSTOP_PIN_CENTER_Z),
+            "rail socket is obstructed",
+        )
+        assert_solid(
+            cradle_flat,
+            (model.ENDSTOP_POCKET_X_MAX + 0.5, center_y, model.ENDSTOP_PIN_CENTER_Z),
+            "rail socket lacks a closed seating end",
+        )
+        assert_solid(
+            stop_flat,
+            (-102.0, center_y, model.ENDSTOP_PIN_CENTER_Z),
+            "tapered rail pin missing",
+        )
 
-    for slide_offset_y in (90.0, 70.0, 50.0, 30.0, 10.0):
+    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Y >= 0.2
+    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Z >= 0.2
+    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Y >= 0.5
+    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Z >= 0.5
+    assert (model.ENDSTOP_RECEIVER_Y - model.ENDSTOP_POCKET_Y) / 2.0 >= 1.2
+    assert (model.ENDSTOP_RECEIVER_Z - model.ENDSTOP_POCKET_Z) / 2.0 >= 1.2
+
+    for slide_offset_x in (-30.0, -24.0, -18.0, -12.0, -6.0):
         overlap = model.flat_cradle().intersect(
-            model.flat_end_stop().translate((0.0, slide_offset_y, 0.0))
+            model.flat_end_stop().translate((slide_offset_x, 0.0, 0.0))
         ).val().Volume()
         assert overlap < 1e-6, (
-            f"hard collision during left-stop insertion at Y+{slide_offset_y:.0f}: "
+            f"hard collision during left-cap insertion at X{slide_offset_x:.0f}: "
             f"{overlap:.3f} mm3"
         )
     assert model.flat_cradle().intersect(model.flat_end_stop()).val().Volume() < 1e-6
     print(
-        "screw-free left stop has one captured, closed-bottom dovetail with "
-        "collision-free slide travel and no hooks, bumps, nub, or fastener"
+        "screw-free left cap has two tapered rail plugs with support-free fit "
+        "surfaces, collision-free horizontal travel, and no hooks, nub, or fastener"
     )
 
     # The right-side coupon is a literal crop of the production cradle. It
@@ -341,17 +359,18 @@ def main() -> None:
     left_coupon_cradle, left_coupon_stop = model.left_slide_coupon_parts()
     assert len(left_coupon_cradle.solids().vals()) == 1
     assert len(left_coupon_stop.solids().vals()) == 1
-    assert_solid(
+    coupon_center_y = -model.ENDSTOP_RECEIVER_CENTER_Y
+    assert_open(
         left_coupon_cradle.val(),
-        (-102.0, model.ENDSTOP_DOVETAIL_BOTTOM_Y - 1.0, -1.5),
-        "slide coupon omits the closed groove bottom",
+        (-102.0, coupon_center_y, model.ENDSTOP_PIN_CENTER_Z),
+        "slide coupon omits the open rail socket",
     )
     assert_solid(
         left_coupon_stop.val(),
-        (-101.8, -40.0, -1.5),
-        "slide coupon omits the dovetail tongue",
+        (-102.0, coupon_center_y, model.ENDSTOP_PIN_CENTER_Z),
+        "slide coupon omits the tapered rail pin",
     )
-    print("left-slide coupon pair is an exact production crop of the dovetail and closed bottom")
+    print("left-slide coupon pair is an exact production crop of one tapered rail plug and socket")
 
     # Preserve the user-tested tube path and seating cap.
     tube_axis_z = core.SLEEVE_BOTTOM_Z + core.SLEEVE_ENGAGEMENT / 2.0

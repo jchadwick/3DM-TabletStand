@@ -9,7 +9,7 @@ Print orientations:
     cradle: rear frame face on the bed
     rear bracket: horizontal sleeve-interface foot on the bed
     sleeve: flange face on the bed, tube-entry bore open upward
-    slide-on left stop: broad outside wall face on the bed
+    slide-on left stop: broad outside wall face on the bed; twin pins build vertically
 
 All dimensions are millimeters. ``tablet_stand_core`` owns confirmed tablet,
 tube, rail, USB-C, cable, and tilt geometry; this file owns the modular joints.
@@ -55,10 +55,12 @@ ALIGNMENT_KEY_EDGE_CHAMFER = 0.4
 ALIGNMENT_GROOVE_DEPTH = 1.15
 ALIGNMENT_KEY_QUANTITY = 2
 
-# The left stop slides down along one clean, closed-bottom dovetail groove in
-# the cradle's left base edge. The captured tongue guides the slide and blocks
-# lateral release without hooks, bumps, an external landing, or a fastener.
-ENDSTOP_SLIDE_CLEARANCE_X = 0.25
+# The left stop pushes horizontally onto two reinforced rail-end receivers.
+# Each pin tapers from a forgiving lead to a close seated fit. The matching
+# socket is a short house-profile tunnel with a 45-degree peaked roof in the
+# cradle's rear-face-down orientation; the pins build vertically when the stop
+# rests on its broad outside wall. No fit surface needs generated support.
+ENDSTOP_SEAT_CLEARANCE_X = 0.25
 ENDSTOP_OUTER_WALL_X = 3.5
 ENDSTOP_OUTER_WALL_Y_MIN = -65.0
 ENDSTOP_OUTER_WALL_Y_MAX = 65.0
@@ -67,29 +69,39 @@ ENDSTOP_EDGE_R = 0.70
 ENDSTOP_CAP_Y = 116.0
 ENDSTOP_LOCATOR_Y = (-42.0, 42.0)
 ENDSTOP_LOCATOR_Y_SIZE = 18.0
-ENDSTOP_DOVETAIL_CENTER_Z = -1.5
-ENDSTOP_DOVETAIL_BOTTOM_Y = -54.5
-ENDSTOP_DOVETAIL_GROOVE_TOP_Y = 65.2
-ENDSTOP_DOVETAIL_TONGUE_TOP_Y = 61.0
-ENDSTOP_DOVETAIL_GROOVE_OUTER_X = -103.8
-ENDSTOP_DOVETAIL_GROOVE_INNER_X = -101.3
-ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z = 1.30
-ENDSTOP_DOVETAIL_GROOVE_HEAD_Z = 2.30
-ENDSTOP_DOVETAIL_TONGUE_OUTER_X = -103.85
-ENDSTOP_DOVETAIL_TONGUE_INNER_X = -101.60
-ENDSTOP_DOVETAIL_TONGUE_NECK_Z = 0.90
-ENDSTOP_DOVETAIL_TONGUE_HEAD_Z = 1.80
-ENDSTOP_DOVETAIL_LEAD_CHAMFER = 0.40
-ENDSTOP_DOVETAIL_CAPTURE_Z = (
-    ENDSTOP_DOVETAIL_TONGUE_HEAD_Z - ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z
-) / 2.0
+ENDSTOP_RECEIVER_X_MIN = -103.5
+ENDSTOP_RECEIVER_X_MAX = -90.0
+ENDSTOP_RECEIVER_INNER_Y = (core.TABLET_Y + core.FIT_Y) / 2.0
+ENDSTOP_RECEIVER_Y = 4.8
+ENDSTOP_RECEIVER_CENTER_Y = ENDSTOP_RECEIVER_INNER_Y + ENDSTOP_RECEIVER_Y / 2.0
+ENDSTOP_RECEIVER_Z0 = 5.4
+ENDSTOP_RECEIVER_Z = 5.8
+ENDSTOP_RECEIVER_CORNER_R = 0.8
+ENDSTOP_RECEIVER_RAMP_INNER_Y = ENDSTOP_RECEIVER_INNER_Y + core.WALL_T - 0.2
+ENDSTOP_RECEIVER_RAMP_Z0 = 3.4
+ENDSTOP_RECEIVER_RAMP_Z1 = ENDSTOP_RECEIVER_Z0 + 0.2
+ENDSTOP_POCKET_X_MIN = -104.0
+ENDSTOP_POCKET_X_MAX = -91.1
+ENDSTOP_POCKET_Y = 2.40
+ENDSTOP_POCKET_Z = 3.20
+ENDSTOP_PIN_X_MIN = -104.0
+ENDSTOP_PIN_LENGTH = 12.0
+ENDSTOP_PIN_CENTER_Z = 8.30
+ENDSTOP_PIN_ROOT_Y = 2.15
+ENDSTOP_PIN_ROOT_Z = 2.95
+ENDSTOP_PIN_TIP_Y = 1.80
+ENDSTOP_PIN_TIP_Z = 2.60
+ENDSTOP_PIN_ROOT_CLEARANCE_Y = ENDSTOP_POCKET_Y - ENDSTOP_PIN_ROOT_Y
+ENDSTOP_PIN_ROOT_CLEARANCE_Z = ENDSTOP_POCKET_Z - ENDSTOP_PIN_ROOT_Z
+ENDSTOP_PIN_TIP_CLEARANCE_Y = ENDSTOP_POCKET_Y - ENDSTOP_PIN_TIP_Y
+ENDSTOP_PIN_TIP_CLEARANCE_Z = ENDSTOP_POCKET_Z - ENDSTOP_PIN_TIP_Z
 
-# Exact crop pair for testing the closed-bottom tongue and groove before
-# committing the production cradle to a long print.
+# Exact lower-rail crop pair for testing one of the two identical tapered plugs
+# before committing the production cradle to a long print.
 LEFT_SLIDE_COUPON_X_MIN = -108.0
-LEFT_SLIDE_COUPON_X_MAX = -90.0
-LEFT_SLIDE_COUPON_Y_MIN = -67.0
-LEFT_SLIDE_COUPON_Y_MAX = -20.0
+LEFT_SLIDE_COUPON_X_MAX = -87.0
+LEFT_SLIDE_COUPON_Y_MIN = -68.0
+LEFT_SLIDE_COUPON_Y_MAX = -62.05
 # Keep the two exact-fit pieces well apart on the combined plate.  The first
 # physical coupon used a 10 mm gap and this particular PLA strung heavily
 # across the repeated inter-part travel; 28 mm leaves an 18 mm clear gap even
@@ -221,53 +233,106 @@ def cross_key(
     return key.faces(">Z").edges().chamfer(ALIGNMENT_KEY_EDGE_CHAMFER)
 
 
-def dovetail_prism(
-    profile: list[tuple[float, float]],
-    y_bottom: float,
-    y_top: float,
-) -> cq.Workplane:
-    """Extrude an X/Z dovetail profile downward along the local Y slide axis."""
+def endstop_house_profile(width_y: float, height_z: float) -> list[tuple[float, float]]:
+    """Return a support-free socket profile with vertical sides and a 45° roof."""
+    half_y = width_y / 2.0
+    half_z = height_z / 2.0
+    roof_eave_z = half_z - half_y
+    return [
+        (-half_y, -half_z),
+        (half_y, -half_z),
+        (half_y, roof_eave_z),
+        (0.0, half_z),
+        (-half_y, roof_eave_z),
+    ]
+
+
+def tapered_x_pin(center_y: float) -> cq.Workplane:
+    """Return one house-profile pin, broad at the stop and narrower at its lead."""
     return (
-        cq.Workplane("XZ", origin=(0.0, y_top, 0.0))
-        .polyline(profile)
+        cq.Workplane(
+            "YZ",
+            origin=(ENDSTOP_PIN_X_MIN, center_y, ENDSTOP_PIN_CENTER_Z),
+        )
+        .polyline(endstop_house_profile(ENDSTOP_PIN_ROOT_Y, ENDSTOP_PIN_ROOT_Z))
         .close()
-        .extrude(y_top - y_bottom)
+        .workplane(offset=ENDSTOP_PIN_LENGTH)
+        .polyline(endstop_house_profile(ENDSTOP_PIN_TIP_Y, ENDSTOP_PIN_TIP_Z))
+        .close()
+        .loft(combine=True)
     )
 
 
-def endstop_dovetail_groove() -> cq.Workplane:
-    """Return the cradle cutter with a narrow mouth and captured inner head."""
-    mouth_half = ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z / 2.0
-    head_half = ENDSTOP_DOVETAIL_GROOVE_HEAD_Z / 2.0
-    profile = [
-        (ENDSTOP_DOVETAIL_GROOVE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z - mouth_half),
-        (ENDSTOP_DOVETAIL_GROOVE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z - head_half),
-        (ENDSTOP_DOVETAIL_GROOVE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z + head_half),
-        (ENDSTOP_DOVETAIL_GROOVE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z + mouth_half),
-    ]
-    return dovetail_prism(
-        profile,
-        ENDSTOP_DOVETAIL_BOTTOM_Y,
-        ENDSTOP_DOVETAIL_GROOVE_TOP_Y,
-    )
+def endstop_rail_receivers() -> cq.Workplane:
+    """Return the two local rail-end reinforcement solids."""
+    receivers = None
+    receiver_center_x = (ENDSTOP_RECEIVER_X_MIN + ENDSTOP_RECEIVER_X_MAX) / 2.0
+    receiver_center_z = ENDSTOP_RECEIVER_Z0 + ENDSTOP_RECEIVER_Z / 2.0
+    for sign in (-1.0, 1.0):
+        center_y = sign * ENDSTOP_RECEIVER_CENTER_Y
+        receiver = core.rounded_plate(
+            ENDSTOP_RECEIVER_X_MAX - ENDSTOP_RECEIVER_X_MIN,
+            ENDSTOP_RECEIVER_Y,
+            ENDSTOP_RECEIVER_Z,
+            ENDSTOP_RECEIVER_Z0,
+            ENDSTOP_RECEIVER_CORNER_R,
+        ).translate((receiver_center_x, center_y, 0.0))
+        inner_y = sign * ENDSTOP_RECEIVER_RAMP_INNER_Y
+        outer_y = sign * (
+            ENDSTOP_RECEIVER_INNER_Y + ENDSTOP_RECEIVER_Y
+        )
+        ramp_profile = [
+            (inner_y, ENDSTOP_RECEIVER_RAMP_Z0),
+            (outer_y, ENDSTOP_RECEIVER_Z0),
+            (outer_y, ENDSTOP_RECEIVER_RAMP_Z1),
+            (inner_y, ENDSTOP_RECEIVER_RAMP_Z1),
+        ]
+        if sign < 0.0:
+            ramp_profile.reverse()
+        ramp = (
+            cq.Workplane("YZ", origin=(ENDSTOP_RECEIVER_X_MIN, 0.0, 0.0))
+            .polyline(ramp_profile)
+            .close()
+            .extrude(ENDSTOP_RECEIVER_X_MAX - ENDSTOP_RECEIVER_X_MIN)
+        )
+        receiver = receiver.union(ramp)
+        receivers = receiver if receivers is None else receivers.union(receiver)
+    assert receivers is not None
+    return receivers
 
 
-def endstop_dovetail_tongue() -> cq.Workplane:
-    """Return the slightly undersized captured tongue with a chamfered lead."""
-    neck_half = ENDSTOP_DOVETAIL_TONGUE_NECK_Z / 2.0
-    head_half = ENDSTOP_DOVETAIL_TONGUE_HEAD_Z / 2.0
-    profile = [
-        (ENDSTOP_DOVETAIL_TONGUE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z - neck_half),
-        (ENDSTOP_DOVETAIL_TONGUE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z - head_half),
-        (ENDSTOP_DOVETAIL_TONGUE_INNER_X, ENDSTOP_DOVETAIL_CENTER_Z + head_half),
-        (ENDSTOP_DOVETAIL_TONGUE_OUTER_X, ENDSTOP_DOVETAIL_CENTER_Z + neck_half),
-    ]
-    tongue = dovetail_prism(
-        profile,
-        ENDSTOP_DOVETAIL_BOTTOM_Y,
-        ENDSTOP_DOVETAIL_TONGUE_TOP_Y,
-    )
-    return tongue.faces(">Y").edges().chamfer(ENDSTOP_DOVETAIL_LEAD_CHAMFER)
+def endstop_rail_pockets() -> cq.Workplane:
+    """Return both 45-degree-roof socket cutters; apply after all rail unions."""
+    pockets = None
+    for sign in (-1.0, 1.0):
+        pocket = (
+            cq.Workplane(
+                "YZ",
+                origin=(
+                    ENDSTOP_POCKET_X_MIN,
+                    sign * ENDSTOP_RECEIVER_CENTER_Y,
+                    ENDSTOP_PIN_CENTER_Z,
+                ),
+            )
+            .polyline(endstop_house_profile(ENDSTOP_POCKET_Y, ENDSTOP_POCKET_Z))
+            .close()
+            .extrude(
+                ENDSTOP_POCKET_X_MAX - ENDSTOP_POCKET_X_MIN
+            )
+        )
+        pockets = pocket if pockets is None else pockets.union(pocket)
+    assert pockets is not None
+    return pockets
+
+
+def endstop_tapered_pins() -> cq.Workplane:
+    """Return the two identical support-free tapered rail plugs."""
+    pins = None
+    for sign in (-1.0, 1.0):
+        pin = tapered_x_pin(sign * ENDSTOP_RECEIVER_CENTER_Y)
+        pins = pin if pins is None else pins.union(pin)
+    assert pins is not None
+    return pins
 
 
 # ============================================================
@@ -275,8 +340,12 @@ def endstop_dovetail_tongue() -> cq.Workplane:
 # ============================================================
 
 def flat_cradle() -> cq.Workplane:
-    """Active tablet cradle with one clean closed-bottom dovetail groove."""
-    cradle = core.flat_main_holder().cut(endstop_dovetail_groove())
+    """Active tablet cradle with two reinforced tapered-pin receivers."""
+    cradle = (
+        core.flat_main_holder()
+        .union(endstop_rail_receivers())
+        .cut(endstop_rail_pockets())
+    )
 
     cradle_groove = cross_groove(
         0.0,
@@ -288,13 +357,13 @@ def flat_cradle() -> cq.Workplane:
 
 
 def flat_end_stop() -> cq.Workplane:
-    """Return the top-down, screw-free left slide stop in assembly coordinates."""
+    """Return the horizontal, twin-pin left end cap in assembly coordinates."""
     cavity_x = core.TABLET_X + core.FIT_X
     cavity_y = core.TABLET_Y + core.FIT_Y
     rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
     wall_h = core.BASE_T + rail_top
     cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
-    wall_inner_x = cradle_left_x - ENDSTOP_SLIDE_CLEARANCE_X
+    wall_inner_x = cradle_left_x - ENDSTOP_SEAT_CLEARANCE_X
     wall_outer_x = wall_inner_x - ENDSTOP_OUTER_WALL_X
 
     outer_wall_center_x = (wall_inner_x + wall_outer_x) / 2.0
@@ -312,8 +381,8 @@ def flat_end_stop() -> cq.Workplane:
     # pads below it contact the tablet edge through the otherwise open left end.
     cap_left_x = wall_outer_x
     # This bridge terminates at the tablet edge. The actual edge contact comes
-    # from the two locator pads; avoiding screen overlap lets the whole stop
-    # pass through the rail-free lead-in during top-down installation.
+    # from the two locator pads; avoiding screen overlap lets the cap push
+    # horizontally onto its two rail-end sockets after the tablet is seated.
     cap_right_x = -cavity_x / 2.0
     cap = core.softened_plate(
         cap_right_x - cap_left_x,
@@ -336,7 +405,7 @@ def flat_end_stop() -> cq.Workplane:
         locator = pad if locator is None else locator.union(pad)
     assert locator is not None
 
-    return outer_wall.union(cap).union(locator).union(endstop_dovetail_tongue())
+    return outer_wall.union(cap).union(locator).union(endstop_tapered_pins())
 
 
 def rear_bracket_local_plate() -> cq.Workplane:
@@ -505,7 +574,7 @@ def button_fit_coupon_print() -> cq.Workplane:
 
 
 def left_slide_coupon_parts() -> tuple[cq.Workplane, cq.Workplane]:
-    """Return exact lower-left crops of the cradle and screw-free slide stop."""
+    """Return exact lower-rail crops of one tapered socket and matching pin."""
     cutter = (
         cq.Workplane("XY")
         .box(
@@ -525,7 +594,7 @@ def left_slide_coupon_parts() -> tuple[cq.Workplane, cq.Workplane]:
 
 
 def left_slide_coupon_print_parts() -> tuple[cq.Workplane, cq.Workplane]:
-    """Orient the two exact slide-stop coupon pieces like production parts."""
+    """Orient the exact rail-socket and end-cap pin crops like production parts."""
     cradle_coupon, stop_coupon = left_slide_coupon_parts()
     return (
         shift_to_bed(cradle_coupon),
@@ -568,7 +637,7 @@ def installed_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane, cq.Work
 
 
 def orient_end_stop_for_print(stop: cq.Workplane) -> cq.Workplane:
-    """Lay the stop on its broad outside wall so the dovetail grows vertically."""
+    """Lay the stop on its broad outside wall so both pins grow vertically."""
     bridge_face_down = stop.rotate(
         (0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
@@ -679,7 +748,7 @@ def export() -> None:
             "cradle": "rear frame face on bed; rail and end-stop features face up",
             "rear_bracket": "horizontal sleeve-interface foot on bed",
             "sleeve": "flange on bed; tube-entry bore open upward",
-            "end_stop": "broad outside wall face on bed; dovetail tongue builds vertically",
+            "end_stop": "broad outside wall face on bed; twin tapered pins build vertically",
             "alignment_key": "flat on bed; print two identical copies",
             "right_fit_coupon": (
                 "rear face on bed; exact 33.5 mm crop of production cradle right end"
@@ -688,7 +757,7 @@ def export() -> None:
                 "rear face on bed; exact top-left production rail crop"
             ),
             "left_slide_coupon": (
-                "two exact lower-left dovetail crops; cradle rear face down and stop outside wall down"
+                "exact lower-rail socket/pin crops; cradle rear face down and stop outside wall down"
             ),
         },
         "right_fit_coupon": {
@@ -707,7 +776,7 @@ def export() -> None:
             "uses_exact_cradle_geometry": True,
         },
         "left_slide_coupon": {
-            "purpose": "verify the closed-bottom dovetail slide, capture, and printed fit",
+            "purpose": "verify one support-free tapered rail plug and socket fit",
             "x_min": LEFT_SLIDE_COUPON_X_MIN,
             "x_max": LEFT_SLIDE_COUPON_X_MAX,
             "y_min": LEFT_SLIDE_COUPON_Y_MIN,
@@ -731,24 +800,27 @@ def export() -> None:
         "joints": {
             "end_stop": {
                 "count": 1,
-                "method": "top-down closed-bottom dovetail slide; optional adhesive",
+                "method": "horizontal twin tapered rail plugs; optional adhesive",
                 "mechanical_fasteners": 0,
-                "travel_axis": "local -Y from landscape top to bottom",
+                "travel_axis": "local +X from the open left end",
                 "external_landing": False,
                 "rear_hooks": 0,
-                "groove_bottom_y": ENDSTOP_DOVETAIL_BOTTOM_Y,
-                "groove_mouth_z": ENDSTOP_DOVETAIL_GROOVE_MOUTH_Z,
-                "groove_head_z": ENDSTOP_DOVETAIL_GROOVE_HEAD_Z,
-                "tongue_neck_z": ENDSTOP_DOVETAIL_TONGUE_NECK_Z,
-                "tongue_head_z": ENDSTOP_DOVETAIL_TONGUE_HEAD_Z,
-                "capture_per_side_z": ENDSTOP_DOVETAIL_CAPTURE_Z,
-                "head_clearance_total_z": (
-                    ENDSTOP_DOVETAIL_GROOVE_HEAD_Z
-                    - ENDSTOP_DOVETAIL_TONGUE_HEAD_Z
-                ),
-                "depth_clearance_x": (
-                    ENDSTOP_DOVETAIL_TONGUE_INNER_X
-                    - ENDSTOP_DOVETAIL_GROOVE_INNER_X
+                "pin_count": 2,
+                "pin_length": ENDSTOP_PIN_LENGTH,
+                "socket_length": ENDSTOP_POCKET_X_MAX - ENDSTOP_POCKET_X_MIN,
+                "socket_y": ENDSTOP_POCKET_Y,
+                "socket_z": ENDSTOP_POCKET_Z,
+                "pin_root_y": ENDSTOP_PIN_ROOT_Y,
+                "pin_root_z": ENDSTOP_PIN_ROOT_Z,
+                "pin_tip_y": ENDSTOP_PIN_TIP_Y,
+                "pin_tip_z": ENDSTOP_PIN_TIP_Z,
+                "root_clearance_y_total": ENDSTOP_PIN_ROOT_CLEARANCE_Y,
+                "root_clearance_z_total": ENDSTOP_PIN_ROOT_CLEARANCE_Z,
+                "tip_clearance_y_total": ENDSTOP_PIN_TIP_CLEARANCE_Y,
+                "tip_clearance_z_total": ENDSTOP_PIN_TIP_CLEARANCE_Z,
+                "receiver_min_wall": min(
+                    (ENDSTOP_RECEIVER_Y - ENDSTOP_POCKET_Y) / 2.0,
+                    (ENDSTOP_RECEIVER_Z - ENDSTOP_POCKET_Z) / 2.0,
                 ),
             },
             "cradle_to_bracket": {

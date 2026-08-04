@@ -163,16 +163,16 @@ def button_coupon_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, 
 
 
 def left_stop_detail_objects(
-    slide_offset_y: float = 0.0,
+    slide_offset_x: float = 0.0,
 ) -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
-    """Crop the local cradle/stop assembly tightly around the new slide joint."""
+    """Crop the local cradle/cap assembly around both tapered rail plugs."""
     cutter = (
         cq.Workplane("XY")
-        .box(28.0, 205.0, 30.0)
-        .translate((-99.0, 25.0, 3.0))
+        .box(44.0, 142.0, 30.0)
+        .translate((-96.0, 0.0, 3.0))
     )
     cradle = model.flat_cradle().intersect(cutter)
-    stop = model.flat_end_stop().translate((0.0, slide_offset_y, 0.0)).intersect(cutter)
+    stop = model.flat_end_stop().translate((slide_offset_x, 0.0, 0.0)).intersect(cutter)
     return [
         (cq_mesh(cradle), (48, 72, 104, 255)),
         (cq_mesh(stop), (16, 112, 220, 255)),
@@ -180,14 +180,14 @@ def left_stop_detail_objects(
 
 
 def left_stop_section_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
-    """Show a thin transverse CAD section with the tongue exploded outward."""
+    """Show one exact tapered pin and socket in a thin lower-rail section."""
     section = (
         cq.Workplane("XY")
-        .box(18.0, 5.0, 22.0)
-        .translate((-102.0, 0.0, 3.0))
+        .box(30.0, 5.0, 18.0)
+        .translate((-96.0, -model.ENDSTOP_RECEIVER_CENTER_Y, 7.0))
     )
     cradle = model.flat_cradle().intersect(section)
-    stop = model.flat_end_stop().intersect(section).translate((-8.0, 0.0, 0.0))
+    stop = model.flat_end_stop().intersect(section).translate((-18.0, 0.0, 0.0))
     return [
         (cq_mesh(cradle), (48, 72, 104, 255)),
         (cq_mesh(stop), (16, 112, 220, 255)),
@@ -223,8 +223,8 @@ def button_coupon_contact_sheet(paths: list[Path], output: Path) -> None:
 def left_stop_contact_sheet(paths: list[Path], output: Path) -> None:
     labels = (
         "CLEAN SEATED EDGE — NO SCREW OR NUB",
-        "TOP-DOWN DOVETAIL SLIDE — 35 MM EXPLODED",
-        "DOVETAIL PROFILE — 0.25 MM CAPTURE PER SIDE",
+        "HORIZONTAL TWIN-PIN CAP — 25 MM EXPLODED",
+        "TAPERED PIN + OPEN-ENDED SOCKET — SUPPORT-FREE FIT",
     )
     canvas = Image.new("RGB", (2400, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
@@ -356,19 +356,19 @@ def main() -> None:
             )
         elif sys.argv[2] == "left-stop-sliding":
             render_view(
-                left_stop_detail_objects(slide_offset_y=35.0),
+                left_stop_detail_objects(slide_offset_x=-25.0),
                 left_stop_views[1],
                 (800, 700),
-                eye=(-175.0, -170.0, 62.0),
-                target=(-101.0, 14.0, 2.0),
+                eye=(-185.0, -170.0, 62.0),
+                target=(-108.0, 0.0, 2.0),
             )
         elif sys.argv[2] == "left-stop-rear":
             render_view(
                 left_stop_section_objects(),
                 left_stop_views[2],
                 (800, 700),
-                eye=(-106.0, -55.0, 2.0),
-                target=(-106.0, 0.0, 2.0),
+                eye=(-105.0, -115.0, 10.0),
+                target=(-102.0, -model.ENDSTOP_RECEIVER_CENTER_Y, 7.5),
             )
         else:
             raise ValueError(f"unknown preview view: {sys.argv[2]}")
@@ -396,7 +396,7 @@ def main() -> None:
         left_stop_views,
         BUILD / "tablet_stand_v2_left_stop_multiview.png",
     )
-    print("Rendered V2 CadQuery solids directly with Trimesh (no STL import).")
+    print("Rendered V2 CadQuery solids directly with a depth-buffered renderer (no STL import).")
 
 
 if __name__ == "__main__":

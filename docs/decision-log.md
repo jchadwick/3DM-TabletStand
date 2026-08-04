@@ -39,7 +39,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Landscape tablet orientation.
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
-- A removable left stop slides downward from the landscape top in one continuous captured dovetail with a closed internal bottom; no mechanical fastener, hook, detent bump, or projecting lower nub is used, and adhesive is optional.
+- A removable left cap slides horizontally in from the left on two tapered plugs aligned with the long-edge rails. They enter reinforced, open-ended sockets with closed seating ends; no mechanical fastener, hook, detent bump, projecting lower nub, or support-trapping dovetail is used, and adhesive is optional.
 - The right edge has a continuous full-depth screen-facing cap backed by internal stops and a solid outer USB-C wall. No tablet-edge or recessed plug-pocket segment is exposed from the front; the low-profile right-angle adapter still turns immediately behind the tablet instead of sending the cable straight out through the right wall.
 - The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
 - Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
@@ -51,12 +51,22 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- The cradle provides one continuous dovetail groove with a 1.30 mm mouth, 2.30 mm internal head, and closed internal bottom. The separate stop has a 1.80 mm-head tongue, giving 0.25 mm capture per side and 0.50 mm total head clearance. The stop's rounded outside wall remains within the normal cradle envelope.
-- Routine previews use direct in-memory CadQuery tessellation with Trimesh's depth-buffered renderer. Blender is reserved for optional polished presentation renders.
+- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.15 × 2.95 mm at the root to 1.80 × 2.60 mm at the tip. Its matching socket is 2.40 × 3.20 mm with two 45-degree roof faces, giving 0.25 mm total root and 0.60 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 133.6 × 14.2 mm.
+- Routine previews use direct in-memory CadQuery tessellation with a depth-buffered renderer. The headless fallback uses VTK; Blender is reserved for optional polished presentation renders.
 
 ## Revision history
 
-### Sleek dovetail stop and clean lower-left corner — 2026-08-03
+### Twin tapered rail plugs replace the failed dovetail — 2026-08-04
+
+- The supported dovetail coupon physically failed its serviceability goal: support could not be removed reliably from the narrow captured groove. The user selected twin tapered plugs as the replacement screw-free joint.
+- Added one horizontal plug and socket at each long-edge rail. Each 12 mm plug tapers from 2.15 × 2.95 mm at its root to 1.80 × 2.60 mm at its tip; each socket is 2.40 × 3.20 mm with 0.25 mm total root and 0.60 mm total tip clearance.
+- Both plug and socket use a house-shaped cross-section. Vertical walls and a two-face 45-degree roof eliminate unsupported flat fit surfaces, while 45-degree underside ramps blend the reinforced socket bodies into the cradle.
+- Preserved the concealed 2 mm-high × 1.2 mm-deep top button groove, solid 1.8 mm outer rail wall, rounded cap, and absence of screws, hooks, detents, or a lower nub.
+- Validation confirms both seating ends, minimum 1.2/1.3 mm receiver walls, zero intersection at six horizontal insertion positions, watertight production/coupon STLs, and a 215 × 133.6 × 14.2 mm cradle envelope. The multiview and exact coupon preview were regenerated and inspected.
+- Prepared the exact socket and plug coupons as separate support-free jobs for the user's string-prone PLA: 0.16 mm layers, three walls, 20% grid, 5 mm brim, 205/200 °C, and 1.0 mm retraction at 40 mm/s. They validate at about 19 min 23 s / 1.0 g and 5 min 44 s / 0.3 g without model-stability warnings.
+- All previous full-cradle, supported-cradle, combined-coupon, and end-stop G-code is stale. A physical twin-plug fit test is required before regenerating the complete cradle and cap slices.
+
+### Sleek dovetail stop and clean lower-left corner — 2026-08-03 (superseded 2026-08-04)
 
 - The user rejected the first screw-free implementation's visible landing nub, small rear hooks, and detent bumps in favor of a sleek tongue-and-groove joint like the supplied reference image.
 - Replaced the separate hooks and detents with one continuous top-entry dovetail. Its cradle groove has a 1.30 mm mouth and 2.30 mm internal head; its stop tongue has a 1.80 mm head, producing 0.25 mm mechanical capture per side and 0.50 mm total sliding clearance at the head.
@@ -68,7 +78,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Regenerated the full-cradle support review. The recommended support-free job validates at 4 h 8 min, 60.7 g, and X = 3–217 mm; the snug-support comparison validates at 4 h 28 min, 67.4 g, and places support on the long lips and end features. Neither was uploaded or started.
 - Prepared the separate end stop bridge-face down with a 5 mm brim and no supports; validation reports 49 min 22 s and 9.2 g. It was not uploaded or started.
 
-### Supported left-slide coupon retry for string-prone PLA — 2026-08-03
+### Supported left-slide coupon retry for string-prone PLA — 2026-08-03 (superseded 2026-08-04)
 
 - The first physical two-piece left-slide coupon failed as a print: the stop crop developed loose/collapsed extrusion beneath its ledge and the shared job showed severe travel stringing. This result does not establish dovetail fit and overrides the earlier support-free slice recommendation.
 - Kept the exact production tongue, groove, closed bottom, and fit clearance unchanged. Rotated the stop onto its broad outside wall face so its dovetail builds vertically; this changes only manufacturing orientation, lowers the full stop from 14.2 mm to about 6.8 mm, and increases its estimated bed contact from 803 mm² to 1,778 mm². Increased the combined plate's inter-part spacing from 10 mm to 28 mm, leaving an 18 mm clear gap between separate 5 mm brims.

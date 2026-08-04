@@ -10,9 +10,9 @@ confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_sleeve.stl`: print the 60 × 46 mm flange down, with the
   32.2 mm tube-entry bore open upward.
 - `tablet_stand_v2_end_stop.stl`: print its broad outside wall face down so the
-  dovetail builds vertically instead of cantilevering into open air. Its tongue
-  slides downward into the cradle's closed-bottom groove with no screw, hook,
-  detent, or projecting lower nub.
+  two tapered rail plugs build vertically. The cap slides horizontally into
+  the cradle's reinforced open-ended rail sockets with no screw, hook, detent,
+  projecting lower nub, or support-trapping dovetail.
 - `tablet_stand_v2_alignment_key_print_2.stl`: print **two copies** flat.
 - `tablet_stand_v2_right_fit_coupon.stl`: print rear face down before the full
   cradle; it is an exact 33.5 mm-wide crop of the production right end and
@@ -26,16 +26,18 @@ confirmed tablet, tube, tilt, and cable geometry.
   insertion end, extends 5 mm beyond the seated button group, and preserves a
   solid 1.8 mm exterior rail wall.
 - `tablet_stand_v2_left_slide_coupon_cradle.stl` and
-  `tablet_stand_v2_left_slide_coupon_stop.stl`: exact lower-left production
-  crops for checking dovetail capture, downward travel, closed-bottom seating,
-  and real PLA slide clearance. `tablet_stand_v2_left_slide_coupon_plate.stl` arranges both pieces
-  together with a 28 mm inter-part gap for the prepared coupon job.
-- `tablet_stand_v2_left_slide_coupon_pla.gcode`: corrected two-piece retry at
-  0.16 mm layers, three walls, 20% grid infill, a removable 5 mm brim, and
-  45-degree grid supports. It uses 205 °C for the first layer, then 200 °C,
-  with 1.0 mm retraction at 40 mm/s; approximately 40 min 49 s and 5.0 g.
-- `tablet_stand_v2_left_slide_coupon_support_review.png`: actual model paths
-  in blue and support paths in orange for the corrected retry.
+  `tablet_stand_v2_left_slide_coupon_stop.stl`: exact production crops of one
+  rail socket and its identical tapered plug. Print them as separate jobs to
+  check horizontal insertion, closed-end seating, retention, and real PLA
+  clearance. `tablet_stand_v2_left_slide_coupon_plate.stl` is preview-only.
+- `tablet_stand_v2_left_slide_coupon_cradle_pla.gcode`: support-free socket
+  coupon at 0.16 mm layers, three walls, 20% grid infill, and a removable 5 mm
+  brim; approximately 19 min 23 s and 1.0 g.
+- `tablet_stand_v2_left_slide_coupon_stop_pla.gcode`: support-free tapered-plug
+  coupon with the same settings; approximately 5 min 44 s and 0.3 g.
+- Both jobs use 205 °C for the first layer, then 200 °C, with 1.0 mm retraction
+  at 40 mm/s. Separate jobs reduce the long travel moves that aggravated
+  stringing in the failed shared coupon.
 - `tablet_stand_v2_left_slide_coupon_plate_preview.png`: six-view mesh review
   of the separated two-piece coupon plate in its corrected print orientations.
 - `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
@@ -45,19 +47,9 @@ confirmed tablet, tube, tilt, and cable geometry.
 - `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
   coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
   approximately 1 h 25 min and 18.6 g. Prepared only.
-- `tablet_stand_v2_cradle_pla.gcode`: support-free full-cradle PLA candidate;
-  rear face down, 0.20 mm layers, three walls, 20% grid infill, no skirt, and
-  no supports; approximately 4 h 8 min and 60.7 g. Its extrusion footprint is
-  X = 3–217 mm and Y = 45–175 mm.
-- `tablet_stand_v2_cradle_pla_supports.gcode`: review-only snug 45-degree support
-  comparison with 0.25 mm XY spacing; approximately 4 h 28 min and 67.4 g. It
-  places support on the long rail lips and end features, so it is not the
-  recommended upload candidate.
-- `tablet_stand_v2_end_stop_pla.gcode`: stale bridge-face-down slice invalidated
-  by the first physical coupon failure; do not print it. Re-slice after the
-  outside-wall-down coupon passes.
-- `tablet_stand_v2_cradle_support_review.png`: top, front, and per-layer views
-  of actual PrusaSlicer model and support extrusion paths.
+- Full cradle and cap G-code is intentionally absent: all earlier slices
+  predate the twin tapered joint and are stale. Regenerate them only after the
+  physical coupon passes.
 
 `tablet_stand_v2.step` is the installed assembly. `model_parameters.json`
 records the module orientations, glue joints, key dimensions, and preserved
@@ -87,7 +79,7 @@ bond faces according to the adhesive instructions.
 All five production STL files and four individual fit-coupon part STLs are
 single watertight solids. The combined left-slide coupon plate intentionally
 contains those two watertight pieces. The alignment-key STL is printed twice.
-The cradle has a broad 215 × 130 mm rear datum, the bracket has a 60 × 28 mm foot, and the
+The cradle has a broad 215 × 133.6 mm rear datum, the bracket has a 60 × 28 mm foot, and the
 sleeve has a 60 × 46 mm flange. The modular split avoids tall rail-support
 towers and the support ceiling inside the sleeve bore.
 The remaining flagged overhangs are predominantly the cradle's 2.2 mm lips,
@@ -98,9 +90,9 @@ Start with no supports at 0.20 mm layers and inspect the slicer preview. If the
 printer struggles with the rear clips, paint support only under those two
 features. The cradle cannot be rotated diagonally into a smaller bounding box.
 The production plate removes the optional 6 mm skirt and centers the 215 mm
-cradle. Do not add a skirt or brim to this job. Test the left-slide coupon before
+cradle. Do not add a skirt or brim to this job. Test the twin-plug coupon before
 uploading the full cradle.
 
 V2 is a validated concept, not a production-ready release. Confirm the remaining
-device clearances, physical left-slide coupon result, tube length, adhesive
+device clearances, physical twin-plug coupon result, tube length, adhesive
 choice, and other fit coupons before a full print.

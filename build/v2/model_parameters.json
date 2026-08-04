@@ -26,11 +26,11 @@
     "cradle": "rear frame face on bed; rail and end-stop features face up",
     "rear_bracket": "horizontal sleeve-interface foot on bed",
     "sleeve": "flange on bed; tube-entry bore open upward",
-    "end_stop": "broad outside wall face on bed; dovetail tongue builds vertically",
+    "end_stop": "broad outside wall face on bed; twin tapered pins build vertically",
     "alignment_key": "flat on bed; print two identical copies",
     "right_fit_coupon": "rear face on bed; exact 33.5 mm crop of production cradle right end",
     "button_fit_coupon": "rear face on bed; exact top-left production rail crop",
-    "left_slide_coupon": "two exact lower-left dovetail crops; cradle rear face down and stop outside wall down"
+    "left_slide_coupon": "exact lower-rail socket/pin crops; cradle rear face down and stop outside wall down"
   },
   "right_fit_coupon": {
     "purpose": "verify tablet rails, right-edge seating, and USB-C rear turn",
@@ -48,11 +48,11 @@
     "uses_exact_cradle_geometry": true
   },
   "left_slide_coupon": {
-    "purpose": "verify the closed-bottom dovetail slide, capture, and printed fit",
+    "purpose": "verify one support-free tapered rail plug and socket fit",
     "x_min": -108.0,
-    "x_max": -90.0,
-    "y_min": -67.0,
-    "y_max": -20.0,
+    "x_max": -87.0,
+    "y_min": -68.0,
+    "y_max": -62.05,
     "plate_gap": 28.0,
     "uses_exact_cradle_geometry": true
   },
@@ -72,19 +72,25 @@
   "joints": {
     "end_stop": {
       "count": 1,
-      "method": "top-down closed-bottom dovetail slide; optional adhesive",
+      "method": "horizontal twin tapered rail plugs; optional adhesive",
       "mechanical_fasteners": 0,
-      "travel_axis": "local -Y from landscape top to bottom",
+      "travel_axis": "local +X from the open left end",
       "external_landing": false,
       "rear_hooks": 0,
-      "groove_bottom_y": -54.5,
-      "groove_mouth_z": 1.3,
-      "groove_head_z": 2.3,
-      "tongue_neck_z": 0.9,
-      "tongue_head_z": 1.8,
-      "capture_per_side_z": 0.25,
-      "head_clearance_total_z": 0.4999999999999998,
-      "depth_clearance_x": -0.29999999999999716
+      "pin_count": 2,
+      "pin_length": 12.0,
+      "socket_length": 12.900000000000006,
+      "socket_y": 2.4,
+      "socket_z": 3.2,
+      "pin_root_y": 2.15,
+      "pin_root_z": 2.95,
+      "pin_tip_y": 1.8,
+      "pin_tip_z": 2.6,
+      "root_clearance_y_total": 0.25,
+      "root_clearance_z_total": 0.25,
+      "tip_clearance_y_total": 0.5999999999999999,
+      "tip_clearance_z_total": 0.6000000000000001,
+      "receiver_min_wall": 1.2
     },
     "cradle_to_bracket": {
       "method": "adhesive bond",

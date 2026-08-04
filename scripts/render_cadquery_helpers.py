@@ -8,6 +8,7 @@ exports remain separate manufacturing deliverables, not preview inputs.
 from __future__ import annotations
 
 import math
+import os
 from io import BytesIO
 from pathlib import Path
 
@@ -77,8 +78,77 @@ def camera_pose(eye, target, up=(0.0, 0.0, 1.0)) -> np.ndarray:
     return pose
 
 
+def _render_view_vtk(objects, output: Path, size: tuple[int, int], eye, target) -> None:
+    """Headless real-depth fallback for macOS sessions without a Cocoa screen."""
+    import vtk
+    from vtk.util.numpy_support import numpy_to_vtk, numpy_to_vtkIdTypeArray
+
+    renderer = vtk.vtkRenderer()
+    renderer.SetBackground(*(channel / 255.0 for channel in BACKGROUND[:3]))
+
+    for mesh, rgba in objects:
+        points = vtk.vtkPoints()
+        points.SetData(numpy_to_vtk(np.asarray(mesh.vertices, dtype=np.float64), deep=True))
+
+        faces = np.asarray(mesh.faces, dtype=np.int64)
+        cells = np.empty((len(faces), 4), dtype=np.int64)
+        cells[:, 0] = 3
+        cells[:, 1:] = faces
+        cell_array = vtk.vtkCellArray()
+        cell_array.SetCells(
+            len(faces),
+            numpy_to_vtkIdTypeArray(cells.ravel(), deep=True),
+        )
+
+        polydata = vtk.vtkPolyData()
+        polydata.SetPoints(points)
+        polydata.SetPolys(cell_array)
+        normals = vtk.vtkPolyDataNormals()
+        normals.SetInputData(polydata)
+        normals.ComputePointNormalsOn()
+        normals.SplittingOff()
+
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(normals.GetOutputPort())
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+        actor.GetProperty().SetColor(*(channel / 255.0 for channel in rgba[:3]))
+        actor.GetProperty().SetOpacity(rgba[3] / 255.0)
+        renderer.AddActor(actor)
+
+    camera = vtk.vtkCamera()
+    camera.SetPosition(*eye)
+    camera.SetFocalPoint(*target)
+    camera.SetViewUp(0.0, 0.0, 1.0)
+    camera.SetViewAngle(42.0)
+    renderer.SetActiveCamera(camera)
+    renderer.ResetCameraClippingRange()
+
+    window = vtk.vtkRenderWindow()
+    window.SetOffScreenRendering(1)
+    window.SetMultiSamples(8)
+    window.SetSize(*size)
+    window.AddRenderer(renderer)
+    window.Render()
+
+    capture = vtk.vtkWindowToImageFilter()
+    capture.SetInput(window)
+    capture.SetInputBufferTypeToRGB()
+    capture.ReadFrontBufferOff()
+    capture.Update()
+    writer = vtk.vtkPNGWriter()
+    writer.SetFileName(str(output))
+    writer.SetInputConnection(capture.GetOutputPort())
+    writer.Write()
+    window.Finalize()
+
+
 def render_view(objects, output: Path, size: tuple[int, int], eye, target):
-    """Render all in-memory tessellations with a real depth buffer."""
+    """Render in-memory tessellations with a real depth buffer and headless fallback."""
+    if os.environ.get("CAD_PREVIEW_HEADLESS") == "1":
+        _render_view_vtk(objects, output, size, eye, target)
+        return
+
     scene = trimesh.Scene()
     for index, (mesh, rgba) in enumerate(objects):
         rendered = mesh.copy()
@@ -88,13 +158,17 @@ def render_view(objects, output: Path, size: tuple[int, int], eye, target):
     scene.camera.resolution = size
     scene.camera.fov = (45.0, 40.0)
     scene.camera_transform = camera_pose(eye, target)
-    png = scene.save_image(
-        resolution=size,
-        visible=True,
-        background=BACKGROUND,
-        smooth=False,
-        flags={"axis": False, "grid": False},
-    )
+    try:
+        png = scene.save_image(
+            resolution=size,
+            visible=True,
+            background=BACKGROUND,
+            smooth=False,
+            flags={"axis": False, "grid": False},
+        )
+    except (IndexError, RuntimeError):
+        _render_view_vtk(objects, output, size, eye, target)
+        return
 
     # Retina displays return a 2x capture; normalize the committed artifact.
     image = Image.open(BytesIO(png)).convert("RGB")

@@ -1,10 +1,10 @@
 # ADR-0002: Replace M3 end stop with screw-free slide stop
 
-- Status: accepted
+- Status: superseded
 - Date: 2026-08-02
 - Deciders: Project maintainers
 - Supersedes: ADR-0001
-- Superseded by: None
+- Superseded by: ADR-0003
 
 ## Context
 
