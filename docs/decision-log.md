@@ -51,10 +51,16 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.40 × 3.20 mm at the root to 2.00 × 2.80 mm at the tip. Its matching socket is 3.00 × 3.80 mm with two 45-degree roof faces, giving 0.60 mm total root and 1.00 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 135.6 × 14.8 mm.
+- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.55 × 3.35 mm at the root to 2.15 × 2.95 mm at the tip. Its matching socket remains 3.00 × 3.80 mm with two 45-degree roof faces, giving 0.45 mm total root and 0.85 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 135.6 × 14.8 mm.
 - Routine previews use direct in-memory CadQuery tessellation with a depth-buffered renderer. The headless fallback uses VTK; Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Slightly tighten the successful enlarged socket fit — 2026-08-05
+
+- The enlarged socket and thicker plug fit reliably in the user's PLA, but the user reported slight looseness. Retain the printed socket and tighten only the plug so no second socket print is needed.
+- Increase the plug from 2.40 × 3.20 mm at the root / 2.00 × 2.80 mm at the tip to 2.55 × 3.35 mm / 2.15 × 2.95 mm. This targets 0.45 mm total root clearance and 0.85 mm total tip clearance while remaining materially larger than the broken first plug.
+- Prepare and validate a plug-only coupon. The revised G-code validates at about 6 min 0 s, 0.3 g, 5.7 mm³/s peak flow, and no support or bed-clearance errors apart from the profile's generic heat-order and thumbnail warnings. Do not print the full cap until this intermediate fit is confirmed.
 
 ### Loosen and strengthen twin-plug fit after PLA coupon failure — 2026-08-05
 

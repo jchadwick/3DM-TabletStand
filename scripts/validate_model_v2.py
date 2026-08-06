@@ -248,10 +248,10 @@ def main() -> None:
             "tapered rail pin missing",
         )
 
-    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Y >= 0.5
-    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Z >= 0.5
-    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Y >= 0.5
-    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Z >= 0.5
+    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Y >= 0.4
+    assert model.ENDSTOP_PIN_ROOT_CLEARANCE_Z >= 0.4
+    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Y >= 0.8
+    assert model.ENDSTOP_PIN_TIP_CLEARANCE_Z >= 0.8
     assert (model.ENDSTOP_RECEIVER_Y - model.ENDSTOP_POCKET_Y) / 2.0 >= 1.2
     assert (model.ENDSTOP_RECEIVER_Z - model.ENDSTOP_POCKET_Z) / 2.0 >= 1.2
 

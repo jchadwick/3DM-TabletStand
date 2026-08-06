@@ -34,12 +34,12 @@ confirmed tablet, tube, tilt, and cable geometry.
   support-free socket coupon with the enlarged 3.00 × 3.80 mm socket; 0.16 mm
   layers, three walls, 20% grid infill, and a removable 5 mm brim; approximately
   20 min 46 s and 1.1 g.
-- `tablet_stand_v2_left_slide_coupon_stop_rev2_pla.gcode`: replacement
-  support-free tapered-plug coupon with the enlarged 2.40 × 3.20 mm root;
-  approximately 5 min 48 s and 0.3 g.
-- Both replacement jobs use 205 °C for the first layer, then 200 °C, with 1.0
-  mm retraction at 40 mm/s. The prior coupon G-code was removed as stale after
-  the user's tight-fit/broken-plug result.
+- `tablet_stand_v2_left_slide_coupon_stop_rev3_pla.gcode`: plug-only
+  replacement with the slightly tightened 2.55 × 3.35 mm root; approximately
+  6 min 0 s and 0.3 g. Reuse the already-printed revised socket coupon.
+- The replacement jobs use 205 °C for the first layer, then 200 °C, with 1.0
+  mm retraction at 40 mm/s. The earlier plug G-code was removed as stale after
+  the user's slightly-loose fit result.
 - `tablet_stand_v2_left_slide_coupon_plate_preview.png`: six-view mesh review
   of the separated two-piece coupon plate in its corrected print orientations.
 - `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
