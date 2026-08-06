@@ -19,7 +19,7 @@ confirmed tablet, tube, tilt, and cable geometry.
   tests the restored production rail allowances, right-edge stops, USB-C
   pocket, and the open 16 mm-wide × 8 mm-deep cable rectangle.
 - `tablet_stand_v2_button_fit_coupon.stl`: print rear face down before the full
-  cradle; it is an exact 73.5 × 11 × 14.2 mm crop of the production top-left
+  cradle; it is an exact 73.5 × 11 × 14.8 mm crop of the production top-left
   rail. Slide it along the landscape-top tablet edge to verify that the
   measured 20–60 mm button group passes freely through the concealed 2 mm-high
   × 1.2 mm-deep inner groove without being pressed. The groove begins at the
@@ -30,14 +30,16 @@ confirmed tablet, tube, tilt, and cable geometry.
   rail socket and its identical tapered plug. Print them as separate jobs to
   check horizontal insertion, closed-end seating, retention, and real PLA
   clearance. `tablet_stand_v2_left_slide_coupon_plate.stl` is preview-only.
-- `tablet_stand_v2_left_slide_coupon_cradle_pla.gcode`: support-free socket
-  coupon at 0.16 mm layers, three walls, 20% grid infill, and a removable 5 mm
-  brim; approximately 19 min 23 s and 1.0 g.
-- `tablet_stand_v2_left_slide_coupon_stop_pla.gcode`: support-free tapered-plug
-  coupon with the same settings; approximately 5 min 44 s and 0.3 g.
-- Both jobs use 205 °C for the first layer, then 200 °C, with 1.0 mm retraction
-  at 40 mm/s. Separate jobs reduce the long travel moves that aggravated
-  stringing in the failed shared coupon.
+- `tablet_stand_v2_left_slide_coupon_cradle_rev2_pla.gcode`: replacement
+  support-free socket coupon with the enlarged 3.00 × 3.80 mm socket; 0.16 mm
+  layers, three walls, 20% grid infill, and a removable 5 mm brim; approximately
+  20 min 46 s and 1.1 g.
+- `tablet_stand_v2_left_slide_coupon_stop_rev2_pla.gcode`: replacement
+  support-free tapered-plug coupon with the enlarged 2.40 × 3.20 mm root;
+  approximately 5 min 48 s and 0.3 g.
+- Both replacement jobs use 205 °C for the first layer, then 200 °C, with 1.0
+  mm retraction at 40 mm/s. The prior coupon G-code was removed as stale after
+  the user's tight-fit/broken-plug result.
 - `tablet_stand_v2_left_slide_coupon_plate_preview.png`: six-view mesh review
   of the separated two-piece coupon plate in its corrected print orientations.
 - `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
@@ -79,7 +81,7 @@ bond faces according to the adhesive instructions.
 All five production STL files and four individual fit-coupon part STLs are
 single watertight solids. The combined left-slide coupon plate intentionally
 contains those two watertight pieces. The alignment-key STL is printed twice.
-The cradle has a broad 215 × 133.6 mm rear datum, the bracket has a 60 × 28 mm foot, and the
+The cradle has a broad 215 × 135.6 mm rear datum, the bracket has a 60 × 28 mm foot, and the
 sleeve has a 60 × 46 mm flange. The modular split avoids tall rail-support
 towers and the support ceiling inside the sleeve bore.
 The remaining flagged overhangs are predominantly the cradle's 2.2 mm lips,

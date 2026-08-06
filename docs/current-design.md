@@ -40,9 +40,9 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | V2 glue alignment | 35 × 15 × 1.8 mm cross key, print quantity 2 | Existing 36.25 × 16.25 × 4.25 mm grooves retained; at least 1.25 mm total planar clearance, 0.50 mm thickness clearance, and 0.4 mm edge relief; user fit-test correction |
 | Cradle-to-bracket bond | 74 × 36 mm nominal mating face | Align matching side and top edges |
 | Bracket-to-sleeve bond | 60 × 28 mm nominal mating face | Align matching side and front edges |
-| V2 left cap | Horizontal local +X insertion on two tapered rail-end plugs; each plug tapers from 2.15 × 2.95 mm at the root to 1.80 × 2.60 mm at the tip and enters a 2.40 × 3.20 mm open-ended socket with a support-free 45° roof | 0.25 mm total root clearance and 0.60 mm total tip clearance; no fastener, hook, detent, external nub, or support-trapping dovetail; optional adhesive after fit confirmation |
+| V2 left cap | Horizontal local +X insertion on two enlarged tapered rail-end plugs; each plug tapers from 2.40 × 3.20 mm at the root to 2.00 × 2.80 mm at the tip and enters a 3.00 × 3.80 mm open-ended socket with a support-free 45° roof | 0.60 mm total root clearance and 1.00 mm total tip clearance; no fastener, hook, detent, external nub, or support-trapping dovetail; optional adhesive after fit confirmation |
 | Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests restored rail fit, right-edge seating, USB-C pocket, and open 16 × 8 mm cable rectangle |
-| Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.2 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
+| Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.8 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
 | Twin-plug coupon | Exact production crops of one rail socket and its identical tapered plug | Print as two separate support-free jobs to minimize travel stringing; tests horizontal insertion, seating, retention, and real PLA clearance before the full cradle and cap |
 
 ## Functional design
@@ -70,11 +70,11 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
 - Before printing the revised full cradle, print `tablet_stand_v2_left_slide_coupon_cradle.stl` and `tablet_stand_v2_left_slide_coupon_stop.stl` as separate jobs. Remove the 5 mm brims, align the two house-shaped profiles, and slide the plug horizontally into the socket. Confirm that it reaches the closed seat without force, does not wobble objectionably, and remains hand-removable. Adjust the parametric root/tip clearance if it is loose or forceful; do not scale either part in the slicer.
-- Both coupon jobs use 0.16 mm layers, three walls, 20% grid infill, no supports, and a 5 mm brim. For the user's dry but string-prone PLA they run at 205 °C on the first layer and 200 °C thereafter, with 1.0 mm retraction at 40 mm/s. The cradle coupon validates at about 19 min 23 s and 1.0 g; the cap coupon at about 5 min 44 s and 0.3 g. Separate jobs avoid the long inter-part travel that aggravated stringing.
+- The replacement coupon jobs use 0.16 mm layers, three walls, 20% grid infill, no supports, and a 5 mm brim. For the user's dry but string-prone PLA they run at 205 °C on the first layer and 200 °C thereafter, with 1.0 mm retraction at 40 mm/s. The revised cradle coupon validates at about 20 min 46 s and 1.1 g; the revised cap coupon at about 5 min 48 s and 0.3 g. Separate jobs avoid the long inter-part travel that aggravated stringing.
 
 ## Full-cradle slice status
 
-- The active cradle envelope is now 215 × 133.6 × 14.2 mm because each reinforced socket extends 1.8 mm beyond its long-edge rail. The exact production STL is watertight and fits the confirmed 220 × 220 mm bed in the rear-face-down orientation.
+- The active cradle envelope is now 215 × 135.6 × 14.8 mm because each enlarged reinforced socket extends 2.8 mm beyond its long-edge rail. The exact production STL is watertight and fits the confirmed 220 × 220 mm bed in the rear-face-down orientation.
 - Previous full-cradle and end-stop slices predate the twin tapered sockets and plugs and are stale. Do not print them.
 - After the separate twin-plug coupons pass physically, regenerate and review support-free full-part slices. The cradle and removable cap must be separate jobs because the cradle nearly spans the bed.
 

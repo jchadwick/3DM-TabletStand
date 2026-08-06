@@ -51,10 +51,17 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.15 × 2.95 mm at the root to 1.80 × 2.60 mm at the tip. Its matching socket is 2.40 × 3.20 mm with two 45-degree roof faces, giving 0.25 mm total root and 0.60 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 133.6 × 14.2 mm.
+- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.40 × 3.20 mm at the root to 2.00 × 2.80 mm at the tip. Its matching socket is 3.00 × 3.80 mm with two 45-degree roof faces, giving 0.60 mm total root and 1.00 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 135.6 × 14.8 mm.
 - Routine previews use direct in-memory CadQuery tessellation with a depth-buffered renderer. The headless fallback uses VTK; Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### Loosen and strengthen twin-plug fit after PLA coupon failure — 2026-08-05
+
+- The user physically tested the first socket/plug pair. It was too tight to seat reliably in the actual PLA, and the small tapered plug broke during fitting. This physical result supersedes the prior 0.25 mm total root-clearance target.
+- Enlarged the socket from 2.40 × 3.20 mm to 3.00 × 3.80 mm and enlarged the plug from 2.15 × 2.95 mm at its root / 1.80 × 2.60 mm at its tip to 2.40 × 3.20 mm / 2.00 × 2.80 mm. The new total root clearance is 0.60 mm, with 1.00 mm total tip clearance.
+- Increased receiver reinforcement to 5.8 mm across Y and 6.8 mm across Z while preserving at least 1.3 mm of surrounding material. The cradle envelope becomes 215 × 135.6 × 14.8 mm and remains within the confirmed 220 × 220 mm bed.
+- Regenerate and physically test the replacement socket and plug coupon before slicing or printing the full cradle/cap. Do not reuse the previous coupon pieces as final fit references.
 
 ### Twin tapered rail plugs replace the failed dovetail — 2026-08-04
 
