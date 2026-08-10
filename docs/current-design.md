@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. V3 is the active split-cradle candidate: its physical tongue/receiver coupon fit despite severe print defects, while the wedge still needs a corrected flat or supported print strategy. V3 preserves the tested tablet, button, USB-C, tube, and cable interfaces while replacing both the 215 mm-wide cradle print and separate left cap with two bed-friendly wings. Superseded V1 is archived only in Git history at commit `560c6e8` and is not maintained.
+The project is a simple, sleek, FDM-printable landscape holder for a 2024 onn. 8-inch tablet. It mounts permanently to the accessible top end of a vertical 32 mm OD tube. V3 is the active split-cradle candidate: its physical tongue/receiver coupon fit despite severe print defects, and the corrected wedge retained and released successfully. V3 preserves the tested tablet, button, USB-C, tube, and cable interfaces while replacing both the 215 mm-wide cradle print and separate left cap with two bed-friendly wings. Superseded V1 is archived only in Git history at commit `560c6e8` and is not maintained.
 
 ## Orientation and coordinates
 
@@ -43,7 +43,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 | V2 left cap (historical) | Horizontal local +X insertion on two enlarged tapered rail-end plugs | Physically fit well, but the entire separate-cap scheme is superseded by the integral V3 left wing |
 | V3 cradle split | Left wing 125.00 × 135.50 × 14.20 mm; right wing 111.33 × 139.00 × 14.20 mm | Replaces the 215 mm-wide single cradle print; both wings remain rear-face-down and fit comfortably on the 220 mm bed |
 | V3 removable joint | Three integral +X tongues: one at each long rail and one through the center plate; 18 mm seated insertion | Physical coupon fit despite major adhesion/stringing defects; retain the matching receiver's 0.50 mm total root and 1.10 mm total tip/lead clearances |
-| V3 locking wedge | One printed 3.70-to-3.30 mm tapered cross-wedge with a 7 mm pull head | Fit geometry remains provisional: the pull head set the first coupon's bed datum and left the body about 1.65 mm unsupported; redesign for a common flat datum or print with removable support; channel can take an M3 bolt if necessary |
+| V3 locking wedge | One corrected printed 3.70-to-3.30 mm tapered cross-wedge with a 7 mm pull head | Corrected pin retained and released successfully in the physical coupon; original floating-body G-code is stale; channel can take an M3 bolt if necessary |
 | V3 left edge | Fully enclosed, rounded, integral part of the left cradle wing | No separate cap, plugs, sockets, screw, or nub; the left wing itself closes the holder during two-piece tablet assembly |
 | Right fit coupon | Exact X = 78.0–111.5 mm crop of V2 cradle | 33.5 × 130 mm plan envelope; tests restored rail fit, right-edge seating, USB-C pocket, and open 16 × 8 mm cable rectangle |
 | Button fit coupon | Exact top-left production-rail crop | 73.5 × 11 × 14.8 mm envelope; tests insertion path, seated button clearance, and intact wall after relief |
@@ -76,13 +76,13 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Active shared geometry is in `cad/tablet_stand_core.py`; the tested unsplit geometry remains in `cad/tablet_stand_v2.py`, and `cad/tablet_stand_v3.py` owns the removable tongue/wedge split, V3 assembly, and exports. Generated V3 review outputs are under `build/v3/`. If the V3 physical joint coupon passes, promote V3 to the sole production path and archive the V2-only workflow rather than maintaining both indefinitely.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
-- The first `tablet_stand_v3_lock_coupon_all3.stl` print physically passed tongue/receiver fit despite severe adhesion and stringing. Do not rescale or change the confirmed tongue/socket clearances. The combined support-free G-code is stale because the wedge body floated above the bed; correct the wedge datum or add removable support, then confirm wedge insertion, pullout, flex, and removal before either full wing.
+- The first `tablet_stand_v3_lock_coupon_all3.stl` print physically passed tongue/receiver fit despite severe adhesion and stringing. The corrected pin then retained and released successfully. Do not rescale or change the confirmed tongue/socket clearances. The original combined support-free G-code is stale; fresh full-part slices with adhesion review are now required before printing either full wing.
 
 ## Full-cradle slice status
 
 - The unsplit V2 cradle is 215 × 135.6 × 14.8 mm and technically fits the confirmed 220 × 220 mm bed, but its narrow margin motivated the V3 split.
 - The V3 left and right cradle-wing STLs are each single watertight solids and remain rear-face-down. Their largest plan dimension is 139 mm, leaving generous bed margin.
-- Previous full-cradle, end-stop, and combined V3 coupon G-code is stale. Do not print it. The V3 tongue/receiver fit gate passed, but the wedge print strategy and retention test remain open. Neither full cradle wing is authorized for printing.
+- Previous full-cradle, end-stop, and combined V3 coupon G-code is stale. Do not print it. The tongue/receiver fit and wedge retention gates passed. Neither full cradle wing is authorized until fresh full-part slices and their support/adhesion review are complete.
 
 ## Known unknowns before a full print
 
@@ -91,5 +91,5 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Speaker, camera, microphone, and any other edge clearances not covered by the measured power/volume group.
 - The successful V2 twin-plug coupon remains useful PLA fit evidence, but it does not replace the required V3 tongue/wedge coupon test.
 - Unobstructed tube length above its existing mounting point.
-- The Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are verified. The tongue/receiver physically fit on 2026-08-10, but major adhesion/stringing defects and the unsupported wedge datum require a corrected wedge print before retention can be accepted.
+- The Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are verified. The tongue/receiver physically fit on 2026-08-10 despite major adhesion/stringing defects, and the corrected wedge retained and released successfully. Full production slices and first-layer adhesion strategy remain to be reviewed.
 - Adhesive selection, surface preparation, clamp method, and cure time for the selected filament.

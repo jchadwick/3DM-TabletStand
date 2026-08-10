@@ -80,5 +80,6 @@ The only retained warnings are the profile's pre-macro bed heat and missing UI
 thumbnail. The user authorized all three coupon pieces, the camera showed an
 empty bed, and the job was started on 2026-08-09. On 2026-08-10 the user
 reported major adhesion failure but confirmed that the tongue and receiver
-still fit. The wedge/pin needs a corrected print strategy, and retention
-strength remains unconfirmed. This G-code is stale and must not be reused.
+still fit. The corrected wedge/pin then retained and released successfully.
+The combined coupon G-code is stale; fresh full-part slices are now the next
+gate.
