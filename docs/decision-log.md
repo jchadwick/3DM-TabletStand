@@ -9,6 +9,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Treat direct physical measurements and fit-test results as authoritative over web specifications or visual estimates.
 - Keep `docs/current-design.md` and the root `AGENTS.md` synchronized with every active design change so new sessions load the correct model context immediately.
 
+### Right-wing production print started — 2026-08-10
+
+- The user explicitly authorized printing the right-hand cradle wing and confirmed the bed was clear. The watertight `tablet_stand_v3_cradle_right.stl` was inspected at 111.33 × 139.00 × 14.20 mm and fits the confirmed Ender-3 Pro bed.
+- Fresh PLA G-code used the functional profile (0.20 mm layers, five walls, 40% grid infill, 215/210 °C nozzle, 60 °C bed), plus snug supports at a 45° threshold and a 5 mm brim because the part inspection flagged 6% overhang area and prior PLA prints had adhesion defects.
+- Independent G-code validation passed the 10 mm³/s flow ceiling (7.5 mm³/s peak), bed footprint, PLA temperatures, and estimated 3 h 30 m 51 s / ~51 g usage. It reported only the known heat-order and missing-thumbnail warnings.
+- A fresh 800 × 600 printer camera snapshot showed the complete visible build plate clear; the machine reported ready. Moonraker accepted the uploaded file and `/printer/print/start` returned `{"result":"ok"}`. Follow-up status showed `tablet_stand_v3_cradle_right.gcode` printing at 0% with the bed heating to 60 °C. The left wing and remaining parts are not authorized by this action.
+
 ## Confirmed dimensions
 
 | Item | Confirmed value | Source/status |

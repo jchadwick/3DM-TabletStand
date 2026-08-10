@@ -60,8 +60,10 @@ The rear bracket is glued only to the fixed right wing. Do not put adhesive on
 the left wing, tongues, receivers, or wedge. Pulling the wedge and sliding the
 left wing off must remain possible for tablet service.
 
-All current STL exports are single watertight solids. V3 has not been sliced,
-uploaded, or authorized for a full-part print.
+All current STL exports are single watertight solids. The right-wing production
+STL was sliced with snug 45° supports and a 5 mm brim, independently validated,
+uploaded, and started on 2026-08-10. Other full-part STLs remain unsliced or
+unauthorized until reviewed individually.
 
 ## Active coupon print
 
