@@ -48,13 +48,30 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right and offset 24 mm behind the screen plane.
 - The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
-- V2 is the active support-minimized concept. Its main body is a flat-print cradle, a foot-down rear tilt bracket, and a flange-down/bore-up sleeve joined with two adhesive bonds.
+- V3 is the current visual-review candidate. It divides the cradle into two rear-face-down wings joined by a support-free stepped glue seam, three recessed splice keys, and the existing rear bracket bridge. The left wing is fully enclosed and replaces the separate V2 end cap, plugs, and sockets.
 - Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
 - Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.55 × 3.35 mm at the root to 2.15 × 2.95 mm at the tip. Its matching socket remains 3.00 × 3.80 mm with two 45-degree roof faces, giving 0.45 mm total root and 0.85 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 135.6 × 14.8 mm.
 - Routine previews use direct in-memory CadQuery tessellation with a depth-buffered renderer. The headless fallback uses VTK; Blender is reserved for optional polished presentation renders.
 
 ## Revision history
+
+### V3 splits the near-bed-width cradle into two printable wings — 2026-08-09
+
+- The user requested another modeling approach after the full V2 cradle measured 215 mm wide on the 220 mm Ender-3 Pro bed, then authorized a V3 concept for visual review.
+- The first V3 render incorrectly retained the separate V2 end cap even though the two-piece cradle itself provides the tablet-loading split. The user rejected that redundancy. V3 now has one continuous rounded left wall integrated into the left wing, and no separate end cap, tapered plug, socket, receiver bulge, screw, or nub.
+- V3 assembly now seats the tablet in the USB-C/right wing first, brings the enclosed left wing onto the long edges, and joins the two wings at the center seam. Adhesive assembly captures the tablet, so serviceability must be explicitly accepted before bonding.
+- Split the exact tested cradle geometry along a 0.35 mm-clearance stepped planar seam. The seam runs at X = −8 mm near both long rails and X = +8 mm through the center, creating a 16 mm dogleg at Y = ±35 mm without an undercut, trapped support, or tall print orientation.
+- The corrected fully enclosed left wing validates at 114.83 × 130.00 × 14.20 mm and the right wing at 119.33 × 130.00 × 14.20 mm. Both are single watertight solids, print rear-face-down, and leave generous margin on the confirmed 220 × 220 mm bed.
+- Added three identical 44 × 6 × 1.6 mm loose splice keys in 46 × 7.2 × 1.9 mm rear recesses. One bridges each long rail and one bridges the center spine; all sit 0.20 mm below the rear face. The existing 74 × 36 mm rear bracket also spans and bonds across the center seam.
+- Preserve the tested tablet allowance, concealed button groove, open USB-C cable rectangle, tube sleeve, cable route, and exposed fillets. The successful twin tapered coupon remains historical V2 fit evidence but that joint is intentionally absent from corrected V3. V3 is rendered and validated but not yet sliced or approved for printing.
+- Keep V2 only as the exact geometry basis during this comparison. If the V3 visual review passes, promote V3 and archive the V2-only workflow rather than maintaining two production versions.
+
+### Twin tapered plug/socket coupon passes — 2026-08-09 (V2 evidence; superseded in V3)
+
+- The user physically tested the tightened rev3 plug against the already-printed enlarged socket and reported that the fit was great. This passes the twin-plug mechanical fit gate for the active screw-free left cap.
+- Keep the 0.45 mm total root and 0.85 mm total tip clearances. No further fit-coupon geometry change is needed before production slicing.
+- The later V3 split-cradle decision removes the separate cap, plugs, and sockets entirely. Keep this result only as V2 process/fit history; do not reuse any pre-V3 full-part G-code.
 
 ### Slightly tighten the successful enlarged socket fit — 2026-08-05
 

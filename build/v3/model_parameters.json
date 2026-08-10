@@ -1,0 +1,46 @@
+{
+  "units": "mm",
+  "revision": "v3 split-cradle concept",
+  "material": "PLA",
+  "machine": "Creality Ender-3 Pro, 220 x 220 x 250 mm, 0.4 mm nozzle",
+  "preserved_geometry_source": "V2 tested tablet, USB-C, button, tube, and cable geometry",
+  "tablet_loading": "seat tablet in right wing, bring integral enclosed left wing onto tablet, then join cradle seam",
+  "separate_left_cap": false,
+  "cradle_split": {
+    "method": "support-free stepped planar seam with three recessed adhesive splice keys",
+    "outer_seam_x": -8.0,
+    "center_seam_x": 8.0,
+    "step_y": 35.0,
+    "total_clearance": 0.35,
+    "left_print_envelope": [
+      114.82624220867932,
+      130.00280091478754,
+      14.202725401013575
+    ],
+    "right_print_envelope": [
+      119.32577078369552,
+      130.00087362578103,
+      14.201856417869537
+    ],
+    "rear_bracket_bridges_center_seam": true
+  },
+  "splice_key": {
+    "quantity": 3,
+    "length": 44.0,
+    "width": 6.0,
+    "thickness": 1.6,
+    "groove_length": 46.0,
+    "groove_width": 7.2,
+    "groove_depth": 1.9,
+    "recess_below_rear_face": 0.2,
+    "length_clearance_total": 2.0,
+    "width_clearance_total": 1.2000000000000002,
+    "depth_clearance": 0.2999999999999998
+  },
+  "print_orientation": {
+    "cradle_left": "rear face down",
+    "cradle_right": "rear face down",
+    "splice_key": "flat; print three",
+    "supports": "none intended for split joint"
+  }
+}
