@@ -89,6 +89,14 @@ def print_layout_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, i
     return objects
 
 
+def coupon_plate_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    colors = (LEFT_COLOR, RIGHT_COLOR, KEY_COLOR)
+    return [
+        (cq_mesh(part), color)
+        for part, color in zip(model.lock_coupon_print_plate_parts(), colors)
+    ]
+
+
 def contact_sheet(installed: Path, left_edge: Path, joint: Path, layout: Path, output: Path) -> None:
     installed_image = Image.open(installed).convert("RGB")
     left_edge_image = Image.open(left_edge).convert("RGB")
@@ -113,6 +121,7 @@ def main() -> None:
     left_edge = BUILD / "tablet_stand_v3_left_edge.png"
     joint = BUILD / "tablet_stand_v3_rear_joint.png"
     layout = BUILD / "tablet_stand_v3_print_layout.png"
+    coupon_plate = BUILD / "tablet_stand_v3_lock_coupon_plate.png"
 
     if len(sys.argv) == 3 and sys.argv[1] == "--render-one":
         if sys.argv[2] == "installed":
@@ -147,6 +156,14 @@ def main() -> None:
                 eye=(0.0, -5.0, 430.0),
                 target=(0.0, 0.0, 0.0),
             )
+        elif sys.argv[2] == "coupon":
+            render_view(
+                coupon_plate_objects(),
+                coupon_plate,
+                (1400, 700),
+                eye=(65.0, -95.0, 105.0),
+                target=(0.0, 5.0, 1.5),
+            )
         else:
             raise ValueError(f"unknown V3 preview view: {sys.argv[2]}")
         return
@@ -155,7 +172,7 @@ def main() -> None:
         subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()), "--render-one", view]
         )
-        for view in ("installed", "left-edge", "joint", "layout")
+        for view in ("installed", "left-edge", "joint", "layout", "coupon")
     ]
     for process in processes:
         if process.wait() != 0:

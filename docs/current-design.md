@@ -76,13 +76,13 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Active shared geometry is in `cad/tablet_stand_core.py`; the tested unsplit geometry remains in `cad/tablet_stand_v2.py`, and `cad/tablet_stand_v3.py` owns the removable tongue/wedge split, V3 assembly, and exports. Generated V3 review outputs are under `build/v3/`. If the V3 physical joint coupon passes, promote V3 to the sole production path and archive the V2-only workflow rather than maintaining both indefinitely.
 - Before the full cradle, print `tablet_stand_v2_right_fit_coupon.stl` rear-face down in the intended PLA process. Slide the tablet's right edge through the short production rails, seat it against the internal stops, connect the real USB-C adapter, and confirm that the complete thick cable section passes through the open 16 × 8 mm rear rectangle without pinching or forcing the tablet.
 - Also print `tablet_stand_v2_button_fit_coupon.stl` rear-face down. Slide it along the tablet's landscape-top edge from the left and confirm that the button group passes freely through the concealed inner groove without being pressed, while the outside of the rail remains closed and smooth.
-- Before either V3 wing, print `tablet_stand_v3_lock_coupon_left.stl`, `tablet_stand_v3_lock_coupon_right.stl`, and `tablet_stand_v3_lock_coupon_wedge.stl` as separate support-free jobs. Slide the exact production tongue fully to its closed seat, insert the wedge, test pullout and flex, then remove both without cracking. Do not scale the coupon in the slicer; adjust the parametric tongue/socket or wedge clearance from the physical result.
+- Before either V3 wing, print `tablet_stand_v3_lock_coupon_all3.stl`, which places one exact production tongue crop, receiver crop, and wedge on a shared support-free bed layout. Slide the tongue fully to its closed seat, insert the wedge, test pullout and flex, then remove both without cracking. Do not scale the coupon in the slicer; adjust the parametric tongue/socket or wedge clearance from the physical result.
 
 ## Full-cradle slice status
 
 - The unsplit V2 cradle is 215 × 135.6 × 14.8 mm and technically fits the confirmed 220 × 220 mm bed, but its narrow margin motivated the V3 split.
 - The V3 left and right cradle-wing STLs are each single watertight solids and remain rear-face-down. Their largest plan dimension is 139 mm, leaving generous bed margin.
-- Previous full-cradle and end-stop slices are stale. Do not print them. V3 has been modeled, validated, and rendered for visual review but has not yet been sliced or authorized for printing.
+- Previous full-cradle and end-stop slices are stale. Do not print them. V3 has been modeled, validated, and rendered; only the exact combined three-piece lock coupon has been sliced and started. Neither full cradle wing is authorized for printing.
 
 ## Known unknowns before a full print
 
@@ -91,5 +91,5 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 - Speaker, camera, microphone, and any other edge clearances not covered by the measured power/volume group.
 - The successful V2 twin-plug coupon remains useful PLA fit evidence, but it does not replace the required V3 tongue/wedge coupon test.
 - Unobstructed tube length above its existing mounting point.
-- The Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are verified. The exact three-piece V3 lock coupon still needs slicing, support review, and a physical fit/retention test before either wing is printed.
+- The Ender-3 Pro profile, 0.4 mm nozzle, PLA, 220 × 220 × 250 mm build volume, and rear-face-down cradle orientation are verified. The exact three-piece V3 lock coupon was sliced with zero support extrusion and started on 2026-08-09; its physical fit/retention result remains required before either wing is printed.
 - Adhesive selection, surface preparation, clamp method, and cure time for the selected filament.

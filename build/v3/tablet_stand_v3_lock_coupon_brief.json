@@ -1,0 +1,11 @@
+{
+  "purpose": "functional",
+  "material": "PLA",
+  "copies": 1,
+  "scope": "full",
+  "priority": "quality",
+  "post_processing": "none",
+  "load_direction": "any",
+  "attended": "yes",
+  "_estimated_hours": 0.06
+}

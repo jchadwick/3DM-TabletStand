@@ -55,6 +55,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### Combined three-piece V3 lock coupon print started — 2026-08-09
+
+- The user explicitly authorized printing all three coupon pieces. Added a reproducible 77.91 × 33.12 × 9.00 mm combined CadQuery plate containing the unchanged production tongue crop, receiver crop, and wedge.
+- PrusaSlicer retained the modeled rear-face-down orientation and generated zero support extrusion. The job uses PLA, 0.16 mm layers, three walls, 20% grid infill, a 5 mm brim, 205/200 °C nozzle, 60 °C bed, and 1.0 mm direct-drive retraction at 40 mm/s.
+- Independent G-code validation reports a 100 × 46 × 9 mm brim-inclusive footprint, 31m 11s estimated time, about 3.1 g, and 6.2 mm³/s peak flow against the 10 mm³/s machine ceiling. The retained pre-macro heat-order and missing-thumbnail warnings do not affect model motion.
+- The printer reported ready and cool after its prior job. A fresh 800 × 600 camera snapshot clearly showed the complete visible plate empty. `tablet_stand_v3_lock_coupon_all3_pla.gcode` was uploaded and the print start was accepted; physical fit and retention results are pending.
+
 ### Removable tongue-and-wedge center joint supersedes V3 glue seam — 2026-08-09
 
 - The user rejected permanent cradle glue and selected a screw-free removable middle joint, with existing M3 hardware available only if necessary.
@@ -66,6 +73,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Validation confirms zero intersection at seven left-wing insertion positions, no seated wing overlap, a collision-free wedge insertion path, retained button/USB-C geometry, a continuous integral left wall, and watertight production/coupon exports.
 - The rear bracket bonds only to the fixed right wing and merely contacts the removable left wing. The bracket-to-sleeve bond keeps one printed alignment key. This makes the tablet serviceable without disturbing the tube mount.
 - Exported exact lower-joint left, right, and wedge coupons. A physical coupon test is required before slicing either full cradle wing; do not infer final wedge retention from CAD alone.
+- Added a combined `lock_coupon_all3` print-plate export containing one unchanged copy of each coupon component. The three islands have more than 10 mm edge clearance so a 5 mm brim does not join them; this is the authorized single-job layout for the physical test.
 
 ### V3 splits the near-bed-width cradle into two printable wings — 2026-08-09 (adhesive joint superseded later the same day)
 

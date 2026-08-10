@@ -85,6 +85,10 @@ LOCK_COUPON_Y_MIN = -73.0
 LOCK_COUPON_Y_MAX = -58.0
 LOCK_COUPON_Z_MIN = -3.1
 LOCK_COUPON_Z_MAX = 6.0
+# Bed-center targets for a single job containing one copy of every coupon
+# component.  The 10+ mm edge gaps leave room for a 5 mm brim around each
+# island without fusing the parts together.
+LOCK_COUPON_PLATE_CENTERS = ((-25.0, 0.0), (25.0, 0.0), (0.0, 22.0))
 
 LINEAR_TOLERANCE = 0.05
 ANGULAR_TOLERANCE = 0.1
@@ -327,6 +331,32 @@ def lock_coupon_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane]:
     return left.intersect(cutter), right.intersect(cutter), locking_wedge()
 
 
+def lock_coupon_print_plate_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane]:
+    """Place one exact copy of each coupon component on a shared bed datum."""
+    placed = []
+    for part, (target_x, target_y) in zip(lock_coupon_parts(), LOCK_COUPON_PLATE_CENTERS):
+        bed_part = v2.shift_to_bed(part)
+        bounds = bed_part.val().BoundingBox()
+        placed.append(
+            bed_part.translate(
+                (
+                    target_x - (bounds.xmin + bounds.xmax) / 2.0,
+                    target_y - (bounds.ymin + bounds.ymax) / 2.0,
+                    0.0,
+                )
+            )
+        )
+    return tuple(placed)
+
+
+def lock_coupon_print_plate() -> cq.Workplane:
+    """Return the three spaced coupon solids as one reproducible STL export."""
+    compound = cq.Compound.makeCompound(
+        [part.val() for part in lock_coupon_print_plate_parts()]
+    )
+    return cq.Workplane("XY").newObject([compound])
+
+
 def installed_parts() -> tuple[cq.Workplane, ...]:
     """Return all V3 modules in assembly position."""
     left, right = cradle_halves()
@@ -364,6 +394,7 @@ def export() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     left, right, bracket, sleeve, alignment_key, wedge = print_parts()
     coupon_left, coupon_right, coupon_wedge = lock_coupon_parts()
+    coupon_plate = lock_coupon_print_plate()
     exports = {
         "tablet_stand_v3_cradle_left.stl": left,
         "tablet_stand_v3_cradle_right.stl": right,
@@ -374,6 +405,7 @@ def export() -> None:
         "tablet_stand_v3_lock_coupon_left.stl": v2.shift_to_bed(coupon_left),
         "tablet_stand_v3_lock_coupon_right.stl": v2.shift_to_bed(coupon_right),
         "tablet_stand_v3_lock_coupon_wedge.stl": v2.shift_to_bed(coupon_wedge),
+        "tablet_stand_v3_lock_coupon_all3.stl": coupon_plate,
     }
     for filename, part in exports.items():
         cq.exporters.export(
@@ -398,6 +430,7 @@ def export() -> None:
 
     left_bb = left.val().BoundingBox()
     right_bb = right.val().BoundingBox()
+    coupon_plate_bb = coupon_plate.val().BoundingBox()
     metadata = {
         "units": "mm",
         "revision": "v3 removable tongue-and-wedge split cradle",
@@ -437,6 +470,11 @@ def export() -> None:
         "lock_coupon": {
             "uses_exact_production_geometry": True,
             "parts": 3,
+            "combined_plate_envelope": [
+                coupon_plate_bb.xlen,
+                coupon_plate_bb.ylen,
+                coupon_plate_bb.zlen,
+            ],
             "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access",
         },
         "structural_assembly": {

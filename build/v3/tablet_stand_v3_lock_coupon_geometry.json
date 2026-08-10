@@ -1,0 +1,48 @@
+{
+  "size_mm": [
+    77.91,
+    33.12,
+    9.0
+  ],
+  "bbox_min": [
+    -40.5,
+    -5.75,
+    0.0
+  ],
+  "bbox_max": [
+    37.41,
+    27.38,
+    9.0
+  ],
+  "volume_mm3": 2324.4,
+  "volume_cm3": 2.32,
+  "surface_area_mm2": 2589.55,
+  "triangles": 7128,
+  "degenerate_triangles": 0,
+  "winding_was_inverted": false,
+  "part_count": 3,
+  "watertight": true,
+  "overhang_area_mm2": 148.26,
+  "overhang_fraction": 0.0573,
+  "overhang_bands_mm2": {
+    "severe_0_35_from_horizontal": 143.74,
+    "moderate_35_50": 2.29,
+    "marginal_50_65": 5.79
+  },
+  "footprint_area_mm2": 368.6,
+  "tallness_ratio": 0.27,
+  "mean_cross_section_mm2": 258.27,
+  "estimated_mean_wall_mm": 1.795,
+  "solid_body": false,
+  "fits_bed": true,
+  "bed_overage_mm": {},
+  "min_printable_wall_mm": 0.34,
+  "nozzle_diameter": 0.4,
+  "filament_estimate_g_pla": 2.9,
+  "flags": [
+    "6% overhang area: enable supports.",
+    "Small first-layer contact (369mm2): add a 5mm brim.",
+    "3 separate shells -- normal for a hollow part or a multi-part plate, a broken mesh otherwise. Worth confirming."
+  ],
+  "machine": "Creality Ender-3 Pro -- 220.0x220.0x250.0mm, 0.4mm nozzle, 1.75mm filament, cartesian_bedslinger, klipper, direct extruder, 10.0 mm3/s PLA, accel 1500.0 (untuned)"
+}

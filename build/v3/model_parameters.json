@@ -11,13 +11,13 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.00127662315619,
+      125.00124220867899,
       135.50000020000007,
-      14.203594911363135
+      14.20272540101358
     ],
     "right_print_envelope": [
-      111.32609876256205,
-      139.00132389934308,
+      111.32712615662862,
+      139.00258311124952,
       14.201856417869537
     ],
     "rear_bracket_bridges_center_seam": true,
@@ -42,6 +42,11 @@
   "lock_coupon": {
     "uses_exact_production_geometry": true,
     "parts": 3,
+    "combined_plate_envelope": [
+      77.91285279728737,
+      33.22288422189376,
+      9.000662049671556
+    ],
     "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access"
   },
   "structural_assembly": {

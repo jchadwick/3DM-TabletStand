@@ -34,8 +34,12 @@ bed-friendly wings joined without cradle glue.
 - `tablet_stand_v3_lock_coupon_left.stl`: production lower tongue crop.
 - `tablet_stand_v3_lock_coupon_right.stl`: production lower receiver crop.
 - `tablet_stand_v3_lock_coupon_wedge.stl`: production locking wedge.
+- `tablet_stand_v3_lock_coupon_all3.stl`: all three exact coupon parts spaced
+  on one bed datum for the combined print job.
+- `tablet_stand_v3_lock_coupon_plate.png`: direct CadQuery preview of that
+  combined three-piece layout.
 
-Print these as separate support-free jobs before either full wing. Confirm that
+Print the combined plate support-free before either full wing. Confirm that
 the tongue reaches the closed seat without force, the wedge inserts and holds
 without cracking, and both pieces remain deliberately removable.
 
@@ -55,4 +59,22 @@ the left wing, tongues, receivers, or wedge. Pulling the wedge and sliding the
 left wing off must remain possible for tablet service.
 
 All current STL exports are single watertight solids. V3 has not been sliced,
-uploaded, or authorized for printing.
+uploaded, or authorized for a full-part print.
+
+## Active coupon print
+
+- `tablet_stand_v3_lock_coupon_all3_pla.gcode`: combined PLA job; 0.16 mm
+  layers, three walls, 20% grid infill, 5 mm brim, 205/200 °C nozzle, 60 °C
+  bed, supports disabled, and 1.0 mm retraction at 40 mm/s.
+- `tablet_stand_v3_lock_coupon_toolpath.png`: actual PrusaSlicer extrusion-path
+  review; it contains all three model islands and zero support extrusion.
+- `tablet_stand_v3_lock_coupon_geometry.json` and
+  `tablet_stand_v3_lock_coupon_brief.json`: inspected geometry and confirmed
+  per-print decisions.
+
+Independent G-code validation reports a 100 × 46 × 9 mm brim-inclusive
+footprint, 31m 11s estimated time, about 3.1 g of PLA, and 6.2 mm³/s peak flow.
+The only retained warnings are the profile's pre-macro bed heat and missing UI
+thumbnail. The user authorized all three coupon pieces, the camera showed an
+empty bed, and the job was started on 2026-08-09. Physical fit results remain
+the gate before either cradle wing.

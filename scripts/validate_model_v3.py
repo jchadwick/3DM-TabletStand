@@ -33,6 +33,7 @@ REQUIRED = (
     "tablet_stand_v3_lock_coupon_left.stl",
     "tablet_stand_v3_lock_coupon_right.stl",
     "tablet_stand_v3_lock_coupon_wedge.stl",
+    "tablet_stand_v3_lock_coupon_all3.stl",
 )
 
 
@@ -142,6 +143,18 @@ def main() -> None:
     assert len(coupon_right.solids().vals()) == 1
     assert len(coupon_wedge.solids().vals()) == 1
     assert coupon_left.intersect(coupon_right).val().Volume() < 1e-6
+    coupon_plate_parts = model.lock_coupon_print_plate_parts()
+    coupon_plate = model.lock_coupon_print_plate()
+    assert len(coupon_plate.solids().vals()) == 3
+    assert abs(coupon_plate.val().BoundingBox().zmin) < 1e-6
+    assert coupon_plate.val().BoundingBox().xlen < 90.0
+    assert coupon_plate.val().BoundingBox().ylen < 40.0
+    assert math.isclose(
+        sum(part.val().Volume() for part in coupon_plate_parts),
+        sum(part.val().Volume() for part in (coupon_left, coupon_right, coupon_wedge)),
+        rel_tol=0.0,
+        abs_tol=1e-5,
+    )
     print("three-piece lock coupon uses exact production tongue, receiver, and wedge geometry")
 
     # V3 deliberately retains the user-tested button and USB-C geometry while
@@ -189,7 +202,8 @@ def main() -> None:
         mesh = trimesh.load_mesh(path, force="mesh")
         components = len(mesh.split(only_watertight=False))
         assert mesh.is_watertight, f"{path.name} is not watertight"
-        assert components == 1, f"{path.name} has {components} components"
+        expected_components = 3 if path.name == "tablet_stand_v3_lock_coupon_all3.stl" else 1
+        assert components == expected_components, f"{path.name} has {components} components"
         print(
             f"{path.name}: watertight, extents={mesh.extents.round(2).tolist()}, "
             f"approx_overhang_area={approximate_support_area(mesh):.0f} mm2"
