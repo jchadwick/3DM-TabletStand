@@ -1,48 +1,58 @@
-# Version 3 split-cradle concept
+# Version 3 removable split cradle
 
-V3 preserves the physically tested V2 tablet, button, USB-C, tube, and cable
-interfaces. It replaces the wide cradle print and separate left cap with two
-cradle wings plus adhesive splice hardware.
+V3 preserves the physically tested tablet, button, USB-C, tube, and cable
+interfaces. It replaces the 215 mm cradle and separate left cap with two
+bed-friendly wings joined without cradle glue.
 
 ## Review files
 
-- `tablet_stand_v3_multiview.png`: installed view, rear joint view, and print
-  layout in one image.
-- `tablet_stand_v3_preview.png`: installed assembly with the two cradle wings
-  shown in different blues.
-- `tablet_stand_v3_left_edge.png`: dedicated view of the continuous integral
-  left wall.
-- `tablet_stand_v3_rear_splice.png`: rear view of the 0.35 mm stepped seam and
-  three orange recessed keys.
-- `tablet_stand_v3_print_layout.png`: the two independent rear-face-down cradle
-  prints plus three splice keys.
+- `tablet_stand_v3_multiview.png`: installed, enclosed-left-edge, removable
+  joint, and print-layout views.
+- `tablet_stand_v3_preview.png`: installed assembly with the two wings in
+  different blues and the locking wedge in orange.
+- `tablet_stand_v3_left_edge.png`: continuous integral left wall.
+- `tablet_stand_v3_rear_joint.png`: exploded view of the three tongues,
+  receivers, and lower cross-wedge.
+- `tablet_stand_v3_print_layout.png`: two independent rear-face-down wings and
+  one locking wedge.
 - `tablet_stand_v3.step`: installed assembly.
 
-## Printable exports
+## Production-oriented exports
 
-- `tablet_stand_v3_cradle_left.stl`: 114.83 × 130.00 × 14.20 mm; rear face down;
-  includes the fully enclosed rounded left edge.
-- `tablet_stand_v3_cradle_right.stl`: 119.33 × 130.00 × 14.20 mm; rear face down.
-- `tablet_stand_v3_cradle_splice_key_print_3.stl`: print three copies flat.
-- `tablet_stand_v3_rear_bracket.stl`: unchanged V2 rear bracket.
-- `tablet_stand_v3_sleeve.stl`: unchanged V2 sleeve.
-- `tablet_stand_v3_alignment_key_print_2.stl`: unchanged structural key; print two.
+- `tablet_stand_v3_cradle_left.stl`: 125.00 × 135.50 × 14.20 mm; rear face
+  down; includes the enclosed rounded left edge and all three tongues.
+- `tablet_stand_v3_cradle_right.stl`: 111.33 × 139.00 × 14.20 mm; rear face
+  down; includes the three matching receivers and lower locking channel.
+- `tablet_stand_v3_locking_wedge.stl`: print one; removable tapered cross-lock.
+- `tablet_stand_v3_rear_bracket.stl`: bonds only to the fixed right wing.
+- `tablet_stand_v3_sleeve.stl`: unchanged tested 32.2 mm sleeve.
+- `tablet_stand_v3_alignment_key_print_1.stl`: print one for the unchanged
+  rear-bracket-to-sleeve adhesive joint.
 
-## Joint concept
+## Exact joint coupon
 
-The cradle seam runs at X = −8 mm beside the long rails and at X = +8 mm
-through the center, producing a 16 mm plan-view dogleg at Y = ±35 mm. The
-0.35 mm total gap is intended for adhesive rather than a friction fit.
+- `tablet_stand_v3_lock_coupon_left.stl`: production lower tongue crop.
+- `tablet_stand_v3_lock_coupon_right.stl`: production lower receiver crop.
+- `tablet_stand_v3_lock_coupon_wedge.stl`: production locking wedge.
 
-Three 44 × 6 × 1.6 mm keys sit loosely in 46 × 7.2 × 1.9 mm rear recesses and
-remain 0.20 mm below the rear surface. The existing 74 × 36 mm rear bracket
-then bonds across the center seam as a fourth structural bridge.
+Print these as separate support-free jobs before either full wing. Confirm that
+the tongue reaches the closed seat without force, the wedge inserts and holds
+without cracking, and both pieces remain deliberately removable.
 
-All STL exports validate as single watertight solids. V3 is a visual-review
-concept and has not been sliced, uploaded, or authorized for printing. If the
-concept is accepted, print a small exact splice coupon before the full wings.
+## Removable joint
 
-The tablet is loaded during cradle assembly: seat it in the right/USB-C wing,
-bring the enclosed left wing onto the tablet, then align and bond the stepped
-seam. There is no separate end cap, plug, or socket. This adhesive workflow
-captures the tablet, so confirm intended serviceability before final bonding.
+The left wing slides +X. Its upper, center, and lower tongues enter 18 mm-deep
+closed-back receivers. Seated/root clearance is 0.50 mm total; the tapered lead
+has 1.10 mm total clearance.
+
+The lower tongue and receiver have an aligned 4 × 4 mm transverse channel. A
+printed wedge tapers from 3.70 to 3.30 mm and has a 7 mm pull head. If it proves
+unreliable in the user's PLA, the same channel clears an M3 shaft; exact bolt,
+washer, nut, and head pockets must wait for physical hardware measurements.
+
+The rear bracket is glued only to the fixed right wing. Do not put adhesive on
+the left wing, tongues, receivers, or wedge. Pulling the wedge and sliding the
+left wing off must remain possible for tablet service.
+
+All current STL exports are single watertight solids. V3 has not been sliced,
+uploaded, or authorized for printing.

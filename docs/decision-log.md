@@ -39,7 +39,7 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Landscape tablet orientation.
 - Simple, sleek, skeletal support rather than a bulky closed enclosure.
 - Tablet slides in from the left through narrow long-edge rails.
-- A removable left cap slides horizontally in from the left on two tapered plugs aligned with the long-edge rails. They enter reinforced, open-ended sockets with closed seating ends; no mechanical fastener, hook, detent bump, projecting lower nub, or support-trapping dovetail is used, and adhesive is optional.
+- V3 uses a fully enclosed removable left cradle wing instead of a separate cap. Three integral tongues slide +X into closed-back right-wing receivers; one tapered printed cross-wedge locks the lower joint and remains removable for tablet service.
 - The right edge has a continuous full-depth screen-facing cap backed by internal stops and a solid outer USB-C wall. No tablet-edge or recessed plug-pocket segment is exposed from the front; the low-profile right-angle adapter still turns immediately behind the tablet instead of sending the cable straight out through the right wall.
 - The 51.4 mm pigtail and downstream connection remain largely hidden across the open back. The confirmed 3.45 mm braided section snaps into two open rear clips and a rear-facing external sleeve channel, then exits downward near the tube.
 - Between the nearer rear clip and sleeve channel, the cable stays in open space: it drops outside the right gusset, passes behind the sleeve, and enters through the channel's rear snap opening. Previewed cable geometry must never cross a holder solid.
@@ -48,15 +48,26 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - The holder installs by sliding a closed 32.2 mm ID sleeve down over the accessible top of the vertical tube.
 - With the tablet nearly vertical, the sleeve is centered left-to-right and offset 24 mm behind the screen plane.
 - The sleeve/collet bottom is level with the installed holder's lower long edge at Z = -64.53 mm. This lowers the complete rear assembly by 14.53 mm without changing sleeve fit or engagement.
-- V3 is the current visual-review candidate. It divides the cradle into two rear-face-down wings joined by a support-free stepped glue seam, three recessed splice keys, and the existing rear bracket bridge. The left wing is fully enclosed and replaces the separate V2 end cap, plugs, and sockets.
-- Both V2 glue joints use matching shallow cross grooves and one loose-fit 35 × 15 × 1.8 mm printed key; the alignment-key STL is printed twice because the two keys occupy separate structural joints. The retained grooves provide at least 1.25 mm total planar clearance and 0.50 mm total thickness clearance. The user confirmed that gluing the main body parts is acceptable.
+- V3 divides the cradle into two rear-face-down wings joined without glue by three integral tongues and one removable lower cross-wedge. The same 4 × 4 mm locking channel can accept an M3 bolt after the actual head/nut/length dimensions are confirmed.
+- The rear bracket bonds only to the fixed right cradle wing so the left wing remains removable. The bracket-to-sleeve bond retains one loose-fit 35 × 15 × 1.8 mm printed alignment key; no adhesive belongs on the removable center joint.
 - The bracket carries the two open braided-cable clips so the cradle keeps a completely flat rear print datum.
-- Each of the two 12 mm tapered plugs uses a support-free house profile, reducing from 2.55 × 3.35 mm at the root to 2.15 × 2.95 mm at the tip. Its matching socket remains 3.00 × 3.80 mm with two 45-degree roof faces, giving 0.45 mm total root and 0.85 mm total tip clearance. The reinforced rail ends extend the cradle envelope to 215 × 135.6 × 14.8 mm.
 - Routine previews use direct in-memory CadQuery tessellation with a depth-buffered renderer. The headless fallback uses VTK; Blender is reserved for optional polished presentation renders.
 
 ## Revision history
 
-### V3 splits the near-bed-width cradle into two printable wings — 2026-08-09
+### Removable tongue-and-wedge center joint supersedes V3 glue seam — 2026-08-09
+
+- The user rejected permanent cradle glue and selected a screw-free removable middle joint, with existing M3 hardware available only if necessary.
+- Replaced the stepped glue seam and three loose adhesive splice keys with a straight center split and three integral +X tongues. The upper/lower tongues are 6 mm tall bed-supported blocks in reinforced receivers; the center tongue stays within the 3 mm rear plate. All receivers have open entrances and closed seating backs.
+- Each tongue inserts 18 mm. The close seated/root fit has 0.50 mm total clearance and the tapered lead has 1.10 mm total clearance, derived from the physically successful V2 PLA plug result but enlarged substantially for strength.
+- Added one removable lower cross-wedge, tapering from 3.70 to 3.30 mm with a 7 mm pull head. It passes along +Y through an aligned 4 × 4 mm channel in the lower tongue and receiver. The channel's 4 mm ceiling is within the confirmed support-free PLA bridge rule.
+- The same channel clears an M3 shaft for a bolt/washer/nut fallback. Do not finalize metal hardware pockets until the user's exact M3 head style, length, washer, and nut dimensions are measured.
+- The left wing is now 125.00 × 135.50 × 14.20 mm and the right wing 111.33 × 139.00 × 14.20 mm; both are single watertight solids and remain comfortably inside the 220 mm bed.
+- Validation confirms zero intersection at seven left-wing insertion positions, no seated wing overlap, a collision-free wedge insertion path, retained button/USB-C geometry, a continuous integral left wall, and watertight production/coupon exports.
+- The rear bracket bonds only to the fixed right wing and merely contacts the removable left wing. The bracket-to-sleeve bond keeps one printed alignment key. This makes the tablet serviceable without disturbing the tube mount.
+- Exported exact lower-joint left, right, and wedge coupons. A physical coupon test is required before slicing either full cradle wing; do not infer final wedge retention from CAD alone.
+
+### V3 splits the near-bed-width cradle into two printable wings — 2026-08-09 (adhesive joint superseded later the same day)
 
 - The user requested another modeling approach after the full V2 cradle measured 215 mm wide on the 220 mm Ender-3 Pro bed, then authorized a V3 concept for visual review.
 - The first V3 render incorrectly retained the separate V2 end cap even though the two-piece cradle itself provides the tablet-loading split. The user rejected that redundancy. V3 now has one continuous rounded left wall integrated into the left wing, and no separate end cap, tapered plug, socket, receiver bulge, screw, or nub.

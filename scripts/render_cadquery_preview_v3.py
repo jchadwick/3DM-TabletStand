@@ -41,8 +41,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
         (cq_mesh(bracket), (48, 104, 156, 255)),
         (cq_mesh(sleeve), (42, 62, 88, 255)),
     ]
-    for key in model.installed_splice_keys():
-        objects.append((cq_mesh(key), KEY_COLOR))
+    objects.append((cq_mesh(model.installed_locking_wedge()), KEY_COLOR))
 
     tablet = trimesh.load_mesh(ROOT / "reference" / "tablet" / "tinker.obj", force="mesh")
     tablet.apply_transform(
@@ -65,20 +64,24 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
 
 def rear_joint_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     left, right = model.cradle_halves()
-    objects = [(cq_mesh(left), LEFT_COLOR), (cq_mesh(right), RIGHT_COLOR)]
-    for key in model.cradle_splice_keys_installed():
-        objects.append((cq_mesh(key), KEY_COLOR))
-    return objects
+    left_mesh = cq_mesh(left)
+    left_mesh.apply_translation((-24.0, 0.0, 0.0))
+    wedge_mesh = cq_mesh(model.locking_wedge_installed())
+    wedge_mesh.apply_translation((0.0, -10.0, 0.0))
+    return [
+        (left_mesh, LEFT_COLOR),
+        (cq_mesh(right), RIGHT_COLOR),
+        (wedge_mesh, KEY_COLOR),
+    ]
 
 
 def print_layout_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
-    left, right, _, _, _, key = model.print_parts()
+    left, right, _, _, _, wedge = model.print_parts()
     placed: list[tuple[trimesh.Trimesh, tuple[int, int, int, int], tuple[float, float, float]]] = [
         (cq_mesh(left), LEFT_COLOR, (-68.0, 0.0, 0.0)),
         (cq_mesh(right), RIGHT_COLOR, (68.0, 0.0, 0.0)),
+        (cq_mesh(wedge), KEY_COLOR, (0.0, 0.0, 0.0)),
     ]
-    for index, y_pos in enumerate((-18.0, 0.0, 18.0)):
-        placed.append((cq_mesh(key), KEY_COLOR, (0.0, y_pos, 0.0)))
     objects = []
     for mesh, color, offset in placed:
         mesh.apply_translation(offset)
@@ -99,8 +102,8 @@ def contact_sheet(installed: Path, left_edge: Path, joint: Path, layout: Path, o
     draw = ImageDraw.Draw(canvas)
     draw.text((24, 14), "V3 INSTALLED — TWO-PIECE CRADLE", fill=(225, 232, 240))
     draw.text((24, 1039), "INTEGRAL LEFT WING — CONTINUOUS ENCLOSED EDGE", fill=(225, 232, 240))
-    draw.text((24, 1769), "REAR SPLICE — STEPPED SEAM + THREE RECESSED KEYS", fill=(225, 232, 240))
-    draw.text((24, 2499), "PRINT LAYOUT — TWO CRADLE WINGS, NO SEPARATE END CAP", fill=(225, 232, 240))
+    draw.text((24, 1769), "REMOVABLE JOINT — THREE TONGUES + LOWER CROSS-WEDGE", fill=(225, 232, 240))
+    draw.text((24, 2499), "PRINT LAYOUT — TWO WINGS + ONE LOCKING WEDGE", fill=(225, 232, 240))
     canvas.save(output)
 
 
@@ -108,7 +111,7 @@ def main() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
     installed = BUILD / "tablet_stand_v3_preview.png"
     left_edge = BUILD / "tablet_stand_v3_left_edge.png"
-    joint = BUILD / "tablet_stand_v3_rear_splice.png"
+    joint = BUILD / "tablet_stand_v3_rear_joint.png"
     layout = BUILD / "tablet_stand_v3_print_layout.png"
 
     if len(sys.argv) == 3 and sys.argv[1] == "--render-one":
@@ -133,8 +136,8 @@ def main() -> None:
                 rear_joint_objects(),
                 joint,
                 (1400, 700),
-                eye=(185.0, 215.0, -205.0),
-                target=(0.0, 0.0, -1.5),
+                eye=(170.0, -230.0, -175.0),
+                target=(0.0, -18.0, -0.5),
             )
         elif sys.argv[2] == "layout":
             render_view(

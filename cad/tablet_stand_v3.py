@@ -1,11 +1,12 @@
 """V3 split-cradle tablet stand concept.
 
 V3 preserves the physically tested V2 tablet, button, USB-C, tube, and cable
-geometry.  The wide flat cradle is divided along a support-free stepped seam
-into two bed-friendly wings.  The left wing has an integral continuous end
-wall, so it replaces the separate V2 cap, plugs, and sockets.  Three loose,
-recessed splice keys align the wings during adhesive assembly, while the
-existing rear tilt bracket bridges the center of the seam after glue-up.
+geometry.  The wide flat cradle is divided into two bed-friendly wings.  The
+left wing has an integral continuous end wall, so it replaces the separate V2
+cap.  Three large integral tongues slide into support-free receivers in the
+right wing.  A removable tapered cross-wedge locks the lower receiver; the same
+4 mm channel accepts a hidden M3 bolt and nut as a fallback.  No cradle glue is
+required, and the left wing remains removable for tablet service.
 
 Coordinates and installed orientation match ``tablet_stand_v2``.
 All dimensions are millimeters.
@@ -28,89 +29,75 @@ from cad import tablet_stand_core as core  # noqa: E402
 from cad import tablet_stand_v2 as v2  # noqa: E402
 
 
-# The stepped seam moves 16 mm across the center spine.  This resists relative
-# Y motion without a print-direction undercut or a support-trapping dovetail.
-CRADLE_SEAM_OUTER_X = -8.0
-CRADLE_SEAM_CENTER_X = 8.0
-CRADLE_SEAM_STEP_Y = 35.0
+# The straight split leaves a printable glue-free joint at the holder center.
+# All three tongues move in +X as the enclosed left wing closes around the
+# tablet.  The user-tested PLA clearances inform the close root / loose lead.
+CRADLE_SEAM_X = 0.0
 CRADLE_SEAM_CLEARANCE = 0.35
+JOINT_TONGUE_ROOT_X = -7.0
+JOINT_TONGUE_TIP_X = 18.0
+JOINT_SOCKET_BACK_X = 19.0
+JOINT_RECEIVER_BACK_X = 22.0
+JOINT_ROOT_CLEARANCE_TOTAL = 0.50
+JOINT_TIP_CLEARANCE_TOTAL = 1.10
 
-# Three identical keys sit in rear-facing recesses.  Their 7.2 mm-wide grooves
-# bridge cleanly under the 10 mm PLA bridging rule for the confirmed process.
-CRADLE_SPLICE_GROOVE_LENGTH = 46.0
-CRADLE_SPLICE_GROOVE_WIDTH = 7.2
-CRADLE_SPLICE_GROOVE_DEPTH = 1.90
-CRADLE_SPLICE_KEY_LENGTH = 44.0
-CRADLE_SPLICE_KEY_WIDTH = 6.0
-CRADLE_SPLICE_KEY_T = 1.60
-CRADLE_SPLICE_KEY_EDGE_CHAMFER = 0.40
-CRADLE_SPLICE_KEY_RECESS = 0.20
-CRADLE_SPLICE_KEY_Y = (-60.5, 0.0, 60.5)
-CRADLE_SPLICE_KEY_X = (
-    CRADLE_SEAM_OUTER_X,
-    CRADLE_SEAM_CENTER_X,
-    CRADLE_SEAM_OUTER_X,
-)
-CRADLE_SPLICE_KEY_QUANTITY = 3
+# Upper and lower receivers sit just outside the tablet cavity, overlap the
+# existing long-edge walls, and use an open bed-side floor plus an 8.5 mm roof
+# bridge (below the confirmed 10 mm PLA rule).  The center tongue stays within
+# the 3 mm rear plate and enters a through-depth planar pocket.
+OUTER_JOINT_CENTER_Y = (-65.75, 65.75)
+OUTER_TONGUE_ROOT_Y = 4.0
+OUTER_TONGUE_TIP_Y = 3.6
+OUTER_TONGUE_Z = 6.0
+OUTER_RECEIVER_Y = 7.5
+OUTER_RECEIVER_Z = 8.5
+OUTER_SOCKET_ROOT_Y = OUTER_TONGUE_ROOT_Y + JOINT_ROOT_CLEARANCE_TOTAL
+OUTER_SOCKET_TIP_Y = OUTER_TONGUE_TIP_Y + JOINT_TIP_CLEARANCE_TOTAL
+OUTER_SOCKET_Z = OUTER_TONGUE_Z + 0.50
+CENTER_TONGUE_ROOT_Y = 20.0
+CENTER_TONGUE_TIP_Y = 18.0
+CENTER_SOCKET_ROOT_Y = CENTER_TONGUE_ROOT_Y + JOINT_ROOT_CLEARANCE_TOTAL
+CENTER_SOCKET_TIP_Y = CENTER_TONGUE_TIP_Y + JOINT_TIP_CLEARANCE_TOTAL
+
+# A transverse square channel through the lower receiver and tongue accepts a
+# printed tapered wedge.  Its 4 mm bridge is comfortably support-free.  If the
+# wedge does not hold in the actual filament, the same channel accepts an M3
+# bolt with washers and a nut without changing either cradle wing.
+LOCK_CENTER_X = 10.0
+LOCK_CENTER_Y = OUTER_JOINT_CENTER_Y[0]
+LOCK_CHANNEL_X = 4.0
+LOCK_CHANNEL_Y = 14.0
+LOCK_CHANNEL_Z = 4.0
+LOCK_WEDGE_ROOT_XZ = 3.70
+LOCK_WEDGE_TIP_XZ = 3.30
+LOCK_WEDGE_BODY_Y0 = -71.0
+LOCK_WEDGE_BODY_Y1 = -62.0
+LOCK_WEDGE_HEAD_XZ = 7.0
+LOCK_WEDGE_HEAD_Y = 2.0
+LOCK_WEDGE_QUANTITY = 1
+M3_FALLBACK_DIAMETER = 3.0
+
+# Exact lower-joint crop for testing insertion, seating, wedge retention, and
+# the optional M3 channel before either full cradle wing is printed.
+LOCK_COUPON_X_MIN = -13.0
+LOCK_COUPON_X_MAX = 25.0
+LOCK_COUPON_Y_MIN = -73.0
+LOCK_COUPON_Y_MAX = -58.0
+LOCK_COUPON_Z_MIN = -3.1
+LOCK_COUPON_Z_MAX = 6.0
 
 LINEAR_TOLERANCE = 0.05
 ANGULAR_TOLERANCE = 0.1
 
 
 def _seam_mask(left: bool) -> cq.Workplane:
-    """Return one clearance-offset half of the stepped XY split mask."""
-    margin = 140.0
-    y_limit = 90.0
+    """Return one clearance-offset half of the straight XY split mask."""
+    margin = 150.0
     half_gap = CRADLE_SEAM_CLEARANCE / 2.0
-    if left:
-        outer_x = CRADLE_SEAM_OUTER_X - half_gap
-        center_x = CRADLE_SEAM_CENTER_X - half_gap
-        points = (
-            (-margin, -y_limit),
-            (outer_x, -y_limit),
-            (outer_x, -CRADLE_SEAM_STEP_Y + half_gap),
-            (center_x, -CRADLE_SEAM_STEP_Y + half_gap),
-            (center_x, CRADLE_SEAM_STEP_Y - half_gap),
-            (outer_x, CRADLE_SEAM_STEP_Y - half_gap),
-            (outer_x, y_limit),
-            (-margin, y_limit),
-        )
-    else:
-        outer_x = CRADLE_SEAM_OUTER_X + half_gap
-        center_x = CRADLE_SEAM_CENTER_X + half_gap
-        points = (
-            (outer_x, -y_limit),
-            (margin, -y_limit),
-            (margin, y_limit),
-            (outer_x, y_limit),
-            (outer_x, CRADLE_SEAM_STEP_Y + half_gap),
-            (center_x, CRADLE_SEAM_STEP_Y + half_gap),
-            (center_x, -CRADLE_SEAM_STEP_Y - half_gap),
-            (outer_x, -CRADLE_SEAM_STEP_Y - half_gap),
-        )
-    return (
-        cq.Workplane("XY")
-        .workplane(offset=-20.0)
-        .polyline(points)
-        .close()
-        .extrude(50.0)
-    )
-
-
-def cradle_splice_grooves() -> cq.Workplane:
-    """Return the three shallow rear-face recess cutters."""
-    grooves: cq.Workplane | None = None
-    for x_pos, y_pos in zip(CRADLE_SPLICE_KEY_X, CRADLE_SPLICE_KEY_Y, strict=True):
-        groove = (
-            cq.Workplane("XY")
-            .workplane(offset=-core.BASE_T - 0.05)
-            .rect(CRADLE_SPLICE_GROOVE_LENGTH, CRADLE_SPLICE_GROOVE_WIDTH)
-            .extrude(CRADLE_SPLICE_GROOVE_DEPTH + 0.05)
-            .translate((x_pos, y_pos, 0.0))
-        )
-        grooves = groove if grooves is None else grooves.union(groove)
-    assert grooves is not None
-    return grooves
+    center_x = CRADLE_SEAM_X + (-half_gap if left else half_gap)
+    width = margin + center_x if left else margin - center_x
+    x_center = (-margin + center_x) / 2.0 if left else (margin + center_x) / 2.0
+    return cq.Workplane("XY").box(width, 180.0, 50.0).translate((x_center, 0.0, 5.0))
 
 
 def integral_left_closure() -> cq.Workplane:
@@ -164,45 +151,180 @@ def integral_left_closure() -> cq.Workplane:
 
 def integral_full_cradle() -> cq.Workplane:
     """Return the tested cradle interfaces with the V3 integral left closure."""
-    cradle = core.flat_main_holder().union(integral_left_closure())
-    bracket_groove = v2.cross_groove(
-        0.0,
-        v2.BRACKET_PLATE_CENTER_Y,
-        -core.BASE_T - 0.05,
-        v2.ALIGNMENT_GROOVE_DEPTH + 0.05,
-    )
-    return cradle.cut(bracket_groove)
+    # The rear bracket is bonded only to the fixed right wing so the left wing
+    # can slide off for tablet service.  Therefore V3 intentionally omits the
+    # old centered cradle-to-bracket alignment-key groove.
+    return core.flat_main_holder().union(integral_left_closure())
 
 
 def split_cradle_source() -> cq.Workplane:
-    """Return the integral V3 cradle with the three splice recesses added."""
-    return integral_full_cradle().cut(cradle_splice_grooves())
+    """Return the integral V3 cradle before the removable center joint."""
+    return integral_full_cradle()
+
+
+def tapered_plan_prism(
+    x0: float,
+    x1: float,
+    center_y: float,
+    width0: float,
+    width1: float,
+    z0: float,
+    height: float,
+) -> cq.Workplane:
+    """Return an X-directed trapezoid in plan, extruded upward from ``z0``."""
+    points = (
+        (x0, center_y - width0 / 2.0),
+        (x0, center_y + width0 / 2.0),
+        (x1, center_y + width1 / 2.0),
+        (x1, center_y - width1 / 2.0),
+    )
+    return cq.Workplane("XY").workplane(offset=z0).polyline(points).close().extrude(height)
+
+
+def joint_tongues() -> cq.Workplane:
+    """Return the three integral, bed-supported tongues on the left wing."""
+    tongues: cq.Workplane | None = None
+    for center_y in OUTER_JOINT_CENTER_Y:
+        tongue = tapered_plan_prism(
+            JOINT_TONGUE_ROOT_X,
+            JOINT_TONGUE_TIP_X,
+            center_y,
+            OUTER_TONGUE_ROOT_Y,
+            OUTER_TONGUE_TIP_Y,
+            -core.BASE_T,
+            OUTER_TONGUE_Z,
+        )
+        tongues = tongue if tongues is None else tongues.union(tongue)
+    center = tapered_plan_prism(
+        JOINT_TONGUE_ROOT_X,
+        JOINT_TONGUE_TIP_X,
+        0.0,
+        CENTER_TONGUE_ROOT_Y,
+        CENTER_TONGUE_TIP_Y,
+        -core.BASE_T,
+        core.BASE_T,
+    )
+    assert tongues is not None
+    return tongues.union(center)
+
+
+def outer_joint_receivers() -> cq.Workplane:
+    """Return reinforced upper/lower shells with bed-open support-free floors."""
+    x0 = CRADLE_SEAM_CLEARANCE / 2.0
+    receiver_x = JOINT_RECEIVER_BACK_X - x0
+    receivers: cq.Workplane | None = None
+    for center_y in OUTER_JOINT_CENTER_Y:
+        receiver = core.softened_plate(
+            receiver_x,
+            OUTER_RECEIVER_Y,
+            OUTER_RECEIVER_Z,
+            -core.BASE_T,
+            0.8,
+            core.EXPOSED_EDGE_R,
+        ).translate(((x0 + JOINT_RECEIVER_BACK_X) / 2.0, center_y, 0.0))
+        receivers = receiver if receivers is None else receivers.union(receiver)
+    assert receivers is not None
+    return receivers
+
+
+def joint_socket_cutters() -> cq.Workplane:
+    """Return the two outer socket tunnels and center planar tongue pocket."""
+    cutters: cq.Workplane | None = None
+    for center_y in OUTER_JOINT_CENTER_Y:
+        cutter = tapered_plan_prism(
+            -0.75,
+            JOINT_SOCKET_BACK_X,
+            center_y,
+            OUTER_SOCKET_ROOT_Y,
+            OUTER_SOCKET_TIP_Y,
+            -core.BASE_T - 0.05,
+            OUTER_SOCKET_Z + 0.05,
+        )
+        cutters = cutter if cutters is None else cutters.union(cutter)
+    center = tapered_plan_prism(
+        -0.75,
+        JOINT_SOCKET_BACK_X,
+        0.0,
+        CENTER_SOCKET_ROOT_Y,
+        CENTER_SOCKET_TIP_Y,
+        -core.BASE_T - 0.05,
+        core.BASE_T + 0.10,
+    )
+    assert cutters is not None
+    return cutters.union(center)
+
+
+def locking_channel() -> cq.Workplane:
+    """Return the transverse wedge/M3 channel through the lower joint."""
+    return (
+        cq.Workplane("XY")
+        .box(LOCK_CHANNEL_X, LOCK_CHANNEL_Y, LOCK_CHANNEL_Z)
+        .translate((LOCK_CENTER_X, LOCK_CENTER_Y, 0.0))
+    )
 
 
 def cradle_halves() -> tuple[cq.Workplane, cq.Workplane]:
-    """Return the left and right support-free cradle wings in assembly space."""
+    """Return the removable left and fixed right cradle wings in assembly space."""
     source = split_cradle_source()
-    return source.intersect(_seam_mask(True)), source.intersect(_seam_mask(False))
+    left = source.intersect(_seam_mask(True)).union(joint_tongues()).cut(locking_channel())
+    right = (
+        source.intersect(_seam_mask(False))
+        .union(outer_joint_receivers())
+        .cut(joint_socket_cutters())
+        .cut(locking_channel())
+    )
+    return left, right
 
 
-def cradle_splice_key() -> cq.Workplane:
-    """Return one loose-fit, elephant-foot-relieved rear splice key."""
-    key = (
+def locking_wedge() -> cq.Workplane:
+    """Return the removable tapered cross-wedge with an external pull head."""
+    plane = cq.Plane(
+        origin=(LOCK_CENTER_X, LOCK_WEDGE_BODY_Y0, 0.0),
+        xDir=(1.0, 0.0, 0.0),
+        normal=(0.0, 1.0, 0.0),
+    )
+    body = (
+        cq.Workplane(plane)
+        .rect(LOCK_WEDGE_ROOT_XZ, LOCK_WEDGE_ROOT_XZ)
+        .workplane(offset=LOCK_WEDGE_BODY_Y1 - LOCK_WEDGE_BODY_Y0)
+        .rect(LOCK_WEDGE_TIP_XZ, LOCK_WEDGE_TIP_XZ)
+        .loft(combine=True)
+    )
+    head_center_y = LOCK_WEDGE_BODY_Y0 - LOCK_WEDGE_HEAD_Y / 2.0 + 0.25
+    head = (
         cq.Workplane("XY")
-        .rect(CRADLE_SPLICE_KEY_LENGTH, CRADLE_SPLICE_KEY_WIDTH)
-        .extrude(CRADLE_SPLICE_KEY_T)
+        .box(LOCK_WEDGE_HEAD_XZ, LOCK_WEDGE_HEAD_Y, LOCK_WEDGE_HEAD_XZ)
+        .translate((LOCK_CENTER_X, head_center_y, 0.0))
     )
-    key = key.faces("<Z").edges().chamfer(CRADLE_SPLICE_KEY_EDGE_CHAMFER)
-    return key.faces(">Z").edges().chamfer(CRADLE_SPLICE_KEY_EDGE_CHAMFER)
+    return body.union(head)
 
 
-def cradle_splice_keys_installed() -> tuple[cq.Workplane, ...]:
-    """Return all three keys recessed into the cradle rear face."""
-    z0 = -core.BASE_T + CRADLE_SPLICE_KEY_RECESS
-    return tuple(
-        cradle_splice_key().translate((x_pos, y_pos, z0))
-        for x_pos, y_pos in zip(CRADLE_SPLICE_KEY_X, CRADLE_SPLICE_KEY_Y, strict=True)
+def locking_wedge_installed() -> cq.Workplane:
+    """Return the seated wedge in cradle coordinates."""
+    return locking_wedge()
+
+
+def lock_coupon_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane]:
+    """Return exact lower tongue/receiver crops plus the production wedge."""
+    cutter = (
+        cq.Workplane("XY")
+        .workplane(offset=LOCK_COUPON_Z_MIN)
+        .box(
+            LOCK_COUPON_X_MAX - LOCK_COUPON_X_MIN,
+            LOCK_COUPON_Y_MAX - LOCK_COUPON_Y_MIN,
+            LOCK_COUPON_Z_MAX - LOCK_COUPON_Z_MIN,
+            centered=(True, True, False),
+        )
+        .translate(
+            (
+                (LOCK_COUPON_X_MIN + LOCK_COUPON_X_MAX) / 2.0,
+                (LOCK_COUPON_Y_MIN + LOCK_COUPON_Y_MAX) / 2.0,
+                0.0,
+            )
+        )
     )
+    left, right = cradle_halves()
+    return left.intersect(cutter), right.intersect(cutter), locking_wedge()
 
 
 def installed_parts() -> tuple[cq.Workplane, ...]:
@@ -217,13 +339,10 @@ def installed_parts() -> tuple[cq.Workplane, ...]:
     )
 
 
-def installed_splice_keys() -> tuple[cq.Workplane, ...]:
-    """Return the three recessed splice keys in installed orientation."""
+def installed_locking_wedge() -> cq.Workplane:
+    """Return the removable cross-wedge in installed orientation."""
     tilt = core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG
-    return tuple(
-        key.rotate((0, 0, 0), (1, 0, 0), tilt)
-        for key in cradle_splice_keys_installed()
-    )
+    return locking_wedge_installed().rotate((0, 0, 0), (1, 0, 0), tilt)
 
 
 def print_parts() -> tuple[cq.Workplane, ...]:
@@ -236,21 +355,25 @@ def print_parts() -> tuple[cq.Workplane, ...]:
         bracket,
         sleeve,
         alignment_key,
-        v2.shift_to_bed(cradle_splice_key()),
+        v2.shift_to_bed(locking_wedge()),
     )
 
 
 def export() -> None:
     """Export the V3 concept as production-oriented STL and installed STEP."""
     OUT.mkdir(parents=True, exist_ok=True)
-    left, right, bracket, sleeve, alignment_key, splice_key = print_parts()
+    left, right, bracket, sleeve, alignment_key, wedge = print_parts()
+    coupon_left, coupon_right, coupon_wedge = lock_coupon_parts()
     exports = {
         "tablet_stand_v3_cradle_left.stl": left,
         "tablet_stand_v3_cradle_right.stl": right,
         "tablet_stand_v3_rear_bracket.stl": bracket,
         "tablet_stand_v3_sleeve.stl": sleeve,
-        "tablet_stand_v3_alignment_key_print_2.stl": alignment_key,
-        "tablet_stand_v3_cradle_splice_key_print_3.stl": splice_key,
+        "tablet_stand_v3_alignment_key_print_1.stl": alignment_key,
+        "tablet_stand_v3_locking_wedge.stl": wedge,
+        "tablet_stand_v3_lock_coupon_left.stl": v2.shift_to_bed(coupon_left),
+        "tablet_stand_v3_lock_coupon_right.stl": v2.shift_to_bed(coupon_right),
+        "tablet_stand_v3_lock_coupon_wedge.stl": v2.shift_to_bed(coupon_wedge),
     }
     for filename, part in exports.items():
         cq.exporters.export(
@@ -266,47 +389,67 @@ def export() -> None:
     assembly.add(right_i, name="cradle_right", color=cq.Color(0.18, 0.34, 0.52))
     assembly.add(bracket_i, name="rear_bracket", color=cq.Color(0.20, 0.34, 0.50))
     assembly.add(sleeve_i, name="sleeve", color=cq.Color(0.18, 0.24, 0.32))
-    for index, key in enumerate(installed_splice_keys(), start=1):
-        assembly.add(key, name=f"cradle_splice_key_{index}", color=cq.Color(0.90, 0.50, 0.12))
+    assembly.add(
+        installed_locking_wedge(),
+        name="removable_locking_wedge",
+        color=cq.Color(0.90, 0.50, 0.12),
+    )
     assembly.save(str(OUT / "tablet_stand_v3.step"))
 
     left_bb = left.val().BoundingBox()
     right_bb = right.val().BoundingBox()
     metadata = {
         "units": "mm",
-        "revision": "v3 split-cradle concept",
+        "revision": "v3 removable tongue-and-wedge split cradle",
         "material": "PLA",
         "machine": "Creality Ender-3 Pro, 220 x 220 x 250 mm, 0.4 mm nozzle",
         "preserved_geometry_source": "V2 tested tablet, USB-C, button, tube, and cable geometry",
-        "tablet_loading": "seat tablet in right wing, bring integral enclosed left wing onto tablet, then join cradle seam",
+        "tablet_loading": (
+            "seat tablet in right wing, slide integral enclosed left wing +X until all three "
+            "tongues seat, then insert lower cross-wedge"
+        ),
         "separate_left_cap": False,
         "cradle_split": {
-            "method": "support-free stepped planar seam with three recessed adhesive splice keys",
-            "outer_seam_x": CRADLE_SEAM_OUTER_X,
-            "center_seam_x": CRADLE_SEAM_CENTER_X,
-            "step_y": CRADLE_SEAM_STEP_Y,
+            "method": "straight removable split with three integral tapered tongues and receivers",
+            "seam_x": CRADLE_SEAM_X,
             "total_clearance": CRADLE_SEAM_CLEARANCE,
             "left_print_envelope": [left_bb.xlen, left_bb.ylen, left_bb.zlen],
             "right_print_envelope": [right_bb.xlen, right_bb.ylen, right_bb.zlen],
             "rear_bracket_bridges_center_seam": True,
+            "adhesive_required": False,
         },
-        "splice_key": {
-            "quantity": CRADLE_SPLICE_KEY_QUANTITY,
-            "length": CRADLE_SPLICE_KEY_LENGTH,
-            "width": CRADLE_SPLICE_KEY_WIDTH,
-            "thickness": CRADLE_SPLICE_KEY_T,
-            "groove_length": CRADLE_SPLICE_GROOVE_LENGTH,
-            "groove_width": CRADLE_SPLICE_GROOVE_WIDTH,
-            "groove_depth": CRADLE_SPLICE_GROOVE_DEPTH,
-            "recess_below_rear_face": CRADLE_SPLICE_KEY_RECESS,
-            "length_clearance_total": CRADLE_SPLICE_GROOVE_LENGTH - CRADLE_SPLICE_KEY_LENGTH,
-            "width_clearance_total": CRADLE_SPLICE_GROOVE_WIDTH - CRADLE_SPLICE_KEY_WIDTH,
-            "depth_clearance": CRADLE_SPLICE_GROOVE_DEPTH - CRADLE_SPLICE_KEY_T,
+        "removable_joint": {
+            "tongue_count": 3,
+            "insertion_axis": "+X",
+            "tongue_length": JOINT_TONGUE_TIP_X - CRADLE_SEAM_X,
+            "receiver_depth": JOINT_SOCKET_BACK_X - CRADLE_SEAM_X,
+            "root_clearance_total": JOINT_ROOT_CLEARANCE_TOTAL,
+            "tip_clearance_total": JOINT_TIP_CLEARANCE_TOTAL,
+            "locking_method": "tapered printed cross-wedge through lower receiver",
+            "locking_channel": {
+                "x": LOCK_CHANNEL_X,
+                "z": LOCK_CHANNEL_Z,
+                "bridge": LOCK_CHANNEL_X,
+            },
+            "wedge_quantity": LOCK_WEDGE_QUANTITY,
+            "m3_fallback": "M3 bolt, washers, and nut through the same 4 mm channel",
+        },
+        "lock_coupon": {
+            "uses_exact_production_geometry": True,
+            "parts": 3,
+            "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access",
+        },
+        "structural_assembly": {
+            "rear_bracket_bond": "fixed right cradle wing only",
+            "left_wing_contacts_bracket_without_adhesive": True,
+            "left_wing_serviceable": True,
+            "bracket_to_sleeve_bond": "unchanged V2 adhesive joint",
+            "alignment_key_quantity": 1,
         },
         "print_orientation": {
             "cradle_left": "rear face down",
             "cradle_right": "rear face down",
-            "splice_key": "flat; print three",
+            "locking_wedge": "flat on a broad head/body face; print one",
             "supports": "none intended for split joint",
         },
     }
