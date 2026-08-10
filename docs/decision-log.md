@@ -55,6 +55,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 
 ## Revision history
 
+### V3 tongue/receiver coupon fits; support-free wedge layout fails — 2026-08-10
+
+- The user reported major bed-adhesion failure, lifted/stringing extrusion, and poor layer quality in the combined PLA coupon. Even with those defects, the production tongue and receiver pieces fit together. This physically passes their insertion-clearance gate; retain 0.50 mm total root and 1.10 mm total lead clearance.
+- Wedge retention strength was not confirmed. The wedge/pin needs support in its current exported orientation: the 7 mm pull head establishes the lowest Z datum while the 3.70 mm root body is centered on the same axis, leaving the body approximately (7.00 − 3.70) / 2 = 1.65 mm above the bed at its root.
+- Supersede the support-free combined coupon G-code. Before production, either redesign the wedge so its body and pull head share a flat print datum or slice the wedge separately with removable support. Prefer the common-flat redesign because support scarring would alter a fit surface and this PLA already strings badly.
+- Do not change the confirmed tongue or receiver clearances, and do not authorize either full cradle wing until the corrected wedge can be inserted, retain the joint, and be removed without cracking.
+
 ### Combined three-piece V3 lock coupon print started — 2026-08-09
 
 - The user explicitly authorized printing all three coupon pieces. Added a reproducible 77.91 × 33.12 × 9.00 mm combined CadQuery plate containing the unchanged production tongue crop, receiver crop, and wedge.

@@ -39,9 +39,11 @@ bed-friendly wings joined without cradle glue.
 - `tablet_stand_v3_lock_coupon_plate.png`: direct CadQuery preview of that
   combined three-piece layout.
 
-Print the combined plate support-free before either full wing. Confirm that
-the tongue reaches the closed seat without force, the wedge inserts and holds
-without cracking, and both pieces remain deliberately removable.
+The first combined support-free plate was physically tested. Despite major
+adhesion/stringing defects, the tongue and receiver fit together. The wedge
+layout failed because its larger pull head put the narrower body about 1.65 mm
+above the bed. Do not reuse the combined G-code; give the wedge a common flat
+datum or removable support before its next print.
 
 ## Removable joint
 
@@ -76,5 +78,7 @@ Independent G-code validation reports a 100 × 46 × 9 mm brim-inclusive
 footprint, 31m 11s estimated time, about 3.1 g of PLA, and 6.2 mm³/s peak flow.
 The only retained warnings are the profile's pre-macro bed heat and missing UI
 thumbnail. The user authorized all three coupon pieces, the camera showed an
-empty bed, and the job was started on 2026-08-09. Physical fit results remain
-the gate before either cradle wing.
+empty bed, and the job was started on 2026-08-09. On 2026-08-10 the user
+reported major adhesion failure but confirmed that the tongue and receiver
+still fit. The wedge/pin needs a corrected print strategy, and retention
+strength remains unconfirmed. This G-code is stale and must not be reused.
