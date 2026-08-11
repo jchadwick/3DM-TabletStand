@@ -21,6 +21,12 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - The PLA dimensional slice uses the existing rear-face-down orientation, 0.20 mm layers, three walls, 20% grid infill, 25 mm/s external perimeters, grid supports at a 55° threshold, **3 interface layers**, **0.20 mm Z gap**, 0.70 mm XY gap, and a 5 mm brim for the adhesion-prone filament.
 - G-code validation passed with a 7.5 mm³/s peak flow against the 10.0 mm³/s ceiling, 48.8 g estimated filament, and an estimated 3 h 38 m 20 s. The only warnings are the known pre-macro bed-heat command and missing UI thumbnails.
 - Printer status reported ready/idle, and a fresh 800 × 600 camera snapshot clearly showed the complete plate empty. The fit file was uploaded and accepted; the printer start endpoint returned `{"result":"ok"}`. Follow-up status showed `tablet_stand_v3_cradle_right_fit.gcode` printing at 0% with the bed heating to 60 °C.
+- The job later completed; the user's photo confirms the same perimeter/USB-C corner features remained, so this print is treated as evidence that the 130 mm right closure was still present rather than as a successful test of the corrected full-span design.
+
+### Right USB-C closure span correction — 2026-08-11
+
+- The physical right-wing fit print showed that the earlier continuous-wall change had targeted only the left closure. The shared V2 USB-C end wall and cap were still 130 mm tall in Y while the active V3 perimeter is 139 mm, leaving the same top/bottom corner notches on the right wing.
+- Added a V3-only continuous right outer closure that extends the USB-C end wall and screen-facing cap to the full **139 mm** span without changing the 16 × 8 mm rear cable opening or the tablet-side plug pocket. Added validator samples at both outer corners; the next right-wing slice must use this corrected geometry.
 
 ### Rounded front frame and preserved stand alignment key — 2026-08-10
 

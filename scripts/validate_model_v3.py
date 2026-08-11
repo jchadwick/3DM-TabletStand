@@ -186,8 +186,22 @@ def main() -> None:
             (-100.0, y_pos, core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0),
             "integral left screen-facing cap is not continuous",
         )
+        right_wall_x = (
+            core.TABLET_X + core.FIT_X
+        ) / 2.0 + core.USB_POCKET_INNER_X + core.USB_END_WALL_T / 2.0
+        assert_solid(
+            right_shape,
+            (right_wall_x, y_pos, 4.0),
+            "integral right USB-C outer wall is not continuous",
+        )
+        assert_solid(
+            right_shape,
+            (core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION, y_pos, core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0),
+            "integral right screen-facing cap is not continuous",
+        )
     assert_open(left_shape, (-98.0, 0.0, 4.0), "integral left closure blocks tablet cavity")
     assert left_bb.ylen >= model.V3_OUTER_Y
+    assert right_bb.ylen >= model.V3_OUTER_Y
     print("tested button and USB-C interfaces are preserved; left wing is fully enclosed")
 
     # The bracket spans the seam geometrically but is bonded only to the fixed

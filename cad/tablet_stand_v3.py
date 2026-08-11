@@ -204,6 +204,40 @@ def continuous_front_edge_rails() -> cq.Workplane:
     return rails
 
 
+def continuous_right_outer_closure() -> cq.Workplane:
+    """Extend the USB-C end wall and cap to the V3 perimeter envelope.
+
+    The shared V2 body stops these features at its 130 mm envelope.  V3's
+    receiver/shroud perimeter is 139 mm, so the right closure needs the same
+    full span or the top and bottom corners read as open notches in the
+    screen-facing view.
+    """
+    cavity_x = core.TABLET_X + core.FIT_X
+    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
+    wall_h = core.BASE_T + rail_top
+    usb_end_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
+    usb_outer_x = usb_end_wall_inner_x + core.USB_END_WALL_T
+    usb_end_wall_center_x = usb_end_wall_inner_x + core.USB_END_WALL_T / 2.0
+    end_wall = core.softened_plate(
+        core.USB_END_WALL_T,
+        V3_OUTER_Y,
+        wall_h,
+        -core.BASE_T,
+        core.EXPOSED_CORNER_R,
+        core.EXPOSED_EDGE_R,
+    ).translate((usb_end_wall_center_x, 0.0, 0.0))
+
+    right_cap_left_x = cavity_x / 2.0 - core.LIP_OVERLAP
+    cap = core.rounded_plate(
+        usb_outer_x - right_cap_left_x,
+        V3_OUTER_Y,
+        core.USB_POCKET_CEILING_T,
+        core.TABLET_Z + core.FIT_Z,
+        core.LIP_CORNER_R,
+    ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0.0, 0.0))
+    return end_wall.union(cap)
+
+
 def integral_full_cradle() -> cq.Workplane:
     """Return the tested cradle interfaces with the V3 integral left closure."""
     # The rear bracket is bonded only to the fixed right wing so the left wing
@@ -212,7 +246,8 @@ def integral_full_cradle() -> cq.Workplane:
     return (
         core.flat_main_holder()
         .union(integral_left_closure())
-        .union(continuous_front_edge_rails())
+        .union(continuous_right_outer_closure(), clean=False)
+        .union(continuous_front_edge_rails(), clean=False)
     )
 
 
@@ -325,9 +360,9 @@ def locking_channel() -> cq.Workplane:
 def cradle_halves() -> tuple[cq.Workplane, cq.Workplane]:
     """Return the removable left and fixed right cradle wings in assembly space."""
     source = split_cradle_source()
-    left = source.intersect(_seam_mask(True)).union(joint_tongues()).cut(locking_channel())
+    left = source.intersect(_seam_mask(True), clean=False).union(joint_tongues()).cut(locking_channel())
     right = (
-        source.intersect(_seam_mask(False))
+        source.intersect(_seam_mask(False), clean=False)
         .union(outer_joint_receivers(), clean=False)
         .cut(joint_socket_cutters(), clean=False)
         .cut(locking_channel(), clean=False)
@@ -509,6 +544,8 @@ def export() -> None:
             "continuous_front_edge_rails": True,
             "continuous_left_outer_wall": True,
             "left_outer_wall_span_y": V3_OUTER_Y,
+            "continuous_right_outer_wall": True,
+            "right_outer_wall_span_y": V3_OUTER_Y,
         },
         "tablet_loading": (
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "
