@@ -31,10 +31,10 @@ BASE_T = 3.0
 FRAME_W = 10.0
 WALL_T = 3.0
 # The supplied tablet mesh has an approximately 7 mm plan corner radius. The
-# front-frame opening follows that curve; the outer radius adds the 10 mm frame
-# width so the rounded corner retains a uniform structural wall.
+# front-frame opening follows that curve; the outer radius is deliberately much
+# larger to give the visible holder a pronounced, soft silhouette.
 FRAME_INNER_CORNER_R = 7.0
-FRAME_OUTER_CORNER_R = FRAME_INNER_CORNER_R + FRAME_W
+FRAME_OUTER_CORNER_R = 28.0
 # Rail walls are 3 mm thick, so their plan fillet is capped just below the
 # 1.5 mm half-thickness; the larger frame corners above carry the visual change.
 EXPOSED_CORNER_R = 1.45

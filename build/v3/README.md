@@ -19,7 +19,7 @@ bed-friendly wings joined without cradle glue.
 
 ## Production-oriented exports
 
-- `tablet_stand_v3_cradle_left.stl`: 125.00 × 135.50 × 14.20 mm; rear face
+- `tablet_stand_v3_cradle_left.stl`: 125.00 × 139.00 × 14.20 mm; rear face
   down; includes the enclosed rounded left edge and all three tongues.
 - `tablet_stand_v3_cradle_right.stl`: 111.33 × 139.00 × 14.20 mm; rear face
   down; includes the three matching receivers and lower locking channel.

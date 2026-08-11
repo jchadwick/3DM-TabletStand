@@ -159,12 +159,54 @@ def integral_left_closure() -> cq.Workplane:
     return outer_wall.union(cap).union(locator)
 
 
+def continuous_front_edge_rails() -> cq.Workplane:
+    """Shroud the outer joint blocks inside straight, smooth top/bottom rails.
+
+    The structural tongue/receiver hardware remains accessible from the rear
+    side of each wing, while the screen-facing perimeter reads as one straight
+    edge instead of two small joiner bumps.
+    """
+    cavity_x = core.TABLET_X + core.FIT_X
+    cavity_y = core.TABLET_Y + core.FIT_Y
+    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
+    wall_h = core.BASE_T + rail_top
+    outer_x = cavity_x + 2.0 * core.WALL_T
+    cradle_left_x = -outer_x / 2.0
+    rail_left_x = cradle_left_x + core.LEFT_RAIL_ENTRY_RELIEF_X
+    outer_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
+    outer_wall_x = outer_wall_inner_x + core.USB_END_WALL_T
+    rail_x = outer_wall_x - rail_left_x
+    rail_center_x = (outer_wall_x + rail_left_x) / 2.0
+    inner_y = cavity_y / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y
+    outer_y = abs(OUTER_JOINT_CENTER_Y[0]) + OUTER_RECEIVER_Y / 2.0
+    shroud_y = outer_y - inner_y
+    shroud_center_y = (outer_y + inner_y) / 2.0
+
+    rails: cq.Workplane | None = None
+    for sign in (-1.0, 1.0):
+        rail = core.softened_plate(
+            rail_x,
+            shroud_y,
+            wall_h,
+            -core.BASE_T,
+            core.EXPOSED_CORNER_R,
+            core.EXPOSED_EDGE_R,
+        ).translate((rail_center_x, sign * shroud_center_y, 0.0))
+        rails = rail if rails is None else rails.union(rail)
+    assert rails is not None
+    return rails
+
+
 def integral_full_cradle() -> cq.Workplane:
     """Return the tested cradle interfaces with the V3 integral left closure."""
     # The rear bracket is bonded only to the fixed right wing so the left wing
     # can slide off for tablet service.  Therefore V3 intentionally omits the
     # old centered cradle-to-bracket alignment-key groove.
-    return core.flat_main_holder().union(integral_left_closure())
+    return (
+        core.flat_main_holder()
+        .union(integral_left_closure())
+        .union(continuous_front_edge_rails())
+    )
 
 
 def split_cradle_source() -> cq.Workplane:
@@ -279,9 +321,9 @@ def cradle_halves() -> tuple[cq.Workplane, cq.Workplane]:
     left = source.intersect(_seam_mask(True)).union(joint_tongues()).cut(locking_channel())
     right = (
         source.intersect(_seam_mask(False))
-        .union(outer_joint_receivers())
-        .cut(joint_socket_cutters())
-        .cut(locking_channel())
+        .union(outer_joint_receivers(), clean=False)
+        .cut(joint_socket_cutters(), clean=False)
+        .cut(locking_channel(), clean=False)
     )
     return left, right
 
@@ -334,7 +376,11 @@ def lock_coupon_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane]:
         )
     )
     left, right = cradle_halves()
-    return left.intersect(cutter), right.intersect(cutter), locking_wedge()
+    return (
+        left.intersect(cutter, clean=False),
+        right.intersect(cutter, clean=False),
+        locking_wedge(),
+    )
 
 
 def lock_coupon_print_plate_parts() -> tuple[cq.Workplane, cq.Workplane, cq.Workplane]:
@@ -453,6 +499,7 @@ def export() -> None:
             "left_closure_plan_corner_radius": LEFT_CLOSURE_CORNER_R,
             "left_closure_edge_fillet": LEFT_CLOSURE_EDGE_R,
             "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
+            "continuous_front_edge_rails": True,
         },
         "tablet_loading": (
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "

@@ -16,6 +16,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - V3 did not lose the stand-alignment feature: it still exports one 35 × 15 × 1.8 mm cross-key for the rear-bracket-to-sleeve joint. The old cradle-to-bracket key was intentionally removed because the bracket bonds only to the fixed right wing; the removable left wing remains adhesive-free.
 - Rebuilt V2/V3 exports, passed both validators, and regenerated the direct CadQuery multi-view preview. The previously printed right-wing G-code predates this finish revision and is stale; it must not be reused for the revised geometry.
 
+### Continuous smooth front perimeter — 2026-08-11
+
+- The user requested a stronger Apple-like silhouette: the active outer frame radius is now 28.0 mm while the tablet-matching inner radius remains 7.0 mm.
+- Added continuous top and bottom edge rails to absorb/shroud the outer tongue/receiver joiners. The structural joiners remain on the rear side of the perimeter, while the screen-facing view reads as a straight, uninterrupted edge with no center bumps.
+- This changes the left production wing envelope to 125.00 × 139.00 × 14.20 mm; the right remains 111.33 × 139.00 × 14.20 mm. Both still fit the 220 mm bed and preserve the tablet cavity, USB-C opening, button channel, tongue clearances, and one bracket-to-sleeve alignment key.
+- Rebuilt and validated the V3 exports and regenerated the direct CadQuery preview. All previous production G-code remains stale until a fresh support/adhesion-reviewed slice is made for this geometry.
+
 ### Right-wing production print started — 2026-08-10
 
 - The user explicitly authorized printing the right-hand cradle wing and confirmed the bed was clear. The watertight `tablet_stand_v3_cradle_right.stl` was inspected at 111.33 × 139.00 × 14.20 mm and fits the confirmed Ender-3 Pro bed.

@@ -4,6 +4,18 @@
   "material": "PLA",
   "machine": "Creality Ender-3 Pro, 220 x 220 x 250 mm, 0.4 mm nozzle",
   "preserved_geometry_source": "V2 tested tablet, USB-C, button, tube, and cable geometry",
+  "finish": {
+    "front_frame_inner_corner_radius": 7.0,
+    "front_frame_outer_corner_radius": 28.0,
+    "rail_wall_plan_corner_radius": 1.45,
+    "lip_plan_corner_radius": 1.05,
+    "rail_wall_edge_fillet": 0.7,
+    "lip_edge_fillet": 0.6,
+    "left_closure_plan_corner_radius": 1.7,
+    "left_closure_edge_fillet": 0.85,
+    "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
+    "continuous_front_edge_rails": true
+  },
   "tablet_loading": "seat tablet in right wing, slide integral enclosed left wing +X until all three tongues seat, then insert lower cross-wedge",
   "separate_left_cap": false,
   "cradle_split": {
@@ -11,14 +23,14 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.00230331182323,
-      135.50000020000022,
-      14.21836240016005
+      125.00153586470518,
+      139.00311962867596,
+      14.242632060997297
     ],
     "right_print_envelope": [
-      111.329794207037,
-      139.0064047552888,
-      14.213199601982563
+      111.32710770723757,
+      139.00311962867596,
+      14.21016349440739
     ],
     "rear_bracket_bridges_center_seam": true,
     "adhesive_required": false
@@ -43,9 +55,9 @@
     "uses_exact_production_geometry": true,
     "parts": 3,
     "combined_plate_envelope": [
-      77.91287992015563,
-      33.22428898816147,
-      9.00206681593927
+      77.91292185382531,
+      33.22243319913488,
+      9.000211026912678
     ],
     "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access"
   },
