@@ -16,6 +16,11 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Independent G-code validation passed the 10 mm³/s flow ceiling (7.5 mm³/s peak), bed footprint, PLA temperatures, and estimated 3 h 30 m 51 s / ~51 g usage. It reported only the known heat-order and missing-thumbnail warnings.
 - A fresh 800 × 600 printer camera snapshot showed the complete visible build plate clear; the machine reported ready. Moonraker accepted the uploaded file and `/printer/print/start` returned `{"result":"ok"}`. Follow-up status showed `tablet_stand_v3_cradle_right.gcode` printing at 0% with the bed heating to 60 °C. The left wing and remaining parts are not authorized by this action.
 
+### Right-wing print support-removal feedback — 2026-08-10
+
+- The right-wing job completed successfully. The user reported that the support material was difficult to distinguish from the model and nearly impossible to remove with this PLA.
+- The G-code contains roughly 4,000 support moves, concentrated under the USB-C/receiver bridge regions and small edge overhangs, plus a 5 mm brim. For subsequent parts, review a more removable support strategy (build-plate-only where possible, larger Z/XY separation, and fewer interface layers) before authorizing another production print.
+
 ## Confirmed dimensions
 
 | Item | Confirmed value | Source/status |

@@ -62,8 +62,10 @@ left wing off must remain possible for tablet service.
 
 All current STL exports are single watertight solids. The right-wing production
 STL was sliced with snug 45° supports and a 5 mm brim, independently validated,
-uploaded, and started on 2026-08-10. Other full-part STLs remain unsliced or
-unauthorized until reviewed individually.
+uploaded, and completed on 2026-08-10. The user reported that the supports were
+difficult to distinguish/remove in this PLA, so subsequent full-part slices
+must use a more removable support strategy. Other full-part STLs remain
+unsliced or unauthorized until reviewed individually.
 
 ## Active coupon print
 
