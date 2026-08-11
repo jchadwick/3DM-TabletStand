@@ -15,6 +15,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Extended the left outer wall and its screen-facing cap to the full **139 mm V3 span**. The visible exterior is now continuous and rounded from top to bottom; the tablet-cavity corner openings remain internal/rear geometry for the measured tablet corner clearance.
 - Kept the structural rail entry relief inside the rear/inner assembly path rather than exposing it on the finished exterior. Rebuilt the V3 exports, added edge-span validation, and regenerated the direct CadQuery previews.
 
+### Updated right-wing fit print started — 2026-08-11
+
+- The user authorized a quick fit print of the revised right wing after the continuous-left-wall change. The fresh source STL is the validated **111.33 × 139.00 × 14.20 mm** right wing; the old right-wing G-code was not reused.
+- The PLA dimensional slice uses the existing rear-face-down orientation, 0.20 mm layers, three walls, 20% grid infill, 25 mm/s external perimeters, grid supports at a 55° threshold, **3 interface layers**, **0.20 mm Z gap**, 0.70 mm XY gap, and a 5 mm brim for the adhesion-prone filament.
+- G-code validation passed with a 7.5 mm³/s peak flow against the 10.0 mm³/s ceiling, 48.8 g estimated filament, and an estimated 3 h 38 m 20 s. The only warnings are the known pre-macro bed-heat command and missing UI thumbnails.
+- Printer status reported ready/idle, and a fresh 800 × 600 camera snapshot clearly showed the complete plate empty. The fit file was uploaded and accepted; the printer start endpoint returned `{"result":"ok"}`. Follow-up status showed `tablet_stand_v3_cradle_right_fit.gcode` printing at 0% with the bed heating to 60 °C.
+
 ### Rounded front frame and preserved stand alignment key — 2026-08-10
 
 - The supplied tablet mesh has an approximately 7 mm plan corner curve. The active V3 front-frame opening now uses a 7.0 mm inner corner radius, and the outer frame uses a 17.0 mm radius (inner radius plus the 10 mm frame width) so the rounded wall remains structurally uniform.
