@@ -14,7 +14,9 @@
     "left_closure_plan_corner_radius": 1.7,
     "left_closure_edge_fillet": 0.85,
     "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
-    "continuous_front_edge_rails": true
+    "continuous_front_edge_rails": true,
+    "continuous_left_outer_wall": true,
+    "left_outer_wall_span_y": 139.0
   },
   "tablet_loading": "seat tablet in right wing, slide integral enclosed left wing +X until all three tongues seat, then insert lower cross-wedge",
   "separate_left_cap": false,
@@ -23,13 +25,13 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.00153586470518,
-      139.00311962867596,
-      14.242632060997297
+      125.00149060365057,
+      139.0040761537444,
+      14.242632060997295
     ],
     "right_print_envelope": [
       111.32710770723757,
-      139.00311962867596,
+      139.00379356064983,
       14.21016349440739
     ],
     "rear_bracket_bridges_center_seam": true,

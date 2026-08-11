@@ -57,6 +57,13 @@ OUTER_TONGUE_TIP_Y = 3.6
 OUTER_TONGUE_Z = 6.0
 OUTER_RECEIVER_Y = 7.5
 OUTER_RECEIVER_Z = 8.5
+# The outer receiver shells set the V3 cradle's full Y envelope.  Keep the
+# integral left wall at that same span so the large rounded frame cannot leave
+# small open notches at its top and bottom corners.
+V3_OUTER_Y = max(
+    core.HOLDER_OUTER_Y,
+    2.0 * (abs(OUTER_JOINT_CENTER_Y[0]) + OUTER_RECEIVER_Y / 2.0),
+)
 OUTER_SOCKET_ROOT_Y = OUTER_TONGUE_ROOT_Y + JOINT_ROOT_CLEARANCE_TOTAL
 OUTER_SOCKET_TIP_Y = OUTER_TONGUE_TIP_Y + JOINT_TIP_CLEARANCE_TOTAL
 OUTER_SOCKET_Z = OUTER_TONGUE_Z + 0.50
@@ -123,7 +130,7 @@ def integral_left_closure() -> cq.Workplane:
 
     outer_wall = core.softened_plate(
         v2.ENDSTOP_OUTER_WALL_X,
-        core.HOLDER_OUTER_Y,
+        V3_OUTER_Y,
         wall_h,
         -core.BASE_T,
         LEFT_CLOSURE_CORNER_R,
@@ -137,7 +144,7 @@ def integral_left_closure() -> cq.Workplane:
     cap_right_x = rail_left_x + 0.35
     cap = core.softened_plate(
         cap_right_x - wall_outer_x,
-        core.HOLDER_OUTER_Y,
+        V3_OUTER_Y,
         core.LIP_T,
         core.TABLET_Z + core.FIT_Z,
         core.LIP_CORNER_R,
@@ -178,7 +185,7 @@ def continuous_front_edge_rails() -> cq.Workplane:
     rail_x = outer_wall_x - rail_left_x
     rail_center_x = (outer_wall_x + rail_left_x) / 2.0
     inner_y = cavity_y / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y
-    outer_y = abs(OUTER_JOINT_CENTER_Y[0]) + OUTER_RECEIVER_Y / 2.0
+    outer_y = V3_OUTER_Y / 2.0
     shroud_y = outer_y - inner_y
     shroud_center_y = (outer_y + inner_y) / 2.0
 
@@ -500,6 +507,8 @@ def export() -> None:
             "left_closure_edge_fillet": LEFT_CLOSURE_EDGE_R,
             "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
             "continuous_front_edge_rails": True,
+            "continuous_left_outer_wall": True,
+            "left_outer_wall_span_y": V3_OUTER_Y,
         },
         "tablet_loading": (
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "

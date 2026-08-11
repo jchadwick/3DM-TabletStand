@@ -9,6 +9,12 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Treat direct physical measurements and fit-test results as authoritative over web specifications or visual estimates.
 - Keep `docs/current-design.md` and the root `AGENTS.md` synchronized with every active design change so new sessions load the correct model context immediately.
 
+### Continuous V3 left outer wall — 2026-08-11
+
+- The apparent top and bottom notches on the left wing were caused by the integral closure ending at the older 130 mm V2 Y span while the V3 receiver/shroud envelope had grown to 139 mm.
+- Extended the left outer wall and its screen-facing cap to the full **139 mm V3 span**. The visible exterior is now continuous and rounded from top to bottom; the tablet-cavity corner openings remain internal/rear geometry for the measured tablet corner clearance.
+- Kept the structural rail entry relief inside the rear/inner assembly path rather than exposing it on the finished exterior. Rebuilt the V3 exports, added edge-span validation, and regenerated the direct CadQuery previews.
+
 ### Rounded front frame and preserved stand alignment key — 2026-08-10
 
 - The supplied tablet mesh has an approximately 7 mm plan corner curve. The active V3 front-frame opening now uses a 7.0 mm inner corner radius, and the outer frame uses a 17.0 mm radius (inner radius plus the 10 mm frame width) so the rounded wall remains structurally uniform.
