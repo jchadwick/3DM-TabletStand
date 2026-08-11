@@ -9,6 +9,13 @@ This file is the durable record of confirmed dimensions, design choices, and lat
 - Treat direct physical measurements and fit-test results as authoritative over web specifications or visual estimates.
 - Keep `docs/current-design.md` and the root `AGENTS.md` synchronized with every active design change so new sessions load the correct model context immediately.
 
+### Rounded front frame and preserved stand alignment key — 2026-08-10
+
+- The supplied tablet mesh has an approximately 7 mm plan corner curve. The active V3 front-frame opening now uses a 7.0 mm inner corner radius, and the outer frame uses a 17.0 mm radius (inner radius plus the 10 mm frame width) so the rounded wall remains structurally uniform.
+- Exposed rail/wall corners remain within the 3 mm wall limit at 1.45 mm, while lip plan corners are 1.05 mm; longitudinal edge fillets are 0.70 mm on rails/walls and 0.60 mm on lips. The integral left closure keeps its 1.70 mm plan corner and 0.85 mm edge fillet.
+- V3 did not lose the stand-alignment feature: it still exports one 35 × 15 × 1.8 mm cross-key for the rear-bracket-to-sleeve joint. The old cradle-to-bracket key was intentionally removed because the bracket bonds only to the fixed right wing; the removable left wing remains adhesive-free.
+- Rebuilt V2/V3 exports, passed both validators, and regenerated the direct CadQuery multi-view preview. The previously printed right-wing G-code predates this finish revision and is stale; it must not be reused for the revised geometry.
+
 ### Right-wing production print started — 2026-08-10
 
 - The user explicitly authorized printing the right-hand cradle wing and confirmed the bed was clear. The watertight `tablet_stand_v3_cradle_right.stl` was inspected at 111.33 × 139.00 × 14.20 mm and fits the confirmed Ender-3 Pro bed.

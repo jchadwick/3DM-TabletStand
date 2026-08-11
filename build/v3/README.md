@@ -60,12 +60,13 @@ The rear bracket is glued only to the fixed right wing. Do not put adhesive on
 the left wing, tongues, receivers, or wedge. Pulling the wedge and sliding the
 left wing off must remain possible for tablet service.
 
-All current STL exports are single watertight solids. The right-wing production
-STL was sliced with snug 45° supports and a 5 mm brim, independently validated,
-uploaded, and completed on 2026-08-10. The user reported that the supports were
-difficult to distinguish/remove in this PLA, so subsequent full-part slices
-must use a more removable support strategy. Other full-part STLs remain
-unsliced or unauthorized until reviewed individually.
+All current STL exports are single watertight solids. The pre-revision right-wing
+STL was sliced with snug 45° supports and a 5 mm brim,
+independently validated, uploaded, and completed on 2026-08-10. The user
+reported that the supports were difficult to distinguish/remove in this PLA.
+The active rounded-finish geometry supersedes that G-code; subsequent
+full-part slices must use a more removable support strategy. Other full-part
+STLs remain unsliced or unauthorized until reviewed individually.
 
 ## Active coupon print
 

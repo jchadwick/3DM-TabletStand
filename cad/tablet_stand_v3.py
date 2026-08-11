@@ -41,6 +41,12 @@ JOINT_RECEIVER_BACK_X = 22.0
 JOINT_ROOT_CLEARANCE_TOTAL = 0.50
 JOINT_TIP_CLEARANCE_TOTAL = 1.10
 
+# Finish-only radii for the integral left closure. These are intentionally
+# separate from the superseded V2 end-stop constants so the active V3 visual
+# treatment can evolve without changing the historical cap geometry.
+LEFT_CLOSURE_CORNER_R = 1.70
+LEFT_CLOSURE_EDGE_R = 0.85
+
 # Upper and lower receivers sit just outside the tablet cavity, overlap the
 # existing long-edge walls, and use an open bed-side floor plus an 8.5 mm roof
 # bridge (below the confirmed 10 mm PLA rule).  The center tongue stays within
@@ -120,8 +126,8 @@ def integral_left_closure() -> cq.Workplane:
         core.HOLDER_OUTER_Y,
         wall_h,
         -core.BASE_T,
-        v2.ENDSTOP_CORNER_R,
-        v2.ENDSTOP_EDGE_R,
+        LEFT_CLOSURE_CORNER_R,
+        LEFT_CLOSURE_EDGE_R,
     ).translate((wall_center_x, 0.0, 0.0))
 
     # Extend to and slightly overlap the production rail lead-ins.  Because
@@ -437,6 +443,17 @@ def export() -> None:
         "material": "PLA",
         "machine": "Creality Ender-3 Pro, 220 x 220 x 250 mm, 0.4 mm nozzle",
         "preserved_geometry_source": "V2 tested tablet, USB-C, button, tube, and cable geometry",
+        "finish": {
+            "front_frame_inner_corner_radius": core.FRAME_INNER_CORNER_R,
+            "front_frame_outer_corner_radius": core.FRAME_OUTER_CORNER_R,
+            "rail_wall_plan_corner_radius": core.EXPOSED_CORNER_R,
+            "lip_plan_corner_radius": core.LIP_CORNER_R,
+            "rail_wall_edge_fillet": core.EXPOSED_EDGE_R,
+            "lip_edge_fillet": core.LIP_EDGE_R,
+            "left_closure_plan_corner_radius": LEFT_CLOSURE_CORNER_R,
+            "left_closure_edge_fillet": LEFT_CLOSURE_EDGE_R,
+            "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
+        },
         "tablet_loading": (
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "
             "tongues seat, then insert lower cross-wedge"

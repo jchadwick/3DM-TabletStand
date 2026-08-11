@@ -30,12 +30,17 @@ SCREEN_ANGLE_FROM_HORIZONTAL_DEG = 90.0 - TILT_FROM_VERTICAL_DEG
 BASE_T = 3.0
 FRAME_W = 10.0
 WALL_T = 3.0
-FRAME_OUTER_CORNER_R = 4.0
-FRAME_INNER_CORNER_R = 3.0
+# The supplied tablet mesh has an approximately 7 mm plan corner radius. The
+# front-frame opening follows that curve; the outer radius adds the 10 mm frame
+# width so the rounded corner retains a uniform structural wall.
+FRAME_INNER_CORNER_R = 7.0
+FRAME_OUTER_CORNER_R = FRAME_INNER_CORNER_R + FRAME_W
+# Rail walls are 3 mm thick, so their plan fillet is capped just below the
+# 1.5 mm half-thickness; the larger frame corners above carry the visual change.
 EXPOSED_CORNER_R = 1.45
-LIP_CORNER_R = 0.95
-EXPOSED_EDGE_R = 0.65
-LIP_EDGE_R = 0.45
+LIP_CORNER_R = 1.05
+EXPOSED_EDGE_R = 0.70
+LIP_EDGE_R = 0.60
 LIP_OVERLAP = 2.2
 LIP_T = 2.0
 LEFT_RAIL_ENTRY_RELIEF_X = 4.0
