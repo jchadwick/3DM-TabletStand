@@ -41,11 +41,15 @@ JOINT_RECEIVER_BACK_X = 22.0
 JOINT_ROOT_CLEARANCE_TOTAL = 0.50
 JOINT_TIP_CLEARANCE_TOTAL = 1.10
 
-# Finish-only radii for the integral left closure. These are intentionally
-# separate from the superseded V2 end-stop constants so the active V3 visual
-# treatment can evolve without changing the historical cap geometry.
+# Finish-only radii for the active V3 exterior.  The 3.0 mm rail/right-wall
+# thickness caps a fully rounded edge below 1.50 mm; 1.30 mm leaves a robust
+# 0.40 mm central land.  The 2.0 mm lips/caps use 0.90 mm, leaving a 0.20 mm
+# land while the separately cut screen opening keeps its approved sharp,
+# 1.70 mm tablet overlap.  V2 keeps its historical 0.70/0.60 mm defaults.
+V3_EXTERIOR_RAIL_WALL_EDGE_R = 1.30
+V3_EXTERIOR_LIP_CAP_EDGE_R = 0.90
 LEFT_CLOSURE_CORNER_R = 1.70
-LEFT_CLOSURE_EDGE_R = 0.85
+LEFT_CLOSURE_EDGE_R = V3_EXTERIOR_RAIL_WALL_EDGE_R
 
 # The successful right-wing fit established that the existing 2.2 mm lips do
 # not compromise insertion, but the square screen-opening corners reveal the
@@ -154,14 +158,15 @@ def integral_left_closure() -> cq.Workplane:
     # form one continuous screen-facing short edge across the full holder Y.
     rail_left_x = cradle_left_x + core.LEFT_RAIL_ENTRY_RELIEF_X
     cap_right_x = rail_left_x + 0.35
+    cap_left_x = wall_inner_x - core.SOFTENED_CAP_WALL_OVERLAP
     cap = core.softened_plate(
-        cap_right_x - wall_outer_x,
+        cap_right_x - cap_left_x,
         V3_OUTER_Y,
         core.LIP_T,
         core.TABLET_Z + core.FIT_Z,
         core.LIP_CORNER_R,
-        core.LIP_EDGE_R,
-    ).translate(((wall_outer_x + cap_right_x) / 2.0, 0.0, 0.0))
+        V3_EXTERIOR_LIP_CAP_EDGE_R,
+    ).translate(((cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
 
     locator: cq.Workplane | None = None
     for locator_y in v2.ENDSTOP_LOCATOR_Y:
@@ -209,7 +214,7 @@ def continuous_front_edge_rails() -> cq.Workplane:
             wall_h,
             -core.BASE_T,
             core.EXPOSED_CORNER_R,
-            core.EXPOSED_EDGE_R,
+            V3_EXTERIOR_RAIL_WALL_EDGE_R,
         ).translate((rail_center_x, sign * shroud_center_y, 0.0))
         rails = rail if rails is None else rails.union(rail)
     assert rails is not None
@@ -226,12 +231,13 @@ def curved_front_corner_bezel() -> cq.Workplane:
     """
     cavity_x = core.TABLET_X + core.FIT_X
     cavity_y = core.TABLET_Y + core.FIT_Y
-    outer = core.rounded_plate(
+    outer = core.softened_plate(
         cavity_x,
         cavity_y,
         core.LIP_T,
         core.TABLET_Z + core.FIT_Z,
         FRONT_BEZEL_OUTER_CORNER_R,
+        V3_EXTERIOR_LIP_CAP_EDGE_R,
     )
     opening = core.rounded_plate(
         FRONT_OPENING_X,
@@ -263,17 +269,19 @@ def continuous_right_outer_closure() -> cq.Workplane:
         wall_h,
         -core.BASE_T,
         core.EXPOSED_CORNER_R,
-        core.EXPOSED_EDGE_R,
+        V3_EXTERIOR_RAIL_WALL_EDGE_R,
     ).translate((usb_end_wall_center_x, 0.0, 0.0))
 
     right_cap_left_x = cavity_x / 2.0 - core.LIP_OVERLAP
-    cap = core.rounded_plate(
-        usb_outer_x - right_cap_left_x,
+    cap_right_x = usb_end_wall_inner_x + core.SOFTENED_CAP_WALL_OVERLAP
+    cap = core.softened_plate(
+        cap_right_x - right_cap_left_x,
         V3_OUTER_Y,
         core.USB_POCKET_CEILING_T,
         core.TABLET_Z + core.FIT_Z,
         core.LIP_CORNER_R,
-    ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0.0, 0.0))
+        V3_EXTERIOR_LIP_CAP_EDGE_R,
+    ).translate(((right_cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
     return end_wall.union(cap)
 
 
@@ -282,10 +290,37 @@ def integral_full_cradle() -> cq.Workplane:
     # The rear bracket is bonded only to the fixed right wing so the left wing
     # can slide off for tablet service.  Therefore V3 intentionally omits the
     # old centered cradle-to-bracket alignment-key groove.
+    cavity_x = core.TABLET_X + core.FIT_X
+    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
+    usb_end_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
+    # The shared V2 body owns a square-edged USB wall.  Remove only that outer
+    # wall band in V3, then rebuild it with the full-span softened closure.  The
+    # cap retains a 0.20 mm internal fuse into the replacement wall, while the
+    # USB chamber, rear-floor opening, and solid outer-wall volume are restored
+    # to their exact prior bounds.
+    closure_rebuild_mask = (
+        cq.Workplane("XY")
+        .box(
+            core.USB_END_WALL_T + 2.0,
+            V3_OUTER_Y + 2.0,
+            rail_top + core.BASE_T + 2.0,
+        )
+        .translate(
+            (
+                usb_end_wall_inner_x + (core.USB_END_WALL_T + 2.0) / 2.0,
+                0.0,
+                (rail_top - core.BASE_T) / 2.0,
+            )
+        )
+    )
+    base = core.flat_main_holder(
+        exposed_edge_radius=V3_EXTERIOR_RAIL_WALL_EDGE_R,
+        lip_edge_radius=V3_EXTERIOR_LIP_CAP_EDGE_R,
+    ).cut(closure_rebuild_mask)
     return (
-        core.flat_main_holder()
+        base
         .union(integral_left_closure())
-        .union(continuous_right_outer_closure(), clean=False)
+        .union(continuous_right_outer_closure())
         .union(continuous_front_edge_rails(), clean=False)
         .union(curved_front_corner_bezel(), clean=False)
     )
@@ -579,10 +614,13 @@ def export() -> None:
             "screen_opening_tablet_overlap": FRONT_CORNER_TABLET_OVERLAP,
             "rail_wall_plan_corner_radius": core.EXPOSED_CORNER_R,
             "lip_plan_corner_radius": core.LIP_CORNER_R,
-            "rail_wall_edge_fillet": core.EXPOSED_EDGE_R,
-            "lip_edge_fillet": core.LIP_EDGE_R,
+            "rail_wall_edge_fillet": V3_EXTERIOR_RAIL_WALL_EDGE_R,
+            "lip_edge_fillet": V3_EXTERIOR_LIP_CAP_EDGE_R,
             "left_closure_plan_corner_radius": LEFT_CLOSURE_CORNER_R,
             "left_closure_edge_fillet": LEFT_CLOSURE_EDGE_R,
+            "continuous_exterior_edge_rounding": True,
+            "rail_wall_edge_land": core.WALL_T - 2.0 * V3_EXTERIOR_RAIL_WALL_EDGE_R,
+            "lip_cap_edge_land": core.LIP_T - 2.0 * V3_EXTERIOR_LIP_CAP_EDGE_R,
             "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
             "continuous_front_edge_rails": True,
             "continuous_left_outer_wall": True,

@@ -43,6 +43,10 @@ EXPOSED_EDGE_R = 0.70
 LIP_EDGE_R = 0.60
 LIP_OVERLAP = 2.2
 LIP_T = 2.0
+# Finish-only cap overlap used when V3 requests softened outer walls.  This
+# small internal fuse avoids a coplanar seam without reaching the exterior
+# fillet or changing the tablet opening.
+SOFTENED_CAP_WALL_OVERLAP = 0.20
 LEFT_RAIL_ENTRY_RELIEF_X = 4.0
 RIGHT_STOP_SPAN = 25.0
 CENTER_PLATE_X = 74.0
@@ -151,8 +155,16 @@ def x_cylinder(diameter: float, length: float, origin: tuple[float, float, float
     return cq.Workplane("YZ", origin=origin).circle(diameter / 2.0).extrude(length)
 
 
-def flat_main_holder() -> cq.Workplane:
-    """Return the active V2 cradle base before modular joint features."""
+def flat_main_holder(
+    exposed_edge_radius: float = EXPOSED_EDGE_R,
+    lip_edge_radius: float = LIP_EDGE_R,
+) -> cq.Workplane:
+    """Return the active V2 cradle base before modular joint features.
+
+    V2 retains the tested default finish.  V3 can request a stronger exterior
+    edge treatment without changing the historical V2 geometry or any mating
+    dimensions.
+    """
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
     outer_x = cavity_x + 2.0 * WALL_T
@@ -166,7 +178,7 @@ def flat_main_holder() -> cq.Workplane:
         BASE_T,
         -BASE_T,
         FRAME_OUTER_CORNER_R,
-        EXPOSED_EDGE_R,
+        exposed_edge_radius,
     )
     inner = rounded_plate(
         outer_x - 2.0 * FRAME_W,
@@ -200,7 +212,7 @@ def flat_main_holder() -> cq.Workplane:
             wall_h,
             -BASE_T,
             EXPOSED_CORNER_R,
-            EXPOSED_EDGE_R,
+            exposed_edge_radius,
         ).translate(
             (rail_center_x, wall_y, 0)
         )
@@ -211,7 +223,7 @@ def flat_main_holder() -> cq.Workplane:
             LIP_T,
             TABLET_Z + FIT_Z,
             LIP_CORNER_R,
-            LIP_EDGE_R,
+            lip_edge_radius,
         ).translate(
             (rail_center_x, lip_y, 0)
         )
@@ -248,7 +260,11 @@ def flat_main_holder() -> cq.Workplane:
     right_cap_left_x = cavity_x / 2.0 - LIP_OVERLAP
     right_cap_x = usb_outer_x - right_cap_left_x
     right_cap = rounded_plate(
-        right_cap_x, outer_y, USB_POCKET_CEILING_T, TABLET_Z + FIT_Z, LIP_CORNER_R
+        right_cap_x,
+        outer_y,
+        USB_POCKET_CEILING_T,
+        TABLET_Z + FIT_Z,
+        LIP_CORNER_R,
     ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0, 0))
     main = main.union(right_cap)
     for sign in (-1.0, 1.0):
@@ -267,7 +283,11 @@ def flat_main_holder() -> cq.Workplane:
         usb_pocket_x, USB_POCKET_Y, BASE_T, -BASE_T, EXPOSED_CORNER_R
     ).translate((usb_pocket_center_x, 0, 0))
     usb_end_wall = rounded_plate(
-        USB_END_WALL_T, outer_y, wall_h, -BASE_T, EXPOSED_CORNER_R
+        USB_END_WALL_T,
+        outer_y,
+        wall_h,
+        -BASE_T,
+        EXPOSED_CORNER_R,
     ).translate((usb_end_wall_center_x, 0, 0))
     rear_turn_slot = (
         cq.Workplane("XY")

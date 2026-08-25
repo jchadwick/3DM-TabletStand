@@ -79,6 +79,10 @@ def main() -> None:
     ]
     assert metadata["finish"]["screen_opening_corner_radius"] == model.FRONT_OPENING_CORNER_R
     assert metadata["finish"]["screen_opening_tablet_overlap"] == model.FRONT_CORNER_TABLET_OVERLAP
+    assert metadata["finish"]["rail_wall_edge_fillet"] == model.V3_EXTERIOR_RAIL_WALL_EDGE_R
+    assert metadata["finish"]["lip_edge_fillet"] == model.V3_EXTERIOR_LIP_CAP_EDGE_R
+    assert metadata["finish"]["left_closure_edge_fillet"] == model.LEFT_CLOSURE_EDGE_R
+    assert metadata["finish"]["continuous_exterior_edge_rounding"] is True
     assert metadata["usb_c"]["plug_chamber_depth"] == core.USB_POCKET_INNER_X
     assert metadata["usb_c"]["rear_turn_opening"] == {
         "x": core.USB_REAR_TURN_SLOT_X,
@@ -269,6 +273,86 @@ def main() -> None:
     assert math.isclose(model.FRONT_OPENING_CORNER_R, 5.30, abs_tol=1e-9)
     assert left_bb.ylen >= model.V3_OUTER_Y
     assert right_bb.ylen >= model.V3_OUTER_Y
+
+    # Change 3 is a cross-sectional exterior treatment, not another plan-corner
+    # change.  Near-edge samples must be open while deeper points remain solid
+    # along all four long-rail segments and both full-span short walls.  The
+    # 0.40/0.20 mm central lands keep the 3.0/2.0 mm sections printable, and
+    # flat rear-datum samples plus the sharp screen-opening transition confirm
+    # that neither build orientation nor the approved overlap was sacrificed.
+    assert math.isclose(model.V3_EXTERIOR_RAIL_WALL_EDGE_R, 1.30, abs_tol=1e-9)
+    assert math.isclose(model.V3_EXTERIOR_LIP_CAP_EDGE_R, 0.90, abs_tol=1e-9)
+    assert model.V3_EXTERIOR_RAIL_WALL_EDGE_R > core.EXPOSED_EDGE_R
+    assert model.V3_EXTERIOR_LIP_CAP_EDGE_R > core.LIP_EDGE_R
+    assert math.isclose(
+        metadata["finish"]["rail_wall_edge_land"],
+        core.WALL_T - 2.0 * model.V3_EXTERIOR_RAIL_WALL_EDGE_R,
+        abs_tol=1e-9,
+    )
+    assert math.isclose(
+        metadata["finish"]["lip_cap_edge_land"],
+        core.LIP_T - 2.0 * model.V3_EXTERIOR_LIP_CAP_EDGE_R,
+        abs_tol=1e-9,
+    )
+    assert metadata["finish"]["rail_wall_edge_land"] >= 0.39
+    assert metadata["finish"]["lip_cap_edge_land"] >= 0.19
+
+    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
+    outer_y = model.V3_OUTER_Y / 2.0
+    for wing_shape, x_pos in ((left_shape, -50.0), (right_shape, 50.0)):
+        for y_sign in (-1.0, 1.0):
+            assert_open(
+                wing_shape,
+                (x_pos, y_sign * (outer_y - 0.2), rail_top - 0.2),
+                "pronounced long-rail exterior fillet is missing",
+            )
+            assert_solid(
+                wing_shape,
+                (x_pos, y_sign * (outer_y - 0.8), rail_top - 0.8),
+                "long-rail exterior fillet breaks through its wall",
+            )
+            assert_solid(
+                wing_shape,
+                (x_pos, y_sign * (outer_y - 1.6), -core.BASE_T + 0.01),
+                "rear-face-down print datum was rounded away",
+            )
+        opening_y = model.FRONT_OPENING_Y / 2.0
+        assert_open(
+            wing_shape,
+            (x_pos, opening_y - 0.05, rail_top - 0.05),
+            "screen opening was narrowed by the exterior fillet",
+        )
+        assert_solid(
+            wing_shape,
+            (x_pos, opening_y + 0.05, rail_top - 0.05),
+            "screen-opening overlap was rounded away",
+        )
+
+    left_outer_x = -(
+        core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
+    ) / 2.0 - v2.ENDSTOP_OUTER_WALL_X
+    right_outer_x = (
+        core.TABLET_X + core.FIT_X
+    ) / 2.0 + core.USB_POCKET_INNER_X + core.USB_END_WALL_T
+    for wing_shape, outer_x, x_sign in (
+        (left_shape, left_outer_x, -1.0),
+        (right_shape, right_outer_x, 1.0),
+    ):
+        assert_open(
+            wing_shape,
+            (outer_x - x_sign * 0.2, 0.0, rail_top - 0.2),
+            "pronounced short-wall exterior fillet is missing",
+        )
+        assert_solid(
+            wing_shape,
+            (outer_x - x_sign * 0.8, 0.0, rail_top - 0.8),
+            "short-wall exterior fillet breaks through its wall",
+        )
+    print(
+        "continuous V3 exterior uses 1.30 mm rail/wall and 0.90 mm lip/cap edge fillets "
+        "with flat rear datums and unchanged screen-opening overlap"
+    )
+
     print(
         "tested button, USB-C chamber, and tablet fit are preserved; the 16 x 12 mm "
         "rear opening adds 4 mm inboard to the original 8 mm outboard span, and "

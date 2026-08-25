@@ -15,10 +15,13 @@
     "screen_opening_tablet_overlap": 1.7,
     "rail_wall_plan_corner_radius": 1.45,
     "lip_plan_corner_radius": 1.05,
-    "rail_wall_edge_fillet": 0.7,
-    "lip_edge_fillet": 0.6,
+    "rail_wall_edge_fillet": 1.3,
+    "lip_edge_fillet": 0.9,
     "left_closure_plan_corner_radius": 1.7,
-    "left_closure_edge_fillet": 0.85,
+    "left_closure_edge_fillet": 1.3,
+    "continuous_exterior_edge_rounding": true,
+    "rail_wall_edge_land": 0.3999999999999999,
+    "lip_cap_edge_land": 0.19999999999999996,
     "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
     "continuous_front_edge_rails": true,
     "continuous_left_outer_wall": true,
@@ -43,14 +46,14 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.00102406222571,
-      139.0020479244512,
-      14.24584952503555
+      125.0013820814576,
+      139.00283770076703,
+      14.233268958926768
     ],
     "right_print_envelope": [
-      111.32585847959268,
-      139.00129510536004,
-      14.212149744027615
+      111.32679177804235,
+      139.00247309319835,
+      14.228846940526768
     ],
     "rear_bracket_bridges_center_seam": true,
     "adhesive_required": false
@@ -75,9 +78,9 @@
     "uses_exact_production_geometry": true,
     "parts": 3,
     "combined_plate_envelope": [
-      77.91292185382531,
-      33.22243319913488,
-      9.000211026912678
+      77.91331735414019,
+      33.22336847466433,
+      9.00114635244212
     ],
     "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access"
   },

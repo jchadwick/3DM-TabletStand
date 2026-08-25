@@ -1,5 +1,12 @@
 # Project Decision Log
 
+### Continuous pronounced V3 exterior edge rounding — 2026-08-25
+
+- The user requested much stronger rounding around the complete outside frame, not merely larger plan-view corner curves. V3 now uses **1.30 mm cross-sectional edge fillets** continuously on the 3.0 mm rear perimeter, long rail walls, and both full-span outer end walls. This nearly full-round treatment leaves a deliberate **0.40 mm central land** rather than a knife edge.
+- The 2.0 mm screen-facing lips and outer caps use **0.90 mm edge fillets**, leaving a **0.20 mm central land**. The separately cut **196.6 × 119.6 mm** screen opening remains sharp at its approved **1.7 mm overlap**, so the finish does not uncover the tablet corners or narrow the tested insertion cavity.
+- The V3-only finish preserves the existing 28.0 mm outer and 7.0 mm rear-opening plan radii, 1.45 mm rail/wall and 1.05 mm lip plan corners, 1.70 mm left-closure plan corner, center split alignment, rear print datums, USB/button/cable interfaces, and all tongue/socket/wedge geometry. Historical V2 retains its tested 0.70/0.60 mm edge-fillet defaults.
+- CAD validation samples the relieved and solid sides of the new fillets on all four long-rail segments and both short walls, confirms flat rear-datum material and the sharp screen-opening transition, and rechecks watertight exports and unchanged wing envelopes. The finish is CAD-validated but not physically printed; all prior right-wing G-code is stale.
+
 ### USB rear-floor enlargement clarification — 2026-08-25
 
 - The user explicitly clarified that the green rectangle is an **addition to the original hole**, not a relocation of it. The immediately preceding 4 mm-shift interpretation was incorrect and is superseded without rewriting its Git history.
