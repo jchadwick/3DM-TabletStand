@@ -594,6 +594,16 @@ def export() -> None:
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "
             "tongues seat, then insert lower cross-wedge"
         ),
+        "usb_c": {
+            "plug_chamber_depth": core.USB_POCKET_INNER_X,
+            "rear_turn_opening": {
+                "x": core.USB_REAR_TURN_SLOT_X,
+                "y": core.USB_REAR_TURN_SLOT_Y,
+                "inboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_INBOARD_X,
+                "outboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_OUTBOARD_X,
+            },
+            "outer_wall_thickness": core.USB_END_WALL_T,
+        },
         "separate_left_cap": False,
         "cradle_split": {
             "method": "straight removable split with three integral tapered tongues and receivers",

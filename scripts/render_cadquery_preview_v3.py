@@ -16,9 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from cad import tablet_stand_core as core  # noqa: E402
+from cad import tablet_stand_v2 as v2  # noqa: E402
 from cad import tablet_stand_v3 as model  # noqa: E402
 from scripts.render_cadquery_helpers import (  # noqa: E402
     BACKGROUND,
+    cable_mesh,
     cq_mesh,
     render_view,
     rotation_x,
@@ -59,7 +61,73 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     tube_top_z = core.SLEEVE_TOP_Z - core.SLEEVE_CAP_T
     tube.apply_translation((0.0, core.SLEEVE_CENTER_Y, tube_top_z - 50.0))
     objects.append((tube, (118, 127, 140, 255)))
+
+    # The unchanged open braided-cable route is shown so the relocated USB
+    # rear-floor opening is reviewed in the context of its downstream path.
+    tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
+    flat_end_x = (
+        core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION - core.RIGHT_ANGLE_PIGTAIL_LENGTH
+    )
+    connector_exit = (
+        tablet_transform @ np.array([flat_end_x - 12.0, 0.0, core.REAR_CLIP_CENTER_Z, 1.0])
+    )[:3]
+    clip_center_z = v2.BRACKET_PLATE_Z0 - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
+    bracket_transform = rotation_x(ANGLE_RAD)
+    clip_far = (
+        bracket_transform
+        @ np.array([v2.BRACKET_CLIP_X[-1], v2.BRACKET_CLIP_LOCAL_Y, clip_center_z, 1.0])
+    )[:3]
+    clip_near = (
+        bracket_transform
+        @ np.array([v2.BRACKET_CLIP_X[0], v2.BRACKET_CLIP_LOCAL_Y, clip_center_z, 1.0])
+    )[:3]
+    clip_release = (
+        bracket_transform
+        @ np.array(
+            [
+                v2.BRACKET_CLIP_X[0],
+                v2.BRACKET_CLIP_LOCAL_Y,
+                clip_center_z - core.REAR_CLIP_OUTER_Z / 2.0 - 1.0,
+                1.0,
+            ]
+        )
+    )[:3]
+    sleeve_back_y = core.SLEEVE_CENTER_Y + core.SLEEVE_OD / 2.0
+    channel_y = sleeve_back_y + core.BRAIDED_CHANNEL_ID / 2.0 - core.BRAIDED_CHANNEL_EMBED
+    outside_x = core.SLEEVE_OD / 2.0 + core.BRAIDED_CABLE_D / 2.0 + 1.0
+    rear_clear_y = (
+        sleeve_back_y
+        + core.BRAIDED_CHANNEL_OUTER_Y
+        + core.BRAIDED_CABLE_D / 2.0
+        + 1.0
+    )
+    transition_z = -36.0
+    cable_points = [
+        connector_exit,
+        clip_far,
+        clip_near,
+        clip_release,
+        np.array([outside_x, clip_release[1], transition_z]),
+        np.array([outside_x, rear_clear_y, transition_z]),
+        np.array([0.0, rear_clear_y, transition_z]),
+        np.array([0.0, channel_y, transition_z]),
+        np.array([0.0, channel_y, core.BRAIDED_CHANNEL_BOTTOM_Z]),
+    ]
+    objects.append(
+        (cable_mesh(cable_points, radius=core.BRAIDED_CABLE_D / 2.0), (232, 196, 84, 255))
+    )
     return objects
+
+
+def usb_detail_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Show the actual right wing plus the relocated rear-opening envelope."""
+    _, right = model.cradle_halves()
+    tablet_right_x = (core.TABLET_X + core.FIT_X) / 2.0
+    opening = trimesh.creation.box(
+        extents=(core.USB_REAR_TURN_SLOT_X, core.USB_REAR_TURN_SLOT_Y, 0.45)
+    )
+    opening.apply_translation((tablet_right_x, 0.0, -core.BASE_T - 0.2))
+    return [(cq_mesh(right), RIGHT_COLOR), (opening, (72, 220, 96, 230))]
 
 
 def rear_joint_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
@@ -97,21 +165,35 @@ def coupon_plate_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, i
     ]
 
 
-def contact_sheet(installed: Path, left_edge: Path, joint: Path, layout: Path, output: Path) -> None:
+def contact_sheet(
+    installed: Path,
+    left_edge: Path,
+    usb_detail: Path,
+    rear_cable: Path,
+    joint: Path,
+    layout: Path,
+    output: Path,
+) -> None:
     installed_image = Image.open(installed).convert("RGB")
     left_edge_image = Image.open(left_edge).convert("RGB")
+    usb_detail_image = Image.open(usb_detail).convert("RGB")
+    rear_cable_image = Image.open(rear_cable).convert("RGB")
     joint_image = Image.open(joint).convert("RGB")
     layout_image = Image.open(layout).convert("RGB")
-    canvas = Image.new("RGB", (1400, 3230), BACKGROUND[:3])
+    canvas = Image.new("RGB", (1400, 4690), BACKGROUND[:3])
     canvas.paste(installed_image, (0, 45))
     canvas.paste(left_edge_image, (0, 1070))
-    canvas.paste(joint_image, (0, 1800))
-    canvas.paste(layout_image, (0, 2530))
+    canvas.paste(usb_detail_image, (0, 1800))
+    canvas.paste(rear_cable_image, (0, 2530))
+    canvas.paste(joint_image, (0, 3260))
+    canvas.paste(layout_image, (0, 3990))
     draw = ImageDraw.Draw(canvas)
-    draw.text((24, 14), "V3 INSTALLED — TWO-PIECE CRADLE", fill=(225, 232, 240))
+    draw.text((24, 14), "V3 INSTALLED — TWO-PIECE CRADLE + OPEN CABLE ROUTE", fill=(225, 232, 240))
     draw.text((24, 1039), "INTEGRAL LEFT WING — CONTINUOUS ENCLOSED EDGE", fill=(225, 232, 240))
-    draw.text((24, 1769), "REMOVABLE JOINT — THREE TONGUES + LOWER CROSS-WEDGE", fill=(225, 232, 240))
-    draw.text((24, 2499), "PRINT LAYOUT — TWO WINGS + ONE LOCKING WEDGE", fill=(225, 232, 240))
+    draw.text((24, 1769), "USB-C REAR FLOOR — 16 x 8 MM OPENING SHIFTED 4 MM INBOARD", fill=(225, 232, 240))
+    draw.text((24, 2499), "REAR CABLE ROUTE — OUTSIDE GUSSET TO CLIPS + SLEEVE CHANNEL", fill=(225, 232, 240))
+    draw.text((24, 3229), "REMOVABLE JOINT — THREE TONGUES + LOWER CROSS-WEDGE", fill=(225, 232, 240))
+    draw.text((24, 3959), "PRINT LAYOUT — TWO WINGS + ONE LOCKING WEDGE", fill=(225, 232, 240))
     canvas.save(output)
 
 
@@ -119,6 +201,8 @@ def main() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
     installed = BUILD / "tablet_stand_v3_preview.png"
     left_edge = BUILD / "tablet_stand_v3_left_edge.png"
+    usb_detail = BUILD / "tablet_stand_v3_usb_detail.png"
+    rear_cable = BUILD / "tablet_stand_v3_rear_cable.png"
     joint = BUILD / "tablet_stand_v3_rear_joint.png"
     layout = BUILD / "tablet_stand_v3_print_layout.png"
     coupon_plate = BUILD / "tablet_stand_v3_lock_coupon_plate.png"
@@ -139,6 +223,22 @@ def main() -> None:
                 (1400, 700),
                 eye=(-330.0, -190.0, 80.0),
                 target=(-98.0, 0.0, 2.0),
+            )
+        elif sys.argv[2] == "usb-detail":
+            render_view(
+                usb_detail_objects(),
+                usb_detail,
+                (1400, 700),
+                eye=(150.0, -125.0, -105.0),
+                target=(101.0, 0.0, -2.5),
+            )
+        elif sys.argv[2] == "rear-cable":
+            render_view(
+                installed_objects(),
+                rear_cable,
+                (1400, 700),
+                eye=(250.0, 330.0, -80.0),
+                target=(0.0, 15.0, -8.0),
             )
         elif sys.argv[2] == "joint":
             render_view(
@@ -172,12 +272,28 @@ def main() -> None:
         subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()), "--render-one", view]
         )
-        for view in ("installed", "left-edge", "joint", "layout", "coupon")
+        for view in (
+            "installed",
+            "left-edge",
+            "usb-detail",
+            "rear-cable",
+            "joint",
+            "layout",
+            "coupon",
+        )
     ]
     for process in processes:
         if process.wait() != 0:
             raise subprocess.CalledProcessError(process.returncode, process.args)
-    contact_sheet(installed, left_edge, joint, layout, BUILD / "tablet_stand_v3_multiview.png")
+    contact_sheet(
+        installed,
+        left_edge,
+        usb_detail,
+        rear_cable,
+        joint,
+        layout,
+        BUILD / "tablet_stand_v3_multiview.png",
+    )
     print("Rendered V3 CadQuery solids directly with a depth-buffered renderer (no STL import).")
 
 

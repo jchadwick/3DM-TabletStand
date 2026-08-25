@@ -27,20 +27,30 @@
     "right_outer_wall_span_y": 139.0
   },
   "tablet_loading": "seat tablet in right wing, slide integral enclosed left wing +X until all three tongues seat, then insert lower cross-wedge",
+  "usb_c": {
+    "plug_chamber_depth": 8.0,
+    "rear_turn_opening": {
+      "x": 8.0,
+      "y": 16.0,
+      "inboard_from_tablet_edge": 4.0,
+      "outboard_from_tablet_edge": 4.0
+    },
+    "outer_wall_thickness": 3.0
+  },
   "separate_left_cap": false,
   "cradle_split": {
     "method": "straight removable split with three integral tapered tongues and receivers",
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.00102406222572,
+      125.00102406222571,
       139.0020479244512,
-      14.245849525035544
+      14.249484607973347
     ],
     "right_print_envelope": [
       111.32601937546059,
       139.00129510536004,
-      14.212149744027624
+      14.219818253947675
     ],
     "rear_bracket_bridges_center_seam": true,
     "adhesive_required": false

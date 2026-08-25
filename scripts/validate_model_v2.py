@@ -76,7 +76,12 @@ def main() -> None:
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["button_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["left_slide_coupon"]["uses_exact_cradle_geometry"] is True
-    assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {"x": 8.0, "y": 16.0}
+    assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {
+        "x": 8.0,
+        "y": 16.0,
+        "inboard_from_tablet_edge": 4.0,
+        "outboard_from_tablet_edge": 4.0,
+    }
     assert metadata["buttons"]["group_start_from_top_left"] == 20.0
     assert metadata["buttons"]["group_end_from_top_left"] == 60.0
     assert metadata["buttons"]["width_across_tablet_thickness"] == 2.0
@@ -280,27 +285,39 @@ def main() -> None:
     assert_open(coupon, (90.0, 0.0, 4.0), "coupon tablet cavity obstructed")
     assert_open(coupon, (104.0, 0.0, 4.0), "coupon USB-C pocket obstructed")
     assert_solid(coupon, (110.0, 0.0, 4.0), "coupon outer USB-C wall missing")
+    tablet_right_x = (core.TABLET_X + core.FIT_X) / 2.0
+    rear_floor_z = -core.BASE_T / 2.0
     assert_open(
         coupon,
-        (core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION, 0.0, -1.5),
-        "coupon rear-turn slot missing",
+        (tablet_right_x - 3.5, 0.0, rear_floor_z),
+        "coupon rear-turn slot lacks its 4 mm inboard relief",
     )
-    rectangle_entry_x = (core.TABLET_X + core.FIT_X) / 2.0 + 0.5
     assert_open(
         coupon,
-        (rectangle_entry_x, 0.0, -1.5),
-        "coupon cable rectangle is not open to tablet cavity",
+        (tablet_right_x + 3.5, 0.0, rear_floor_z),
+        "coupon rear-turn slot does not cross the tablet edge",
     )
     assert_solid(
         coupon,
-        (rectangle_entry_x, core.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, -1.5),
+        (tablet_right_x + 4.5, 0.0, rear_floor_z),
+        "coupon did not restore the unused outboard rear floor",
+    )
+    assert_solid(
+        coupon,
+        (tablet_right_x, core.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, rear_floor_z),
         "coupon cable rectangle removes excess pocket floor",
+    )
+    assert_open(
+        coupon,
+        (tablet_right_x + core.USB_PLUG_PROJECTION, 0.0, core.TABLET_Z / 2.0),
+        "coupon plug chamber above the rear floor was narrowed",
     )
     print(
         "right fit coupon is an exact cradle crop; "
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
         f"{coupon_bb.zlen:.2f} mm; open cable rectangle="
-        f"{core.USB_REAR_TURN_SLOT_Y:.1f} x {core.USB_REAR_TURN_SLOT_X:.1f} mm"
+        f"{core.USB_REAR_TURN_SLOT_Y:.1f} x {core.USB_REAR_TURN_SLOT_X:.1f} mm, "
+        f"shifted {core.USB_REAR_TURN_SLOT_INBOARD_X:.1f} mm inboard"
     )
 
     # The top-left coupon is a literal crop of the production rail. Its slot

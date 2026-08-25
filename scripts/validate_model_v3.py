@@ -79,6 +79,14 @@ def main() -> None:
     ]
     assert metadata["finish"]["screen_opening_corner_radius"] == model.FRONT_OPENING_CORNER_R
     assert metadata["finish"]["screen_opening_tablet_overlap"] == model.FRONT_CORNER_TABLET_OVERLAP
+    assert metadata["usb_c"]["plug_chamber_depth"] == core.USB_POCKET_INNER_X
+    assert metadata["usb_c"]["rear_turn_opening"] == {
+        "x": core.USB_REAR_TURN_SLOT_X,
+        "y": core.USB_REAR_TURN_SLOT_Y,
+        "inboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_INBOARD_X,
+        "outboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_OUTBOARD_X,
+    }
+    assert metadata["usb_c"]["outer_wall_thickness"] == core.USB_END_WALL_T
 
     source = model.split_cradle_source()
     left, right = model.cradle_halves()
@@ -163,16 +171,43 @@ def main() -> None:
     )
     print("three-piece lock coupon uses exact production tongue, receiver, and wedge geometry")
 
-    # V3 deliberately retains the user-tested button and USB-C geometry while
-    # replacing the separate cap with a continuous integral left closure.
+    # V3 retains the user-tested button and USB-C plug chamber while moving
+    # only the rear-floor turn opening 4 mm inboard as marked in the fit photo.
     assert_open(left_shape, (-80.0, 62.5, core.TABLET_Z / 2.0), "button channel obstructed")
     assert_solid(left_shape, (-80.0, 64.0, core.TABLET_Z / 2.0), "button outer wall missing")
-    assert_open(right_shape, (104.0, 0.0, 4.0), "USB-C pocket obstructed")
+    tablet_right_x = (core.TABLET_X + core.FIT_X) / 2.0
+    rear_floor_z = -core.BASE_T / 2.0
+    plug_chamber_z = core.TABLET_Z / 2.0
+    assert math.isclose(core.USB_REAR_TURN_SLOT_X, 8.0, abs_tol=1e-9)
+    assert math.isclose(core.USB_REAR_TURN_SLOT_Y, 16.0, abs_tol=1e-9)
+    assert math.isclose(core.USB_REAR_TURN_SLOT_INBOARD_X, 4.0, abs_tol=1e-9)
+    assert math.isclose(core.USB_REAR_TURN_SLOT_OUTBOARD_X, 4.0, abs_tol=1e-9)
     assert_open(
         right_shape,
-        (core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION, 0.0, -1.5),
-        "USB-C rear rectangle obstructed",
+        (tablet_right_x - 3.5, 0.0, rear_floor_z),
+        "USB-C rear opening lacks the green-marked inboard relief",
     )
+    assert_open(
+        right_shape,
+        (tablet_right_x + 3.5, 0.0, rear_floor_z),
+        "USB-C rear opening does not cross the tablet edge",
+    )
+    assert_solid(
+        right_shape,
+        (tablet_right_x + 4.5, 0.0, rear_floor_z),
+        "unused outboard half of the USB-C rear opening was not restored",
+    )
+    assert_solid(
+        right_shape,
+        (tablet_right_x, core.USB_REAR_TURN_SLOT_Y / 2.0 + 1.0, rear_floor_z),
+        "USB-C rear opening exceeds its retained 16 mm width",
+    )
+    for chamber_x in (tablet_right_x + 0.5, tablet_right_x + core.USB_PLUG_PROJECTION):
+        assert_open(
+            right_shape,
+            (chamber_x, 0.0, plug_chamber_z),
+            "USB-C plug chamber above the relocated floor opening was narrowed",
+        )
     left_wall_x = -(
         core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
     ) / 2.0 - v2.ENDSTOP_OUTER_WALL_X / 2.0
@@ -235,8 +270,9 @@ def main() -> None:
     assert left_bb.ylen >= model.V3_OUTER_Y
     assert right_bb.ylen >= model.V3_OUTER_Y
     print(
-        "tested button, USB-C, and tablet fit are preserved; 5.30 mm screen-opening "
-        "corners conceal the tablet's 7 mm front corners with 1.70 mm overlap"
+        "tested button, USB-C chamber, and tablet fit are preserved; the 16 x 8 mm "
+        "rear opening is shifted 4 mm inboard, and 5.30 mm screen-opening corners "
+        "conceal the tablet's 7 mm front corners with 1.70 mm overlap"
     )
 
     # The bracket spans the seam geometrically but is bonded only to the fixed

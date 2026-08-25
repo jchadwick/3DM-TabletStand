@@ -858,6 +858,8 @@ def export() -> None:
             "usb_rear_turn_open_rectangle": {
                 "x": core.USB_REAR_TURN_SLOT_X,
                 "y": core.USB_REAR_TURN_SLOT_Y,
+                "inboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_INBOARD_X,
+                "outboard_from_tablet_edge": core.USB_REAR_TURN_SLOT_OUTBOARD_X,
             },
         },
     }

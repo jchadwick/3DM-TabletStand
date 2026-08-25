@@ -1,5 +1,12 @@
 # Project Decision Log
 
+### USB rear-floor opening shifted inboard after right-wing fit — 2026-08-25
+
+- The successful but stringy right-wing fit print showed much more open rear-floor area outboard of the installed right-angle USB-C cable than needed. The user's green-marked photo directs the same amount of opening to the tablet side so the attached cable can still enter, seat, and turn behind the tablet.
+- Kept the opening's proven **16 × 8 mm (Y × X)** envelope and moved it **4.0 mm inboard**. Relative to the fitted tablet's right edge at **X = 100.5 mm**, the opening now spans **X = 96.5–104.5 mm**: 4 mm inboard and 4 mm outboard. This restores the unused former **X = 104.5–108.5 mm** outboard half as rear floor and cuts the equal green-marked **X = 96.5–100.5 mm** tablet-side relief.
+- This revision changes only the rear floor. The USB-C port center, **8.0 mm clear plug chamber above the floor**, recorded **6.50 mm plug projection**, 3.0 mm solid outer wall, continuous screen-facing cap, 16 mm opening width, tablet cavity allowances, cable clips, and downstream sleeve route are unchanged.
+- CAD validation confirms the new inboard and outboard opening samples, restored outboard floor, retained 16 mm width, unchanged plug chamber volume at representative points, continuous outer closure, and watertight exports. The shift is not yet physically tested, and every earlier right-wing G-code is stale.
+
 ### Curved front opening after successful right-wing fit — 2026-08-25
 
 - The corrected full-span right-wing print was **very stringy**, but the user reported very good clearance and fit: the tablet slides in very smoothly and seats snugly. This physically confirms the active **1.0 mm total X/Y and 0.8 mm Z allowance** for the right wing; preserve it.
