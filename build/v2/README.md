@@ -1,7 +1,7 @@
 # Version 2 outputs
 
-The active design uses glue-aligned printable modules while preserving the
-confirmed tablet, tube, tilt, and cable geometry.
+V2 is retained as the historical geometry basis and fit-coupon evidence while
+V3 is the active removable-wing design.
 
 ## Print files
 
@@ -30,28 +30,16 @@ confirmed tablet, tube, tilt, and cable geometry.
   rail socket and its identical tapered plug. Print them as separate jobs to
   check horizontal insertion, closed-end seating, retention, and real PLA
   clearance. `tablet_stand_v2_left_slide_coupon_plate.stl` is preview-only.
-- `tablet_stand_v2_left_slide_coupon_cradle_rev2_pla.gcode`: replacement
-  support-free socket coupon with the enlarged 3.00 × 3.80 mm socket; 0.16 mm
-  layers, three walls, 20% grid infill, and a removable 5 mm brim; approximately
-  20 min 46 s and 1.1 g.
-- `tablet_stand_v2_left_slide_coupon_stop_rev3_pla.gcode`: plug-only
-  replacement with the slightly tightened 2.55 × 3.35 mm root; approximately
-  6 min 0 s and 0.3 g. Reuse the already-printed revised socket coupon.
-- The replacement jobs use 205 °C for the first layer, then 200 °C, with 1.0
-  mm retraction at 40 mm/s. The earlier plug G-code was removed as stale after
-  the user's slightly-loose fit result.
+- `tablet_stand_v2_left_slide_coupon_cradle_rev2_pla.gcode` and
+  `tablet_stand_v2_left_slide_coupon_stop_rev3_pla.gcode` are retained only as
+  evidence for the physically tested V2 socket/plug process. The joint is not
+  present in V3; do not use these files for the active holder.
 - `tablet_stand_v2_left_slide_coupon_plate_preview.png`: six-view mesh review
   of the separated two-piece coupon plate in its corrected print orientations.
-- `tablet_stand_v2_button_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
-  button-coupon job in the exact production orientation; 0.20 mm layers, three
-  walls, 20% grid infill, no supports, approximately 23 min and 5.3 g. Inspect
-  the short internal groove and smooth closed outside wall after printing.
-- `tablet_stand_v2_right_fit_coupon_pla.gcode`: validated Ender-3 Pro PLA
-  coupon job; 0.20 mm layers, three walls, 20% grid infill, no supports,
-  approximately 1 h 25 min and 18.6 g. Prepared only.
-- Full cradle and cap G-code is intentionally absent: all earlier slices
-  predate the twin tapered joint and are stale. Regenerate them only after the
-  physical coupon passes.
+- Stale button-coupon, right-fit-coupon, two-key, full-cradle, and cap G-code
+  is intentionally absent. The current V2 coupon STLs and all historical
+  slices remain recoverable from Git history; regenerate from the current STL
+  only if a new physical test is explicitly authorized.
 
 `tablet_stand_v2.step` is the installed assembly. `model_parameters.json`
 records the module orientations, glue joints, key dimensions, and preserved

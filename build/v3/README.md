@@ -42,8 +42,8 @@ bed-friendly wings joined without cradle glue.
 The first combined support-free plate was physically tested. Despite major
 adhesion/stringing defects, the tongue and receiver fit together. The wedge
 layout failed because its larger pull head put the narrower body about 1.65 mm
-above the bed. Do not reuse the combined G-code; give the wedge a common flat
-datum or removable support before its next print.
+above the bed. Its stale combined G-code has been removed from the active tree;
+give the wedge a common flat datum or removable support before any new print.
 
 ## Removable joint
 
@@ -64,27 +64,23 @@ All current STL exports are single watertight solids. The pre-revision right-win
 STL was sliced with snug 45° supports and a 5 mm brim,
 independently validated, uploaded, and completed on 2026-08-10. The user
 reported that the supports were difficult to distinguish/remove in this PLA.
-The active rounded-finish geometry supersedes that G-code; subsequent
-full-part slices must use a more removable support strategy. Other full-part
-STLs remain unsliced or unauthorized until reviewed individually.
+The active rounded-finish geometry supersedes that G-code; all three stale
+right-wing slices and their associated INI/print-record/validation files have
+been removed from the active tree. Subsequent full-part slices must use a more
+removable support strategy. Other full-part STLs remain unsliced or
+unauthorized until reviewed individually.
 
-## Active coupon print
+## Historical coupon print evidence
 
-- `tablet_stand_v3_lock_coupon_all3_pla.gcode`: combined PLA job; 0.16 mm
-  layers, three walls, 20% grid infill, 5 mm brim, 205/200 °C nozzle, 60 °C
-  bed, supports disabled, and 1.0 mm retraction at 40 mm/s.
 - `tablet_stand_v3_lock_coupon_toolpath.png`: actual PrusaSlicer extrusion-path
-  review; it contains all three model islands and zero support extrusion.
+  review from the physically tested combined job; it contains all three model
+  islands and zero support extrusion.
 - `tablet_stand_v3_lock_coupon_geometry.json` and
   `tablet_stand_v3_lock_coupon_brief.json`: inspected geometry and confirmed
-  per-print decisions.
+  per-print decisions retained as fit evidence.
 
-Independent G-code validation reports a 100 × 46 × 9 mm brim-inclusive
-footprint, 31m 11s estimated time, about 3.1 g of PLA, and 6.2 mm³/s peak flow.
-The only retained warnings are the profile's pre-macro bed heat and missing UI
-thumbnail. The user authorized all three coupon pieces, the camera showed an
-empty bed, and the job was started on 2026-08-09. On 2026-08-10 the user
-reported major adhesion failure but confirmed that the tongue and receiver
-still fit. The corrected wedge/pin then retained and released successfully.
-The combined coupon G-code is stale; fresh full-part slices are now the next
-gate.
+The user authorized and started that combined job on 2026-08-09. On 2026-08-10
+the user reported major adhesion failure but confirmed that the tongue and
+receiver still fit; the corrected wedge/pin then retained and released
+successfully. The stale combined coupon G-code has been removed and remains
+recoverable from Git history. Fresh full-part slices are now the next gate.

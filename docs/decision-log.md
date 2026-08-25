@@ -1,5 +1,11 @@
 # Project Decision Log
 
+### Remove expired generated print artifacts — 2026-08-25
+
+- Removed stale V3 combined-coupon and right-wing G-code, including the two obsolete right-wing INI files and the superseded rounded-finish slice's print record and validation text. The associated printed-fit decisions, coupon STLs, toolpath image, geometry/brief JSON, current production STLs, STEP, and previews remain in the active tree; deleted slices remain recoverable from Git history.
+- Removed V2 G-code that no longer matches the active artifact purpose: the old two-key job, pre-current button coupon, and pre-enlargement right-fit coupon. The current V2 STLs/previews and physical fit evidence remain available.
+- Conservatively retained the V2 rear-bracket G-code because the bracket geometry is still reused by V3, plus the two V2 twin-plug coupon jobs because they directly correspond to the recorded physical clearance test. They are historical/ambiguous artifacts, not authorization to print.
+
 ### Continuous pronounced V3 exterior edge rounding — 2026-08-25
 
 - The user requested much stronger rounding around the complete outside frame, not merely larger plan-view corner curves. V3 now uses **1.30 mm cross-sectional edge fillets** continuously on the 3.0 mm rear perimeter, long rail walls, and both full-span outer end walls. This nearly full-round treatment leaves a deliberate **0.40 mm central land** rather than a knife edge.
