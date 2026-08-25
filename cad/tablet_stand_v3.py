@@ -47,6 +47,18 @@ JOINT_TIP_CLEARANCE_TOTAL = 1.10
 LEFT_CLOSURE_CORNER_R = 1.70
 LEFT_CLOSURE_EDGE_R = 0.85
 
+# The successful right-wing fit established that the existing 2.2 mm lips do
+# not compromise insertion, but the square screen-opening corners reveal the
+# tablet's rounded front corners.  Continue the same straight-edge overlap
+# around a tablet-concentric curve: the 0.5 mm per-side cavity allowance turns
+# the 2.2 mm lip into 1.7 mm nominal tablet overlap, so the approximately 7 mm
+# tablet radius becomes a 5.3 mm visible opening radius.
+FRONT_CORNER_TABLET_OVERLAP = 1.70
+FRONT_OPENING_X = core.TABLET_X - 2.0 * FRONT_CORNER_TABLET_OVERLAP
+FRONT_OPENING_Y = core.TABLET_Y - 2.0 * FRONT_CORNER_TABLET_OVERLAP
+FRONT_OPENING_CORNER_R = core.FRAME_INNER_CORNER_R - FRONT_CORNER_TABLET_OVERLAP
+FRONT_BEZEL_OUTER_CORNER_R = core.FRAME_INNER_CORNER_R + core.FIT_X / 2.0
+
 # Upper and lower receivers sit just outside the tablet cavity, overlap the
 # existing long-edge walls, and use an open bed-side floor plus an 8.5 mm roof
 # bridge (below the confirmed 10 mm PLA rule).  The center tongue stays within
@@ -204,6 +216,33 @@ def continuous_front_edge_rails() -> cq.Workplane:
     return rails
 
 
+def curved_front_corner_bezel() -> cq.Workplane:
+    """Return the thin screen-facing ring that conceals all tablet corners.
+
+    The straight parts coincide with the already successful retaining lips;
+    only the four rounded corner infills add new tablet overlap.  The ring is
+    at the existing lip height, so it does not narrow the tablet insertion
+    cavity below the front retaining plane.
+    """
+    cavity_x = core.TABLET_X + core.FIT_X
+    cavity_y = core.TABLET_Y + core.FIT_Y
+    outer = core.rounded_plate(
+        cavity_x,
+        cavity_y,
+        core.LIP_T,
+        core.TABLET_Z + core.FIT_Z,
+        FRONT_BEZEL_OUTER_CORNER_R,
+    )
+    opening = core.rounded_plate(
+        FRONT_OPENING_X,
+        FRONT_OPENING_Y,
+        core.LIP_T + 2.0,
+        core.TABLET_Z + core.FIT_Z - 1.0,
+        FRONT_OPENING_CORNER_R,
+    )
+    return outer.cut(opening)
+
+
 def continuous_right_outer_closure() -> cq.Workplane:
     """Extend the USB-C end wall and cap to the V3 perimeter envelope.
 
@@ -248,6 +287,7 @@ def integral_full_cradle() -> cq.Workplane:
         .union(integral_left_closure())
         .union(continuous_right_outer_closure(), clean=False)
         .union(continuous_front_edge_rails(), clean=False)
+        .union(curved_front_corner_bezel(), clean=False)
     )
 
 
@@ -534,6 +574,9 @@ def export() -> None:
         "finish": {
             "front_frame_inner_corner_radius": core.FRAME_INNER_CORNER_R,
             "front_frame_outer_corner_radius": core.FRAME_OUTER_CORNER_R,
+            "screen_opening_size": [FRONT_OPENING_X, FRONT_OPENING_Y],
+            "screen_opening_corner_radius": FRONT_OPENING_CORNER_R,
+            "screen_opening_tablet_overlap": FRONT_CORNER_TABLET_OVERLAP,
             "rail_wall_plan_corner_radius": core.EXPOSED_CORNER_R,
             "lip_plan_corner_radius": core.LIP_CORNER_R,
             "rail_wall_edge_fillet": core.EXPOSED_EDGE_R,

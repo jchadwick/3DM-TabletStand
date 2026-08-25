@@ -73,6 +73,12 @@ def main() -> None:
     assert metadata["structural_assembly"]["rear_bracket_bond"] == "fixed right cradle wing only"
     assert metadata["structural_assembly"]["left_wing_serviceable"] is True
     assert metadata["structural_assembly"]["alignment_key_quantity"] == 1
+    assert metadata["finish"]["screen_opening_size"] == [
+        model.FRONT_OPENING_X,
+        model.FRONT_OPENING_Y,
+    ]
+    assert metadata["finish"]["screen_opening_corner_radius"] == model.FRONT_OPENING_CORNER_R
+    assert metadata["finish"]["screen_opening_tablet_overlap"] == model.FRONT_CORNER_TABLET_OVERLAP
 
     source = model.split_cradle_source()
     left, right = model.cradle_halves()
@@ -200,9 +206,38 @@ def main() -> None:
             "integral right screen-facing cap is not continuous",
         )
     assert_open(left_shape, (-98.0, 0.0, 4.0), "integral left closure blocks tablet cavity")
+
+    # The successful right-wing fit is preserved below the lip plane, while a
+    # tablet-concentric 5.3 mm opening curve now covers the four nominal 7 mm
+    # tablet-front corners.  The inner samples ensure this remains a narrow
+    # corner treatment rather than an unnecessarily intrusive bezel.
+    front_z = core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0
+    for x_sign in (-1.0, 1.0):
+        wing_shape = left_shape if x_sign < 0.0 else right_shape
+        for y_sign in (-1.0, 1.0):
+            assert_solid(
+                wing_shape,
+                (x_sign * 97.0, y_sign * 58.5, front_z),
+                "rounded front-corner cover is missing",
+            )
+            assert_open(
+                wing_shape,
+                (x_sign * 96.5, y_sign * 58.0, front_z),
+                "rounded front-corner cover intrudes beyond its 5.3 mm opening radius",
+            )
+    assert math.isclose(model.FRONT_CORNER_TABLET_OVERLAP, 1.70, abs_tol=1e-9)
+    assert math.isclose(
+        model.FRONT_CORNER_TABLET_OVERLAP,
+        core.LIP_OVERLAP - core.FIT_X / 2.0,
+        abs_tol=1e-9,
+    )
+    assert math.isclose(model.FRONT_OPENING_CORNER_R, 5.30, abs_tol=1e-9)
     assert left_bb.ylen >= model.V3_OUTER_Y
     assert right_bb.ylen >= model.V3_OUTER_Y
-    print("tested button and USB-C interfaces are preserved; left wing is fully enclosed")
+    print(
+        "tested button, USB-C, and tablet fit are preserved; 5.30 mm screen-opening "
+        "corners conceal the tablet's 7 mm front corners with 1.70 mm overlap"
+    )
 
     # The bracket spans the seam geometrically but is bonded only to the fixed
     # right wing.  The left rear face stays ungrooved and removable.

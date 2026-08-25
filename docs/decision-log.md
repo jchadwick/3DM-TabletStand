@@ -1,5 +1,12 @@
 # Project Decision Log
 
+### Curved front opening after successful right-wing fit — 2026-08-25
+
+- The corrected full-span right-wing print was **very stringy**, but the user reported very good clearance and fit: the tablet slides in very smoothly and seats snugly. This physically confirms the active **1.0 mm total X/Y and 0.8 mm Z allowance** for the right wing; preserve it.
+- The same front-view test showed both rounded tablet corners visibly exposed beneath the square corners of the screen-facing lips. The approximately 7 mm tablet corner curve was already represented in the rear frame, but not in the front retaining opening.
+- Added only a lip-plane corner treatment. The screen-facing opening is now **196.6 × 119.6 mm** with **5.3 mm** corners concentric to the nominal 7 mm tablet corners. It maintains the proven **1.7 mm nominal overlap** on the straight edges and continues that same overlap around all four curves, concealing the glass/body corners without narrowing the insertion cavity below the 2 mm front lip.
+- The USB-C rear-channel dimensions and the existing outside-edge fillets/radii are unchanged in this revision; those remain separate requested changes. All prior right-wing G-code predates the new front-corner covers and is stale.
+
 ### Corrected right-wing slice with removable support strategy — 2026-08-25
 
 - The user authorized printing the corrected full-span right wing and reported that the prior right-wing fit was slightly tight, possibly from difficult support removal.
