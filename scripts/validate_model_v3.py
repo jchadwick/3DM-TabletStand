@@ -171,17 +171,17 @@ def main() -> None:
     )
     print("three-piece lock coupon uses exact production tongue, receiver, and wedge geometry")
 
-    # V3 retains the user-tested button and USB-C plug chamber while moving
-    # only the rear-floor turn opening 4 mm inboard as marked in the fit photo.
+    # V3 retains the user-tested button and USB-C plug chamber while enlarging
+    # the rear-floor opening by the green-marked 4 mm inboard area.
     assert_open(left_shape, (-80.0, 62.5, core.TABLET_Z / 2.0), "button channel obstructed")
     assert_solid(left_shape, (-80.0, 64.0, core.TABLET_Z / 2.0), "button outer wall missing")
     tablet_right_x = (core.TABLET_X + core.FIT_X) / 2.0
     rear_floor_z = -core.BASE_T / 2.0
     plug_chamber_z = core.TABLET_Z / 2.0
-    assert math.isclose(core.USB_REAR_TURN_SLOT_X, 8.0, abs_tol=1e-9)
+    assert math.isclose(core.USB_REAR_TURN_SLOT_X, 12.0, abs_tol=1e-9)
     assert math.isclose(core.USB_REAR_TURN_SLOT_Y, 16.0, abs_tol=1e-9)
     assert math.isclose(core.USB_REAR_TURN_SLOT_INBOARD_X, 4.0, abs_tol=1e-9)
-    assert math.isclose(core.USB_REAR_TURN_SLOT_OUTBOARD_X, 4.0, abs_tol=1e-9)
+    assert math.isclose(core.USB_REAR_TURN_SLOT_OUTBOARD_X, 8.0, abs_tol=1e-9)
     assert_open(
         right_shape,
         (tablet_right_x - 3.5, 0.0, rear_floor_z),
@@ -189,13 +189,13 @@ def main() -> None:
     )
     assert_open(
         right_shape,
-        (tablet_right_x + 3.5, 0.0, rear_floor_z),
-        "USB-C rear opening does not cross the tablet edge",
+        (tablet_right_x + 7.5, 0.0, rear_floor_z),
+        "USB-C rear opening does not retain the original 8 mm outboard span",
     )
     assert_solid(
         right_shape,
-        (tablet_right_x + 4.5, 0.0, rear_floor_z),
-        "unused outboard half of the USB-C rear opening was not restored",
+        (tablet_right_x + 8.5, 0.0, rear_floor_z),
+        "USB-C rear opening extends into the solid outer wall",
     )
     assert_solid(
         right_shape,
@@ -270,9 +270,10 @@ def main() -> None:
     assert left_bb.ylen >= model.V3_OUTER_Y
     assert right_bb.ylen >= model.V3_OUTER_Y
     print(
-        "tested button, USB-C chamber, and tablet fit are preserved; the 16 x 8 mm "
-        "rear opening is shifted 4 mm inboard, and 5.30 mm screen-opening corners "
-        "conceal the tablet's 7 mm front corners with 1.70 mm overlap"
+        "tested button, USB-C chamber, and tablet fit are preserved; the 16 x 12 mm "
+        "rear opening adds 4 mm inboard to the original 8 mm outboard span, and "
+        "5.30 mm screen-opening corners conceal the tablet's 7 mm front corners "
+        "with 1.70 mm overlap"
     )
 
     # The bracket spans the seam geometrically but is bonded only to the fixed

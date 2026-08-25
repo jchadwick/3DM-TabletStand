@@ -1,6 +1,13 @@
 # Project Decision Log
 
-### USB rear-floor opening shifted inboard after right-wing fit — 2026-08-25
+### USB rear-floor enlargement clarification — 2026-08-25
+
+- The user explicitly clarified that the green rectangle is an **addition to the original hole**, not a relocation of it. The immediately preceding 4 mm-shift interpretation was incorrect and is superseded without rewriting its Git history.
+- Retained the complete original **16 × 8 mm (Y × X)** rear-floor opening from the fitted tablet edge at **X = 100.5 mm** through the plug-pocket floor to **X = 108.5 mm**, then added the green-marked **4.0 mm** inboard relief from **X = 96.5–100.5 mm**. The active opening is therefore **16 × 12 mm**, spanning **X = 96.5–108.5 mm**.
+- The correction still changes only the rear floor. The USB-C port center, **8.0 mm clear plug chamber above the floor**, recorded **6.50 mm plug projection**, 3.0 mm solid outer wall, continuous screen-facing cap, tablet cavity allowances, cable clips, and downstream sleeve route remain unchanged.
+- CAD validation now explicitly samples both the new 4 mm inboard relief and the retained original 8 mm outboard opening. The enlarged opening is not yet physically tested, and every earlier right-wing G-code remains stale.
+
+### USB rear-floor opening shifted inboard after right-wing fit — 2026-08-25 (superseded immediately above)
 
 - The successful but stringy right-wing fit print showed much more open rear-floor area outboard of the installed right-angle USB-C cable than needed. The user's green-marked photo directs the same amount of opening to the tablet side so the attached cable can still enter, seat, and turn behind the tablet.
 - Kept the opening's proven **16 × 8 mm (Y × X)** envelope and moved it **4.0 mm inboard**. Relative to the fitted tablet's right edge at **X = 100.5 mm**, the opening now spans **X = 96.5–104.5 mm**: 4 mm inboard and 4 mm outboard. This restores the unused former **X = 104.5–108.5 mm** outboard half as rear floor and cuts the equal green-marked **X = 96.5–100.5 mm** tablet-side relief.

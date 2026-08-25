@@ -195,7 +195,7 @@ def left_stop_section_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, i
 
 
 def coupon_contact_sheet(paths: list[Path], output: Path) -> None:
-    labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 8 MM RECTANGLE")
+    labels = ("TABLET ENTRY / RAILS", "USB-C OUTER END", "OPEN 16 x 12 MM RECTANGLE")
     canvas = Image.new("RGB", (2100, 745), BACKGROUND[:3])
     draw = ImageDraw.Draw(canvas)
     for index, (path, label) in enumerate(zip(paths, labels, strict=True)):

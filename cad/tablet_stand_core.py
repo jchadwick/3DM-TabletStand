@@ -80,15 +80,15 @@ USB_POCKET_Y = 30.0
 USB_END_WALL_T = 3.0
 USB_POCKET_CEILING_T = 2.0
 # Physical cable tests superseded the earlier T-shaped 3 x 16 mm slot plus
-# 6 x 8.5 mm entry notch.  The current open rectangle remains 16 x 8 mm,
-# but the right-wing fit photo showed that its outboard half was unused.  Shift
-# the rectangle 4 mm inboard: cut the green-marked tablet-side rear floor and
-# restore the same amount of outboard floor.  The full 8 mm-deep plug chamber
-# above the floor remains unchanged for the measured 6.50 mm plug projection.
-USB_REAR_TURN_SLOT_X = 8.0
-USB_REAR_TURN_SLOT_Y = 16.0
+# 6 x 8.5 mm entry notch.  Preserve the complete original 16 x 8 mm opening
+# from the tablet edge through the plug-pocket floor, then add the user's
+# green-marked 4 mm inboard relief.  The rear-floor opening is therefore
+# 16 x 12 mm overall (Y x X), while the full 8 mm-deep plug chamber above it
+# remains unchanged for the measured 6.50 mm plug projection.
 USB_REAR_TURN_SLOT_INBOARD_X = 4.0
-USB_REAR_TURN_SLOT_OUTBOARD_X = USB_REAR_TURN_SLOT_X - USB_REAR_TURN_SLOT_INBOARD_X
+USB_REAR_TURN_SLOT_OUTBOARD_X = 8.0
+USB_REAR_TURN_SLOT_X = USB_REAR_TURN_SLOT_INBOARD_X + USB_REAR_TURN_SLOT_OUTBOARD_X
+USB_REAR_TURN_SLOT_Y = 16.0
 RIGHT_ANGLE_PIGTAIL_LENGTH = 51.4
 RIGHT_ANGLE_FLAT_T = 0.6
 DOWNSTREAM_CONNECTOR_BODY = 9.6
@@ -281,9 +281,9 @@ def flat_main_holder() -> cq.Workplane:
             )
         )
     )
-    # Cut after unioning so the relocated rectangle clears the green-marked
-    # tablet-side rear floor.  Its outboard 4 mm is now restored floor, while
-    # the plug chamber above the floor still reaches the unchanged outer wall.
+    # Cut after unioning so the enlarged rectangle includes both the complete
+    # original 8 mm outboard floor opening and the green-marked 4 mm inboard
+    # relief.  The plug chamber above still reaches the unchanged outer wall.
     main = (
         main.union(cable_floor)
         .union(usb_end_wall)

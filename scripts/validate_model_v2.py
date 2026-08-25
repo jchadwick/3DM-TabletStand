@@ -77,10 +77,10 @@ def main() -> None:
     assert metadata["button_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["left_slide_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {
-        "x": 8.0,
+        "x": 12.0,
         "y": 16.0,
         "inboard_from_tablet_edge": 4.0,
-        "outboard_from_tablet_edge": 4.0,
+        "outboard_from_tablet_edge": 8.0,
     }
     assert metadata["buttons"]["group_start_from_top_left"] == 20.0
     assert metadata["buttons"]["group_end_from_top_left"] == 60.0
@@ -294,13 +294,13 @@ def main() -> None:
     )
     assert_open(
         coupon,
-        (tablet_right_x + 3.5, 0.0, rear_floor_z),
-        "coupon rear-turn slot does not cross the tablet edge",
+        (tablet_right_x + 7.5, 0.0, rear_floor_z),
+        "coupon rear-turn slot does not retain the original 8 mm outboard opening",
     )
     assert_solid(
         coupon,
-        (tablet_right_x + 4.5, 0.0, rear_floor_z),
-        "coupon did not restore the unused outboard rear floor",
+        (tablet_right_x + 8.5, 0.0, rear_floor_z),
+        "coupon rear-turn slot extends into the solid outer wall",
     )
     assert_solid(
         coupon,
@@ -317,7 +317,7 @@ def main() -> None:
         f"envelope={coupon_bb.xlen:.2f} x {coupon_bb.ylen:.2f} x "
         f"{coupon_bb.zlen:.2f} mm; open cable rectangle="
         f"{core.USB_REAR_TURN_SLOT_Y:.1f} x {core.USB_REAR_TURN_SLOT_X:.1f} mm, "
-        f"shifted {core.USB_REAR_TURN_SLOT_INBOARD_X:.1f} mm inboard"
+        f"including {core.USB_REAR_TURN_SLOT_INBOARD_X:.1f} mm inboard relief"
     )
 
     # The top-left coupon is a literal crop of the production rail. Its slot

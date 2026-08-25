@@ -190,7 +190,7 @@ def contact_sheet(
     draw = ImageDraw.Draw(canvas)
     draw.text((24, 14), "V3 INSTALLED — TWO-PIECE CRADLE + OPEN CABLE ROUTE", fill=(225, 232, 240))
     draw.text((24, 1039), "INTEGRAL LEFT WING — CONTINUOUS ENCLOSED EDGE", fill=(225, 232, 240))
-    draw.text((24, 1769), "USB-C REAR FLOOR — 16 x 8 MM OPENING SHIFTED 4 MM INBOARD", fill=(225, 232, 240))
+    draw.text((24, 1769), "USB-C REAR FLOOR — ORIGINAL 16 x 8 MM + 4 MM INBOARD RELIEF", fill=(225, 232, 240))
     draw.text((24, 2499), "REAR CABLE ROUTE — OUTSIDE GUSSET TO CLIPS + SLEEVE CHANNEL", fill=(225, 232, 240))
     draw.text((24, 3229), "REMOVABLE JOINT — THREE TONGUES + LOWER CROSS-WEDGE", fill=(225, 232, 240))
     draw.text((24, 3959), "PRINT LAYOUT — TWO WINGS + ONE LOCKING WEDGE", fill=(225, 232, 240))

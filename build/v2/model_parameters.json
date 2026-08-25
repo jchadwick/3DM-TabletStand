@@ -128,10 +128,10 @@
     "sleeve_channel_id": 4.15,
     "sleeve_channel_slot": 2.8,
     "usb_rear_turn_open_rectangle": {
-      "x": 8.0,
+      "x": 12.0,
       "y": 16.0,
       "inboard_from_tablet_edge": 4.0,
-      "outboard_from_tablet_edge": 4.0
+      "outboard_from_tablet_edge": 8.0
     }
   }
 }

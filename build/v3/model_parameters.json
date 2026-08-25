@@ -30,10 +30,10 @@
   "usb_c": {
     "plug_chamber_depth": 8.0,
     "rear_turn_opening": {
-      "x": 8.0,
+      "x": 12.0,
       "y": 16.0,
       "inboard_from_tablet_edge": 4.0,
-      "outboard_from_tablet_edge": 4.0
+      "outboard_from_tablet_edge": 8.0
     },
     "outer_wall_thickness": 3.0
   },
@@ -45,12 +45,12 @@
     "left_print_envelope": [
       125.00102406222571,
       139.0020479244512,
-      14.249484607973347
+      14.24584952503555
     ],
     "right_print_envelope": [
-      111.32601937546059,
+      111.32585847959268,
       139.00129510536004,
-      14.219818253947675
+      14.212149744027615
     ],
     "rear_bracket_bridges_center_seam": true,
     "adhesive_required": false
