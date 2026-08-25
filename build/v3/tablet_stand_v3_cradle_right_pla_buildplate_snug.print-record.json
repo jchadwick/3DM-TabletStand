@@ -1,0 +1,368 @@
+{
+  "machine": "Creality Ender-3 Pro -- 220.0x220.0x250.0mm, 0.4mm nozzle, 1.75mm filament, cartesian_bedslinger, klipper, direct extruder, 10.0 mm3/s PLA, accel 1500.0 (untuned)",
+  "printer": "Creality Ender-3 Pro",
+  "nozzle_diameter": 0.4,
+  "material": "PLA",
+  "intent": "dimensional",
+  "brief": {
+    "purpose": "dimensional",
+    "material": "PLA",
+    "copies": 1,
+    "scope": "full",
+    "priority": "quality",
+    "post_processing": "none",
+    "load_direction": "none",
+    "attended": "yes",
+    "_estimated_hours": 1.35
+  },
+  "settings": [
+    {
+      "group": "Layers",
+      "key": "layer_height",
+      "label": "layer height",
+      "value": 0.16,
+      "unit": "mm",
+      "source": "brief: quality priority",
+      "notable": true
+    },
+    {
+      "group": "Layers",
+      "key": "first_layer_height",
+      "label": "first layer height",
+      "value": 0.24,
+      "unit": "mm",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "walls",
+      "label": "walls",
+      "value": 3,
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "top_layers",
+      "label": "top layers",
+      "value": 4,
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "bottom_layers",
+      "label": "bottom layers",
+      "value": 3,
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "infill_pct",
+      "label": "infill",
+      "value": 20,
+      "unit": "%",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "infill_pattern",
+      "label": "infill pattern",
+      "value": "grid",
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "extrusion_width",
+      "label": "extrusion width",
+      "value": 0.42,
+      "unit": "mm",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "external_perimeter_extrusion_width",
+      "label": "external width",
+      "value": 0.4,
+      "unit": "mm",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "first_layer_extrusion_width",
+      "label": "first layer width",
+      "value": 0.46,
+      "unit": "mm",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "seam_position",
+      "label": "seam",
+      "value": "nearest",
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Walls & infill",
+      "key": "ironing",
+      "label": "ironing",
+      "value": false,
+      "unit": "",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "first_layer_nozzle_temp",
+      "label": "nozzle, first layer",
+      "value": 215,
+      "unit": "C",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "nozzle_temp",
+      "label": "nozzle",
+      "value": 210,
+      "unit": "C",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "first_layer_bed_temp",
+      "label": "bed, first layer",
+      "value": 60,
+      "unit": "C",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "bed_temp",
+      "label": "bed",
+      "value": 60,
+      "unit": "C",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "fan_pct",
+      "label": "fan",
+      "value": 100,
+      "unit": "%",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Temperature & cooling",
+      "key": "min_layer_time",
+      "label": "min layer time",
+      "value": 8,
+      "unit": "s",
+      "source": "material:PLA",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "max_volumetric_speed",
+      "label": "FLOW CEILING",
+      "value": 10.0,
+      "unit": "mm3/s",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "first_layer_speed",
+      "label": "first layer",
+      "value": 22,
+      "unit": "mm/s",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "external_perimeter_speed",
+      "label": "external perimeter",
+      "value": 24.0,
+      "unit": "mm/s",
+      "source": "brief: quality priority",
+      "notable": true
+    },
+    {
+      "group": "Speed & flow",
+      "key": "perimeter_speed",
+      "label": "perimeter",
+      "value": 48.0,
+      "unit": "mm/s",
+      "source": "brief: quality priority",
+      "notable": true
+    },
+    {
+      "group": "Speed & flow",
+      "key": "infill_speed",
+      "label": "infill",
+      "value": 100,
+      "unit": "mm/s",
+      "source": "intent:dimensional",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "travel_speed",
+      "label": "travel",
+      "value": 210.0,
+      "unit": "mm/s",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "accel",
+      "label": "acceleration",
+      "value": 1500.0,
+      "unit": "mm/s2",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Speed & flow",
+      "key": "first_layer_accel",
+      "label": "first layer accel",
+      "value": 1000.0,
+      "unit": "mm/s2",
+      "source": "machine profile",
+      "notable": false
+    },
+    {
+      "group": "Retraction",
+      "key": "retract_length",
+      "label": "retraction",
+      "value": 0.8,
+      "unit": "mm",
+      "source": "PLA + direct",
+      "notable": false
+    },
+    {
+      "group": "Retraction",
+      "key": "retract_speed",
+      "label": "retraction speed",
+      "value": 35,
+      "unit": "mm/s",
+      "source": "PLA + direct",
+      "notable": false
+    },
+    {
+      "group": "Supports",
+      "key": "supports",
+      "label": "supports",
+      "value": true,
+      "unit": "",
+      "source": "you asked for it (--set)",
+      "notable": true
+    },
+    {
+      "group": "Supports",
+      "key": "support_style",
+      "label": "style",
+      "value": "snug",
+      "unit": "",
+      "source": "you asked for it (--set)",
+      "notable": true
+    },
+    {
+      "group": "Supports",
+      "key": "support_angle",
+      "label": "threshold",
+      "value": 55,
+      "unit": "deg",
+      "source": "you asked for it (--set)",
+      "notable": true
+    },
+    {
+      "group": "Supports",
+      "key": "support_z_gap",
+      "label": "Z gap",
+      "value": 0.24,
+      "unit": "mm",
+      "source": "you asked for it (--set)",
+      "notable": true
+    },
+    {
+      "group": "Supports",
+      "key": "support_xy_gap",
+      "label": "XY gap",
+      "value": 0.7,
+      "unit": "mm",
+      "source": "you asked for it (--set)",
+      "notable": true
+    },
+    {
+      "group": "Adhesion",
+      "key": "brim_width",
+      "label": "brim",
+      "value": 5,
+      "unit": "mm",
+      "source": "you asked for it (--set)",
+      "notable": true
+    }
+  ],
+  "reasoning": [
+    "Machine: Creality Ender-3 Pro -- 220.0x220.0x250.0mm, 0.4mm nozzle, 1.75mm filament, cartesian_bedslinger, klipper, direct extruder, 10.0 mm3/s PLA, accel 1500.0 (untuned)",
+    "Flow ceiling 10.0 mm3/s (stock_creality hotend, PLA); the slicer clamps individual moves to respect it, which is what actually bounds print speed.",
+    "dimensional intent on a 0.4mm nozzle: 0.2mm layers (standard tier), 3 walls, 20% grid infill, 0.42mm extrusion width.",
+    "Direct extruder: 0.8mm retraction at 35 mm/s.",
+    "Acceleration held at 1500.0 mm/s2 -- resonance compensation is not marked as tuned in the profile, and higher accel without it just produces ringing.",
+    "6% overhang area: supports on, grid style, 55deg threshold, 0.2mm Z gap.",
+    "Quality priority: 0.16mm layers and perimeters 20% slower.",
+    "Manual override: supports = True",
+    "Manual override: support_style = snug",
+    "Manual override: support_angle = 55",
+    "Manual override: support_z_gap = 0.24",
+    "Manual override: support_xy_gap = 0.7",
+    "Manual override: brim_width = 5"
+  ],
+  "notable_keys": [
+    "layer_height",
+    "external_perimeter_speed",
+    "perimeter_speed",
+    "supports",
+    "support_style",
+    "support_angle",
+    "support_z_gap",
+    "support_xy_gap",
+    "brim_width"
+  ],
+  "command": "PrusaSlicer 2.8.1 direct slice with --support-material-buildplate-only --support-material-style=snug --support-material-contact-distance=0.24 --support-material-xy-spacing=0.7 --brim-width=5",
+  "argv": [],
+  "output_path": "build/v3/tablet_stand_v3_cradle_right_pla_buildplate_snug.gcode",
+  "dry_run": false,
+  "ready": true,
+  "readiness_errors": [],
+  "slicer": {
+    "name": "PrusaSlicer",
+    "version": "PrusaSlicer-2.8.1+linux-x64-GTK3-202409181416 based on Slic3r (with GUI support)"
+  },
+  "model_file": "/repos/jchadwick/tablet/build/v3/tablet_stand_v3_cradle_right.stl",
+  "machine_profile": "/data/home/.config/autofab/machines/ender3pro.json",
+  "sliced_at": "2026-08-25 03:22",
+  "resolved_config": "build/v3/tablet_stand_v3_cradle_right_pla_buildplate_snug.ini",
+  "validation_exit_code": 1,
+  "support_strategy": "PrusaSlicer direct override: buildplate-only snug supports, 0.24 mm Z gap, 0.7 mm XY spacing, 3 interface layers, 5 mm brim"
+}

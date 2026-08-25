@@ -1,5 +1,14 @@
 # Project Decision Log
 
+### Corrected right-wing slice with removable support strategy — 2026-08-25
+
+- The user authorized printing the corrected full-span right wing and reported that the prior right-wing fit was slightly tight, possibly from difficult support removal.
+- Prepared a fresh PLA slice from the current **111.33 × 139.00 × 14.20 mm** watertight right-wing STL, retaining rear-face-down orientation and the active full 139 mm USB-C closure.
+- Changed only the support strategy for this retry: **snug, build-plate-only supports**, 55° threshold, 0.24 mm Z gap, 0.70 mm XY spacing, 3 interface layers, and a 5 mm brim. This avoids the prior grid supports' model-anchored scarring where possible while preserving overhang support.
+- Validation passes the 10 mm³/s flow ceiling (6.3 mm³/s peak), bed footprint, PLA temperatures, and watertight-source checks. Estimated duration is 4 h 2 m with about 40.2 g PLA. The retained warnings are the known pre-macro bed-heat command and missing UI thumbnails.
+- Printer status reported ready/idle and a fresh camera snapshot clearly showed the complete visible plate empty. The corrected job is ready to upload/start; physical fit remains pending.
+
+
 This file is the durable record of confirmed dimensions, design choices, and later corrections. Update it whenever a decision is made or revised; do not rely only on conversation history.
 
 ## Persistent project rule

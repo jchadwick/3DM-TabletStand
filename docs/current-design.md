@@ -82,7 +82,7 @@ In the CadQuery model, X runs left (−) to right/USB-C side (+), Y runs user/bo
 
 - The unsplit V2 cradle is 215 × 135.6 × 14.8 mm and technically fits the confirmed 220 × 220 mm bed, but its narrow margin motivated the V3 split.
 - The V3 left and right cradle-wing STLs are each single watertight solids and remain rear-face-down. Their largest plan dimension is 139 mm, leaving generous bed margin.
-- Previous full-cradle, end-stop, combined V3 coupon, and both earlier right-wing G-code files are stale. Do not print them. The tongue/receiver fit and wedge retention gates passed. The latest right-wing fit job completed, but it used the pre-correction 130 mm USB-C end-wall/cap span; the active full-span geometry requires a new slice. Do not start the corrected right wing, left wing, or other parts until their fresh slices and support/adhesion review are complete.
+- Previous full-cradle, end-stop, combined V3 coupon, and both earlier right-wing G-code files are stale. Do not print them. The tongue/receiver fit and wedge retention gates passed. The latest right-wing fit job completed, but it used the pre-correction 130 mm USB-C end-wall/cap span. A fresh corrected-geometry PLA slice is now prepared at `build/v3/tablet_stand_v3_cradle_right_pla_buildplate_snug.gcode`: rear-face-down, 0.16 mm layers, 3 walls, 20% grid infill, 55° snug build-plate-only supports, 0.24 mm Z gap, 0.70 mm XY gap, 3 interface layers, and a 5 mm brim. Validation passes with only the known pre-macro heat-order and missing-thumbnail warnings; the job is estimated at 4 h 2 m and ~40.2 g PLA. Do not start the left wing or other parts until this corrected right-wing print is physically reviewed.
 
 ## Known unknowns before a full print
 
