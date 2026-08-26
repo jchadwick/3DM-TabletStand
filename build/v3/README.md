@@ -69,8 +69,9 @@ coplanar shroud faces are gone. The concealed top-button groove runs from the
 integral left closure-side interior to the center seam while retaining its
 1.8 mm exterior wall.
 
-All current STL exports are single watertight solids. The pre-revision right-wing
-STL was sliced with snug 45° supports and a 5 mm brim,
+Each individual-part STL export is a single watertight solid; the combined
+three-piece lock-coupon plate intentionally contains three watertight components.
+The pre-revision right-wing STL was sliced with snug 45° supports and a 5 mm brim,
 independently validated, uploaded, and completed on 2026-08-10. The user
 reported that the supports were difficult to distinguish/remove in this PLA.
 The active rounded-finish geometry supersedes that G-code; all three stale
