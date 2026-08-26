@@ -43,10 +43,6 @@ EXPOSED_EDGE_R = 0.70
 LIP_EDGE_R = 0.60
 LIP_OVERLAP = 2.2
 LIP_T = 2.0
-# Finish-only cap overlap used when V3 requests softened outer walls.  This
-# small internal fuse avoids a coplanar seam without reaching the exterior
-# fillet or changing the tablet opening.
-SOFTENED_CAP_WALL_OVERLAP = 0.20
 LEFT_RAIL_ENTRY_RELIEF_X = 4.0
 RIGHT_STOP_SPAN = 25.0
 CENTER_PLATE_X = 74.0
@@ -150,6 +146,25 @@ def softened_plate(
     return result
 
 
+def front_softened_plate(
+    x: float,
+    y: float,
+    z: float,
+    z0: float,
+    corner_radius: float,
+    edge_radius: float,
+) -> cq.Workplane:
+    """Create a rounded plate with only its screen/front-side edges filleted.
+
+    This keeps a complete flat rear print datum when a V3 perimeter wall is
+    fused into the rear frame, avoiding tangent duplicate edges in tessellation.
+    """
+    result = rounded_plate(x, y, z, z0, corner_radius)
+    if edge_radius > 0:
+        result = result.edges(">Z").fillet(edge_radius)
+    return result
+
+
 def x_cylinder(diameter: float, length: float, origin: tuple[float, float, float]) -> cq.Workplane:
     """Create a cylinder whose axis points in +X."""
     return cq.Workplane("YZ", origin=origin).circle(diameter / 2.0).extrude(length)
@@ -158,12 +173,17 @@ def x_cylinder(diameter: float, length: float, origin: tuple[float, float, float
 def flat_main_holder(
     exposed_edge_radius: float = EXPOSED_EDGE_R,
     lip_edge_radius: float = LIP_EDGE_R,
+    rail_entry_relief_x: float = LEFT_RAIL_ENTRY_RELIEF_X,
+    button_channel_x_end: float = BUTTON_CHANNEL_FINAL_X,
+    include_lips: bool = True,
+    include_right_cap: bool = True,
 ) -> cq.Workplane:
     """Return the active V2 cradle base before modular joint features.
 
-    V2 retains the tested default finish.  V3 can request a stronger exterior
-    edge treatment without changing the historical V2 geometry or any mating
-    dimensions.
+    V2 retains the tested defaults. V3 can close the historical left rail lead,
+    extend the concealed button groove, and replace the overlapping individual
+    lips/cap with one continuous screen-facing perimeter without changing the
+    historical V2 geometry or any mating dimensions.
     """
     cavity_x = TABLET_X + FIT_X
     cavity_y = TABLET_Y + FIT_Y
@@ -193,12 +213,11 @@ def flat_main_holder(
     y_spine = cq.Workplane("XY").box(SPINE_W, outer_y - 12.0, BASE_T).translate((0, 0, -BASE_T / 2.0))
     main = frame.union(center).union(x_spine).union(y_spine)
 
-    # Long-edge U rails.  The left ends remain open so the tablet can slide in.
-    # Their right ends reach the closed USB-C housing.
+    # Long-edge U rails. Their right ends reach the closed USB-C housing. V2
+    # keeps the historical rail-free lead for its separate end stop; active V3
+    # overrides it so the integral left closure meets each rail continuously.
     wall_h = BASE_T + rail_top
-    # Leave a short rail-free lead at the left edge so the separate end stop
-    # can slide downward past both long rails without a hard collision.
-    rail_left_x = -outer_x / 2.0 + LEFT_RAIL_ENTRY_RELIEF_X
+    rail_left_x = -outer_x / 2.0 + rail_entry_relief_x
     usb_end_wall_inner_x = cavity_x / 2.0 + USB_POCKET_INNER_X
     usb_end_wall_center_x = usb_end_wall_inner_x + USB_END_WALL_T / 2.0
     usb_outer_x = usb_end_wall_inner_x + USB_END_WALL_T
@@ -216,25 +235,27 @@ def flat_main_holder(
         ).translate(
             (rail_center_x, wall_y, 0)
         )
-        lip_y = sign * (cavity_y / 2.0 - LIP_OVERLAP / 2.0)
-        lip = softened_plate(
-            rail_x,
-            LIP_OVERLAP,
-            LIP_T,
-            TABLET_Z + FIT_Z,
-            LIP_CORNER_R,
-            lip_edge_radius,
-        ).translate(
-            (rail_center_x, lip_y, 0)
-        )
-        main = main.union(wall).union(lip)
+        main = main.union(wall)
+        if include_lips:
+            lip_y = sign * (cavity_y / 2.0 - LIP_OVERLAP / 2.0)
+            lip = softened_plate(
+                rail_x,
+                LIP_OVERLAP,
+                LIP_T,
+                TABLET_Z + FIT_Z,
+                LIP_CORNER_R,
+                lip_edge_radius,
+            ).translate(
+                (rail_center_x, lip_y, 0)
+            )
+            main = main.union(lip)
 
-    # Recess only the inner face of the top rail at button height from the
-    # slide-in entrance through 5 mm past the final seated button position.
-    # The 1.2 mm-deep groove clears the 1 mm projection while preserving a
-    # continuous 1.8 mm exterior wall and the full screen-facing retaining lip.
+    # Recess only the inner face of the top rail at button height. The 1.2 mm
+    # depth clears the 1 mm projection while preserving a continuous 1.8 mm
+    # exterior wall and the screen-facing retaining perimeter. V2 ends 5 mm
+    # beyond the seated group; V3 extends the same concealed groove to its seam.
     button_channel_x0 = rail_left_x - 0.2
-    button_channel_x = BUTTON_CHANNEL_FINAL_X - button_channel_x0
+    button_channel_x = button_channel_x_end - button_channel_x0
     button_channel_y0 = cavity_y / 2.0 - 0.2
     button_channel_y1 = cavity_y / 2.0 + BUTTON_CHANNEL_DEPTH_Y
     button_channel = (
@@ -244,7 +265,7 @@ def flat_main_holder(
         .extrude(BUTTON_CHANNEL_Z)
         .translate(
             (
-                (button_channel_x0 + BUTTON_CHANNEL_FINAL_X) / 2.0,
+                (button_channel_x0 + button_channel_x_end) / 2.0,
                 (button_channel_y0 + button_channel_y1) / 2.0,
                 0.0,
             )
@@ -259,14 +280,15 @@ def flat_main_holder(
     stop_x = cavity_x / 2.0 + WALL_T / 2.0
     right_cap_left_x = cavity_x / 2.0 - LIP_OVERLAP
     right_cap_x = usb_outer_x - right_cap_left_x
-    right_cap = rounded_plate(
-        right_cap_x,
-        outer_y,
-        USB_POCKET_CEILING_T,
-        TABLET_Z + FIT_Z,
-        LIP_CORNER_R,
-    ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0, 0))
-    main = main.union(right_cap)
+    if include_right_cap:
+        right_cap = rounded_plate(
+            right_cap_x,
+            outer_y,
+            USB_POCKET_CEILING_T,
+            TABLET_Z + FIT_Z,
+            LIP_CORNER_R,
+        ).translate(((right_cap_left_x + usb_outer_x) / 2.0, 0, 0))
+        main = main.union(right_cap)
     for sign in (-1.0, 1.0):
         stop_y = sign * (cavity_y / 2.0 - RIGHT_STOP_SPAN / 2.0)
         wall = rounded_plate(WALL_T, RIGHT_STOP_SPAN, wall_h, -BASE_T, EXPOSED_CORNER_R).translate(

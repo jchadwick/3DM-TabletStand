@@ -23,6 +23,8 @@
     "rail_wall_edge_land": 0.3999999999999999,
     "lip_cap_edge_land": 0.19999999999999996,
     "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
+    "front_perimeter_construction": "one continuous ring split only at the removable wing seam",
+    "stacked_front_lips_caps_or_shrouds": false,
     "continuous_front_edge_rails": true,
     "continuous_left_outer_wall": true,
     "left_outer_wall_span_y": 139.0,
@@ -30,6 +32,15 @@
     "right_outer_wall_span_y": 139.0
   },
   "tablet_loading": "seat tablet in right wing, slide integral enclosed left wing +X until all three tongues seat, then insert lower cross-wedge",
+  "button_channel": {
+    "height": 2.0,
+    "depth": 1.2,
+    "x_start": -103.5,
+    "x_end": 0.0,
+    "seam_cutter_overrun": 0.2,
+    "remaining_outer_wall": 1.8,
+    "concealed": true
+  },
   "usb_c": {
     "plug_chamber_depth": 8.0,
     "rear_turn_opening": {
@@ -46,14 +57,14 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.0013820814576,
-      139.00283770076703,
-      14.233268958926768
+      125.0015529111282,
+      139.0031056222562,
+      14.228930376247533
     ],
     "right_print_envelope": [
-      111.32679177804235,
-      139.00247309319835,
-      14.228846940526768
+      111.32733126523522,
+      139.00338977872372,
+      14.21532678715611
     ],
     "rear_bracket_bridges_center_seam": true,
     "adhesive_required": false
@@ -78,9 +89,9 @@
     "uses_exact_production_geometry": true,
     "parts": 3,
     "combined_plate_envelope": [
-      77.91331735414019,
-      33.22336847466433,
-      9.00114635244212
+      77.91250020000004,
+      33.22222237222225,
+      9.000000200000148
     ],
     "purpose": "verify tongue insertion, seating, wedge retention, removal, and M3 fallback access"
   },

@@ -83,6 +83,19 @@ def main() -> None:
     assert metadata["finish"]["lip_edge_fillet"] == model.V3_EXTERIOR_LIP_CAP_EDGE_R
     assert metadata["finish"]["left_closure_edge_fillet"] == model.LEFT_CLOSURE_EDGE_R
     assert metadata["finish"]["continuous_exterior_edge_rounding"] is True
+    assert metadata["finish"]["front_perimeter_construction"] == (
+        "one continuous ring split only at the removable wing seam"
+    )
+    assert metadata["finish"]["stacked_front_lips_caps_or_shrouds"] is False
+    assert metadata["button_channel"] == {
+        "height": core.BUTTON_CHANNEL_Z,
+        "depth": core.BUTTON_CHANNEL_DEPTH_Y,
+        "x_start": model.V3_BUTTON_CHANNEL_X0,
+        "x_end": model.CRADLE_SEAM_X,
+        "seam_cutter_overrun": model.V3_BUTTON_CHANNEL_SEAM_OVERRUN_X,
+        "remaining_outer_wall": core.BUTTON_CHANNEL_REMAINING_OUTER_WALL,
+        "concealed": True,
+    }
     assert metadata["usb_c"]["plug_chamber_depth"] == core.USB_POCKET_INNER_X
     assert metadata["usb_c"]["rear_turn_opening"] == {
         "x": core.USB_REAR_TURN_SLOT_X,
@@ -106,6 +119,26 @@ def main() -> None:
     assert max(left_bb.xlen, left_bb.ylen, right_bb.xlen, right_bb.ylen) < 220.0
     assert abs(left_bb.zmin + core.BASE_T) < 1e-6
     assert abs(right_bb.zmin + core.BASE_T) < 1e-6
+    # Each export intentionally omits remote opposite-end boolean history to
+    # avoid degenerate tessellation faces. Confirm the retained geometry is
+    # exactly equal to the corresponding half of the complete source.
+    expected_left = (
+        source.intersect(model._seam_mask(True), clean=False)
+        .union(model.joint_tongues())
+        .cut(model.locking_channel())
+    )
+    expected_right = (
+        source.intersect(model._seam_mask(False), clean=False)
+        .union(model.outer_joint_receivers(), clean=False)
+        .cut(model.joint_socket_cutters(), clean=False)
+        .cut(model.locking_channel(), clean=False)
+    )
+    for expected, actual, label in (
+        (expected_left, left, "left"),
+        (expected_right, right, "right"),
+    ):
+        delta = expected.cut(actual).val().Volume() + actual.cut(expected).val().Volume()
+        assert delta < 1e-6, f"{label} split differs from complete cradle source: {delta:.6f} mm3"
     print(
         "split cradle is interference-free and bed-friendly; "
         f"left={left_bb.xlen:.2f} x {left_bb.ylen:.2f} x {left_bb.zlen:.2f} mm, "
@@ -175,10 +208,48 @@ def main() -> None:
     )
     print("three-piece lock coupon uses exact production tongue, receiver, and wedge geometry")
 
-    # V3 retains the user-tested button and USB-C plug chamber while enlarging
-    # the rear-floor opening by the green-marked 4 mm inboard area.
-    assert_open(left_shape, (-80.0, 62.5, core.TABLET_Z / 2.0), "button channel obstructed")
-    assert_solid(left_shape, (-80.0, 64.0, core.TABLET_Z / 2.0), "button outer wall missing")
+    # The concealed 2.0 x 1.2 mm button groove now covers the complete usable
+    # left-wing travel from the integral closure-side interior to the split.
+    # It remains bounded above/below and leaves the 1.8 mm exterior rail wall.
+    button_y = (core.TABLET_Y + core.FIT_Y) / 2.0 + 0.5
+    button_z = core.BUTTON_CHANNEL_Z0 + core.BUTTON_CHANNEL_Z / 2.0
+    for x_pos in (-103.25, -90.0, -60.0, -30.0, -1.0):
+        assert_open(
+            left_shape,
+            (x_pos, button_y, button_z),
+            f"full-length left button channel obstructed at X={x_pos:.2f}",
+        )
+        assert_solid(
+            left_shape,
+            (x_pos, button_y + core.BUTTON_CHANNEL_DEPTH_Y + 0.3, button_z),
+            f"button channel breaks through its 1.8 mm outer wall at X={x_pos:.2f}",
+        )
+    for z_pos in (core.BUTTON_CHANNEL_Z0 - 0.1, core.BUTTON_CHANNEL_Z0 + core.BUTTON_CHANNEL_Z + 0.1):
+        assert_solid(
+            left_shape,
+            (-50.0, button_y, z_pos),
+            "button channel exceeds its protected 2.0 mm height",
+        )
+    assert_solid(
+        left_shape,
+        (-104.0, button_y, button_z),
+        "button channel cuts the integral left outer closure",
+    )
+    for y_pos in (-64.0, 64.0):
+        for x_pos in (-103.6, -103.4, -100.0):
+            assert_solid(
+                left_shape,
+                (x_pos, y_pos, button_z),
+                "closed V3 rail lead is discontinuous at the integral left closure",
+            )
+    print(
+        "concealed button channel is 2.0 mm high x 1.2 mm deep from "
+        f"X={model.V3_BUTTON_CHANNEL_X0:.2f} to the center seam with a "
+        f"{model.V3_BUTTON_CHANNEL_SEAM_OVERRUN_X:.2f} mm cutter overrun"
+    )
+
+    # V3 retains the user-tested USB-C plug chamber while enlarging the
+    # rear-floor opening by the green-marked 4 mm inboard area.
     tablet_right_x = (core.TABLET_X + core.FIT_X) / 2.0
     rear_floor_z = -core.BASE_T / 2.0
     plug_chamber_z = core.TABLET_Z / 2.0
@@ -229,7 +300,7 @@ def main() -> None:
         assert_solid(
             left_shape,
             (-100.0, y_pos, core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0),
-            "integral left screen-facing cap is not continuous",
+            "unified left screen-facing perimeter is not continuous",
         )
         right_wall_x = (
             core.TABLET_X + core.FIT_X
@@ -242,15 +313,43 @@ def main() -> None:
         assert_solid(
             right_shape,
             (core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION, y_pos, core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0),
-            "integral right screen-facing cap is not continuous",
+            "unified right screen-facing perimeter is not continuous",
         )
     assert_open(left_shape, (-98.0, 0.0, 4.0), "integral left closure blocks tablet cavity")
+
+    # The visible front perimeter is authored as one ring rather than stacked
+    # pre-filleted lips, caps, bezel, and receiver shrouds. Its front planar
+    # face is one connected face with one opening, and representative top,
+    # bottom, and side points remain continuously solid up to the wing split.
+    front_ring = model.continuous_front_perimeter()
+    assert len(front_ring.solids().vals()) == 1
+    top_faces = front_ring.faces(">Z").vals()
+    assert len(top_faces) == 1, "front perimeter has layered/coplanar top faces"
+    assert top_faces[0].Area() > 5000.0
+    front_z = core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0
+    for x_pos in (-100.0, -80.0, -40.0, -1.0):
+        for y_pos in (-64.0, 64.0):
+            assert_solid(
+                left_shape,
+                (x_pos, y_pos, front_z),
+                "left front rail has a gap or obsolete entry-relief step",
+            )
+    for x_pos in (1.0, 40.0, 80.0, 105.0):
+        for y_pos in (-64.0, 64.0):
+            assert_solid(
+                right_shape,
+                (x_pos, y_pos, front_z),
+                "right front rail has a gap or layered step",
+            )
+    print(
+        "screen-facing perimeter is one smooth ring with one planar front face; "
+        "the only visible break is the 0.35 mm removable center seam"
+    )
 
     # The successful right-wing fit is preserved below the lip plane, while a
     # tablet-concentric 5.3 mm opening curve now covers the four nominal 7 mm
     # tablet-front corners.  The inner samples ensure this remains a narrow
     # corner treatment rather than an unnecessarily intrusive bezel.
-    front_z = core.TABLET_Z + core.FIT_Z + core.LIP_T / 2.0
     for x_sign in (-1.0, 1.0):
         wing_shape = left_shape if x_sign < 0.0 else right_shape
         for y_sign in (-1.0, 1.0):

@@ -6,11 +6,14 @@ bed-friendly wings joined without cradle glue.
 
 ## Review files
 
-- `tablet_stand_v3_multiview.png`: installed, enclosed-left-edge, removable
-  joint, and print-layout views.
+- `tablet_stand_v3_multiview.png`: installed, enclosed-left-edge, USB/cable,
+  removable-joint, and print-layout views of the smooth unified front ring.
 - `tablet_stand_v3_preview.png`: installed assembly with the two wings in
   different blues and the locking wedge in orange.
-- `tablet_stand_v3_left_edge.png`: continuous integral left wall.
+- `tablet_stand_v3_left_edge.png`: continuous integral left wall with no
+  obsolete end-stop/slider step.
+- `tablet_stand_v3_button_channel.png`: inner-side detail of the full-travel
+  concealed 2.0 × 1.2 mm left-wing button groove, highlighted in green.
 - `tablet_stand_v3_rear_joint.png`: exploded view of the three tongues,
   receivers, and lower cross-wedge.
 - `tablet_stand_v3_print_layout.png`: two independent rear-face-down wings and
@@ -59,6 +62,12 @@ washer, nut, and head pockets must wait for physical hardware measurements.
 The rear bracket is glued only to the fixed right wing. Do not put adhesive on
 the left wing, tongues, receivers, or wedge. Pulling the wedge and sliding the
 left wing off must remain possible for tablet service.
+
+The visible front perimeter is one continuous 2 mm ring across both wings,
+with only the flush center split; separately stacked V2 lips, caps, bezel, and
+coplanar shroud faces are gone. The concealed top-button groove runs from the
+integral left closure-side interior to the center seam while retaining its
+1.8 mm exterior wall.
 
 All current STL exports are single watertight solids. The pre-revision right-wing
 STL was sliced with snug 45° supports and a 5 mm brim,

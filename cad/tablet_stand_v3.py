@@ -61,7 +61,16 @@ FRONT_CORNER_TABLET_OVERLAP = 1.70
 FRONT_OPENING_X = core.TABLET_X - 2.0 * FRONT_CORNER_TABLET_OVERLAP
 FRONT_OPENING_Y = core.TABLET_Y - 2.0 * FRONT_CORNER_TABLET_OVERLAP
 FRONT_OPENING_CORNER_R = core.FRAME_INNER_CORNER_R - FRONT_CORNER_TABLET_OVERLAP
-FRONT_BEZEL_OUTER_CORNER_R = core.FRAME_INNER_CORNER_R + core.FIT_X / 2.0
+# Active V3 closes the obsolete 4 mm V2 end-stop lead and overlaps the integral
+# left closure by 0.20 mm behind the visible face. Its concealed button groove
+# then runs from that closure-side interior to 0.20 mm past the split cutter so
+# the entire removable left-wing travel is clear.
+V3_RAIL_CLOSURE_OVERLAP_X = 0.20
+V3_BUTTON_CHANNEL_SEAM_OVERRUN_X = 0.20
+V3_BUTTON_CHANNEL_X0 = -(
+    core.TABLET_X + core.FIT_X + 2.0 * core.WALL_T
+) / 2.0
+V3_BUTTON_CHANNEL_X1 = CRADLE_SEAM_X + V3_BUTTON_CHANNEL_SEAM_OVERRUN_X
 
 # Upper and lower receivers sit just outside the tablet cavity, overlap the
 # existing long-edge walls, and use an open bed-side floor plus an 8.5 mm roof
@@ -134,9 +143,8 @@ def _seam_mask(left: bool) -> cq.Workplane:
 
 
 def integral_left_closure() -> cq.Workplane:
-    """Return the continuous rounded left wall and screen-facing cap."""
+    """Return the continuous rounded left wall beneath the unified front ring."""
     cavity_x = core.TABLET_X + core.FIT_X
-    cavity_y = core.TABLET_Y + core.FIT_Y
     rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
     wall_h = core.BASE_T + rail_top
     cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
@@ -144,7 +152,7 @@ def integral_left_closure() -> cq.Workplane:
     wall_outer_x = wall_inner_x - v2.ENDSTOP_OUTER_WALL_X
     wall_center_x = (wall_inner_x + wall_outer_x) / 2.0
 
-    outer_wall = core.softened_plate(
+    outer_wall = core.front_softened_plate(
         v2.ENDSTOP_OUTER_WALL_X,
         V3_OUTER_Y,
         wall_h,
@@ -152,21 +160,6 @@ def integral_left_closure() -> cq.Workplane:
         LEFT_CLOSURE_CORNER_R,
         LEFT_CLOSURE_EDGE_R,
     ).translate((wall_center_x, 0.0, 0.0))
-
-    # Extend to and slightly overlap the production rail lead-ins.  Because
-    # this cap is integral rather than removable, it can close the corner and
-    # form one continuous screen-facing short edge across the full holder Y.
-    rail_left_x = cradle_left_x + core.LEFT_RAIL_ENTRY_RELIEF_X
-    cap_right_x = rail_left_x + 0.35
-    cap_left_x = wall_inner_x - core.SOFTENED_CAP_WALL_OVERLAP
-    cap = core.softened_plate(
-        cap_right_x - cap_left_x,
-        V3_OUTER_Y,
-        core.LIP_T,
-        core.TABLET_Z + core.FIT_Z,
-        core.LIP_CORNER_R,
-        V3_EXTERIOR_LIP_CAP_EDGE_R,
-    ).translate(((cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
 
     locator: cq.Workplane | None = None
     for locator_y in v2.ENDSTOP_LOCATOR_Y:
@@ -180,65 +173,32 @@ def integral_left_closure() -> cq.Workplane:
         ).translate((cradle_left_x + core.WALL_T / 2.0, locator_y, 0.0))
         locator = pad if locator is None else locator.union(pad)
     assert locator is not None
-    return outer_wall.union(cap).union(locator)
+    return outer_wall.union(locator)
 
 
-def continuous_front_edge_rails() -> cq.Workplane:
-    """Shroud the outer joint blocks inside straight, smooth top/bottom rails.
+def continuous_front_perimeter() -> cq.Workplane:
+    """Return the sole screen-facing V3 perimeter as one smooth ring.
 
-    The structural tongue/receiver hardware remains accessible from the rear
-    side of each wing, while the screen-facing perimeter reads as one straight
-    edge instead of two small joiner bumps.
+    Earlier revisions stacked individually filleted V2 lips, left/right caps,
+    a corner bezel, and receiver shrouds. Their coincident boundaries produced
+    visible ridges and preserved the look of the superseded separate end stop.
+    This single asymmetric outer ring spans the actual V3 left/right closures
+    and 139 mm rail envelope, then cuts the approved tablet-concentric opening.
     """
     cavity_x = core.TABLET_X + core.FIT_X
-    cavity_y = core.TABLET_Y + core.FIT_Y
-    rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
-    wall_h = core.BASE_T + rail_top
-    outer_x = cavity_x + 2.0 * core.WALL_T
-    cradle_left_x = -outer_x / 2.0
-    rail_left_x = cradle_left_x + core.LEFT_RAIL_ENTRY_RELIEF_X
-    outer_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
-    outer_wall_x = outer_wall_inner_x + core.USB_END_WALL_T
-    rail_x = outer_wall_x - rail_left_x
-    rail_center_x = (outer_wall_x + rail_left_x) / 2.0
-    inner_y = cavity_y / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y
-    outer_y = V3_OUTER_Y / 2.0
-    shroud_y = outer_y - inner_y
-    shroud_center_y = (outer_y + inner_y) / 2.0
-
-    rails: cq.Workplane | None = None
-    for sign in (-1.0, 1.0):
-        rail = core.softened_plate(
-            rail_x,
-            shroud_y,
-            wall_h,
-            -core.BASE_T,
-            core.EXPOSED_CORNER_R,
-            V3_EXTERIOR_RAIL_WALL_EDGE_R,
-        ).translate((rail_center_x, sign * shroud_center_y, 0.0))
-        rails = rail if rails is None else rails.union(rail)
-    assert rails is not None
-    return rails
-
-
-def curved_front_corner_bezel() -> cq.Workplane:
-    """Return the thin screen-facing ring that conceals all tablet corners.
-
-    The straight parts coincide with the already successful retaining lips;
-    only the four rounded corner infills add new tablet overlap.  The ring is
-    at the existing lip height, so it does not narrow the tablet insertion
-    cavity below the front retaining plane.
-    """
-    cavity_x = core.TABLET_X + core.FIT_X
-    cavity_y = core.TABLET_Y + core.FIT_Y
+    cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
+    outer_left_x = cradle_left_x - v2.ENDSTOP_OUTER_WALL_X
+    outer_right_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X + core.USB_END_WALL_T
+    outer_x = outer_right_x - outer_left_x
+    outer_center_x = (outer_left_x + outer_right_x) / 2.0
     outer = core.softened_plate(
-        cavity_x,
-        cavity_y,
+        outer_x,
+        V3_OUTER_Y,
         core.LIP_T,
         core.TABLET_Z + core.FIT_Z,
-        FRONT_BEZEL_OUTER_CORNER_R,
+        LEFT_CLOSURE_CORNER_R,
         V3_EXTERIOR_LIP_CAP_EDGE_R,
-    )
+    ).translate((outer_center_x, 0.0, 0.0))
     opening = core.rounded_plate(
         FRONT_OPENING_X,
         FRONT_OPENING_Y,
@@ -249,11 +209,48 @@ def curved_front_corner_bezel() -> cq.Workplane:
     return outer.cut(opening)
 
 
-def continuous_right_outer_closure() -> cq.Workplane:
-    """Extend the USB-C end wall and cap to the V3 perimeter envelope.
+def continuous_rear_edge_shrouds() -> cq.Workplane:
+    """Support the unified front ring and hide rear joint blocks without ridges.
 
-    The shared V2 body stops these features at its 130 mm envelope.  V3's
-    receiver/shroud perimeter is 139 mm, so the right closure needs the same
+    These two exterior rail walls stop 0.70 mm below the visible front face, so
+    their pre-filleted top surfaces are fully buried inside the single ring
+    instead of creating a second coplanar outline. Clean fusion absorbs the
+    overlapping historical 3 mm tablet rails into each smooth outer wall.
+    """
+    cavity_x = core.TABLET_X + core.FIT_X
+    cavity_y = core.TABLET_Y + core.FIT_Y
+    cradle_left_x = -(cavity_x + 2.0 * core.WALL_T) / 2.0
+    rail_left_x = cradle_left_x - V3_RAIL_CLOSURE_OVERLAP_X
+    outer_wall_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X + core.USB_END_WALL_T
+    rail_x = outer_wall_x - rail_left_x
+    rail_center_x = (outer_wall_x + rail_left_x) / 2.0
+    inner_y = cavity_y / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y
+    outer_y = V3_OUTER_Y / 2.0
+    shroud_y = outer_y - inner_y
+    shroud_center_y = (outer_y + inner_y) / 2.0
+    shroud_top_z = core.TABLET_Z + core.FIT_Z + V3_EXTERIOR_RAIL_WALL_EDGE_R
+    shroud_h = core.BASE_T + shroud_top_z
+
+    rails: cq.Workplane | None = None
+    for sign in (-1.0, 1.0):
+        rail = core.front_softened_plate(
+            rail_x,
+            shroud_y,
+            shroud_h,
+            -core.BASE_T,
+            core.EXPOSED_CORNER_R,
+            V3_EXTERIOR_RAIL_WALL_EDGE_R,
+        ).translate((rail_center_x, sign * shroud_center_y, 0.0))
+        rails = rail if rails is None else rails.union(rail)
+    assert rails is not None
+    return rails
+
+
+def continuous_right_outer_closure() -> cq.Workplane:
+    """Extend the USB-C end wall beneath the unified front perimeter.
+
+    The shared V2 body stops its wall at the 130 mm envelope. V3's
+    receiver/shroud perimeter is 139 mm, so the right wall needs the same
     full span or the top and bottom corners read as open notches in the
     screen-facing view.
     """
@@ -261,9 +258,8 @@ def continuous_right_outer_closure() -> cq.Workplane:
     rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
     wall_h = core.BASE_T + rail_top
     usb_end_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
-    usb_outer_x = usb_end_wall_inner_x + core.USB_END_WALL_T
     usb_end_wall_center_x = usb_end_wall_inner_x + core.USB_END_WALL_T / 2.0
-    end_wall = core.softened_plate(
+    end_wall = core.front_softened_plate(
         core.USB_END_WALL_T,
         V3_OUTER_Y,
         wall_h,
@@ -272,32 +268,29 @@ def continuous_right_outer_closure() -> cq.Workplane:
         V3_EXTERIOR_RAIL_WALL_EDGE_R,
     ).translate((usb_end_wall_center_x, 0.0, 0.0))
 
-    right_cap_left_x = cavity_x / 2.0 - core.LIP_OVERLAP
-    cap_right_x = usb_end_wall_inner_x + core.SOFTENED_CAP_WALL_OVERLAP
-    cap = core.softened_plate(
-        cap_right_x - right_cap_left_x,
-        V3_OUTER_Y,
-        core.USB_POCKET_CEILING_T,
-        core.TABLET_Z + core.FIT_Z,
-        core.LIP_CORNER_R,
-        V3_EXTERIOR_LIP_CAP_EDGE_R,
-    ).translate(((right_cap_left_x + cap_right_x) / 2.0, 0.0, 0.0))
-    return end_wall.union(cap)
+    return end_wall
 
 
-def integral_full_cradle() -> cq.Workplane:
-    """Return the tested cradle interfaces with the V3 integral left closure."""
+def integral_full_cradle(
+    include_left_closure: bool = True,
+    include_right_closure: bool = True,
+) -> cq.Workplane:
+    """Return the tested cradle interfaces with the unified V3 perimeter.
+
+    The optional closure flags let each exported wing avoid carrying remote
+    boolean history from the opposite end before the straight split. Geometry
+    at and inside each retained half is identical to the complete source.
+    """
     # The rear bracket is bonded only to the fixed right wing so the left wing
     # can slide off for tablet service.  Therefore V3 intentionally omits the
     # old centered cradle-to-bracket alignment-key groove.
     cavity_x = core.TABLET_X + core.FIT_X
     rail_top = core.TABLET_Z + core.FIT_Z + core.LIP_T
     usb_end_wall_inner_x = cavity_x / 2.0 + core.USB_POCKET_INNER_X
-    # The shared V2 body owns a square-edged USB wall.  Remove only that outer
-    # wall band in V3, then rebuild it with the full-span softened closure.  The
-    # cap retains a 0.20 mm internal fuse into the replacement wall, while the
-    # USB chamber, rear-floor opening, and solid outer-wall volume are restored
-    # to their exact prior bounds.
+    # The shared V2 body owns a square-edged USB wall and separately stacked
+    # cap. Remove only that outer wall band in V3, then rebuild the wall at the
+    # full span beneath the unified ring. The USB chamber, rear-floor opening,
+    # and solid outer-wall volume remain at their exact prior bounds.
     closure_rebuild_mask = (
         cq.Workplane("XY")
         .box(
@@ -316,13 +309,20 @@ def integral_full_cradle() -> cq.Workplane:
     base = core.flat_main_holder(
         exposed_edge_radius=V3_EXTERIOR_RAIL_WALL_EDGE_R,
         lip_edge_radius=V3_EXTERIOR_LIP_CAP_EDGE_R,
+        rail_entry_relief_x=-V3_RAIL_CLOSURE_OVERLAP_X,
+        button_channel_x_end=V3_BUTTON_CHANNEL_X1,
+        include_lips=False,
+        include_right_cap=False,
     ).cut(closure_rebuild_mask)
+    result = base
+    if include_left_closure:
+        result = result.union(integral_left_closure())
+    if include_right_closure:
+        result = result.union(continuous_right_outer_closure())
     return (
-        base
-        .union(integral_left_closure())
-        .union(continuous_right_outer_closure())
-        .union(continuous_front_edge_rails(), clean=False)
-        .union(curved_front_corner_bezel(), clean=False)
+        result
+        .union(continuous_rear_edge_shrouds(), clean=False)
+        .union(continuous_front_perimeter(), clean=False)
     )
 
 
@@ -434,10 +434,14 @@ def locking_channel() -> cq.Workplane:
 
 def cradle_halves() -> tuple[cq.Workplane, cq.Workplane]:
     """Return the removable left and fixed right cradle wings in assembly space."""
-    source = split_cradle_source()
-    left = source.intersect(_seam_mask(True), clean=False).union(joint_tongues()).cut(locking_channel())
+    # Build each split from the same source construction but omit boolean
+    # history for the remote short closure. This prevents degenerate zero-area
+    # tessellation faces without changing either retained wing's geometry.
+    left_source = integral_full_cradle(include_right_closure=False)
+    right_source = integral_full_cradle(include_left_closure=False)
+    left = left_source.intersect(_seam_mask(True), clean=False).union(joint_tongues()).cut(locking_channel())
     right = (
-        source.intersect(_seam_mask(False), clean=False)
+        right_source.intersect(_seam_mask(False), clean=False)
         .union(outer_joint_receivers(), clean=False)
         .cut(joint_socket_cutters(), clean=False)
         .cut(locking_channel(), clean=False)
@@ -622,6 +626,8 @@ def export() -> None:
             "rail_wall_edge_land": core.WALL_T - 2.0 * V3_EXTERIOR_RAIL_WALL_EDGE_R,
             "lip_cap_edge_land": core.LIP_T - 2.0 * V3_EXTERIOR_LIP_CAP_EDGE_R,
             "front_frame_corner_source": "supplied tablet mesh; approximately 7 mm tablet plan radius",
+            "front_perimeter_construction": "one continuous ring split only at the removable wing seam",
+            "stacked_front_lips_caps_or_shrouds": False,
             "continuous_front_edge_rails": True,
             "continuous_left_outer_wall": True,
             "left_outer_wall_span_y": V3_OUTER_Y,
@@ -632,6 +638,15 @@ def export() -> None:
             "seat tablet in right wing, slide integral enclosed left wing +X until all three "
             "tongues seat, then insert lower cross-wedge"
         ),
+        "button_channel": {
+            "height": core.BUTTON_CHANNEL_Z,
+            "depth": core.BUTTON_CHANNEL_DEPTH_Y,
+            "x_start": V3_BUTTON_CHANNEL_X0,
+            "x_end": CRADLE_SEAM_X,
+            "seam_cutter_overrun": V3_BUTTON_CHANNEL_SEAM_OVERRUN_X,
+            "remaining_outer_wall": core.BUTTON_CHANNEL_REMAINING_OUTER_WALL,
+            "concealed": True,
+        },
         "usb_c": {
             "plug_chamber_depth": core.USB_POCKET_INNER_X,
             "rear_turn_opening": {

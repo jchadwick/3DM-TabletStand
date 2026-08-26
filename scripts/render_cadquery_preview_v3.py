@@ -119,6 +119,23 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     return objects
 
 
+def button_detail_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Show the removable left wing and its full-travel concealed button groove."""
+    left, _ = model.cradle_halves()
+    channel_x = model.CRADLE_SEAM_X - model.V3_BUTTON_CHANNEL_X0
+    channel = trimesh.creation.box(
+        extents=(channel_x, core.BUTTON_CHANNEL_DEPTH_Y, core.BUTTON_CHANNEL_Z)
+    )
+    channel.apply_translation(
+        (
+            (model.V3_BUTTON_CHANNEL_X0 + model.CRADLE_SEAM_X) / 2.0,
+            (core.TABLET_Y + core.FIT_Y) / 2.0 + core.BUTTON_CHANNEL_DEPTH_Y / 2.0,
+            core.BUTTON_CHANNEL_Z0 + core.BUTTON_CHANNEL_Z / 2.0,
+        )
+    )
+    return [(cq_mesh(left), LEFT_COLOR), (channel, (72, 220, 96, 230))]
+
+
 def usb_detail_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
     """Show the actual right wing plus the relocated rear-opening envelope."""
     _, right = model.cradle_halves()
@@ -201,6 +218,7 @@ def main() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
     installed = BUILD / "tablet_stand_v3_preview.png"
     left_edge = BUILD / "tablet_stand_v3_left_edge.png"
+    button_detail = BUILD / "tablet_stand_v3_button_channel.png"
     usb_detail = BUILD / "tablet_stand_v3_usb_detail.png"
     rear_cable = BUILD / "tablet_stand_v3_rear_cable.png"
     joint = BUILD / "tablet_stand_v3_rear_joint.png"
@@ -223,6 +241,14 @@ def main() -> None:
                 (1400, 700),
                 eye=(-330.0, -190.0, 80.0),
                 target=(-98.0, 0.0, 2.0),
+            )
+        elif sys.argv[2] == "button-detail":
+            render_view(
+                button_detail_objects(),
+                button_detail,
+                (1400, 700),
+                eye=(-145.0, -115.0, 45.0),
+                target=(-52.0, 62.0, 4.0),
             )
         elif sys.argv[2] == "usb-detail":
             render_view(
@@ -275,6 +301,7 @@ def main() -> None:
         for view in (
             "installed",
             "left-edge",
+            "button-detail",
             "usb-detail",
             "rear-cable",
             "joint",
