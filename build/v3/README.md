@@ -18,6 +18,8 @@ bed-friendly wings joined without cradle glue.
   receivers, and lower cross-wedge.
 - `tablet_stand_v3_print_layout.png`: two independent rear-face-down wings and
   one locking wedge.
+- `tablet_stand_v3_assembly_grooves.png`: annotated view of the matching
+  cross-grooves on the bracket foot and sleeve flange.
 - `tablet_stand_v3.step`: installed assembly.
 
 ## Production-oriented exports
@@ -76,9 +78,10 @@ independently validated, uploaded, and completed on 2026-08-10. The user
 reported that the supports were difficult to distinguish/remove in this PLA.
 The active rounded-finish geometry supersedes that G-code; all three stale
 right-wing slices and their associated INI/print-record/validation files have
-been removed from the active tree. Subsequent full-part slices must use a more
-removable support strategy. Other full-part STLs remain unsliced or
-unauthorized until reviewed individually.
+been removed from the active tree. Subsequent reprints should preserve the more
+removable support strategy. On 2026-08-27 the user reported that all production
+parts printed well and fit
+great; permanent bracket/sleeve adhesive assembly remained to be completed.
 
 ## Historical coupon print evidence
 

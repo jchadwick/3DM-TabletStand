@@ -1,5 +1,12 @@
 # Project Decision Log
 
+### Production parts fit and illustrated adhesive assembly — 2026-08-27
+
+- The user reported that all current V3 production parts printed well and fit great. This supersedes the earlier status that the left wing and remaining modules were unprinted or unauthorized; preserve the active tablet allowance and tongue/socket/wedge dimensions.
+- Clarified that the cradle does not attach directly to the sleeve. The rear tilt bracket provides two permanent adhesive joints: its angled plate bonds only to the fixed USB-C/right wing, and its horizontal foot bonds to the sleeve flange.
+- Added a direct-CadQuery annotated assembly render and `docs/assembly.md`. The single printed 35 × 15 × 1.8 mm cross-key sits between the matching recesses on the underside of the bracket foot and top of the sleeve flange. The key is deliberately loose for alignment; adhesive over the broad mating faces carries the joint.
+- No adhesive belongs on the removable left wing, tablet, tongues, receivers, wedge, sleeve bore, or cable channel.
+
 ### Unified smooth V3 front perimeter and full-travel button groove — 2026-08-26
 
 - The user identified visible ridges/double outlines along the screen-facing top and bottom rails and a disjointed left edge that still read like the superseded separate end-stop/slider. Those artifacts came from stacking independently pre-filleted V2 long lips, separate left/right caps, a corner bezel, and full-height receiver shrouds on coplanar faces.
