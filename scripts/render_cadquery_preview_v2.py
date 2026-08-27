@@ -58,7 +58,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     tube.apply_translation((0.0, core.SLEEVE_CENTER_Y, tube_top_z - 50.0))
     objects.append((tube, (118, 127, 140, 255)))
 
-    # Schematic V2 cable route through the clips now carried by the rear bracket.
+    # Schematic cable route through the open channel carried by the rear bracket.
     tablet_transform = translation(0, 0, 0.45) @ rotation_x(ANGLE_RAD)
     flat_end_x = (
         core.TABLET_X / 2.0 + core.USB_PLUG_PROJECTION - core.RIGHT_ANGLE_PIGTAIL_LENGTH
@@ -70,18 +70,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
         model.BRACKET_PLATE_Z0 - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
     )
     bracket_transform = rotation_x(ANGLE_RAD)
-    clip_far = (
-        bracket_transform
-        @ np.array(
-            [
-                model.BRACKET_CLIP_X[-1],
-                model.BRACKET_CLIP_LOCAL_Y,
-                clip_center_z,
-                1.0,
-            ]
-        )
-    )[:3]
-    clip_near = (
+    clip_center = (
         bracket_transform
         @ np.array(
             [
@@ -115,8 +104,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     transition_z = -36.0
     cable_points = [
         connector_exit,
-        clip_far,
-        clip_near,
+        clip_center,
         clip_release,
         np.array([outside_x, clip_release[1], transition_z]),
         np.array([outside_x, rear_clear_y, transition_z]),

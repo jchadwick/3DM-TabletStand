@@ -1,5 +1,14 @@
 # Project Decision Log
 
+### One accessible rear cable channel and clips-up bracket reprint — 2026-08-27
+
+- The user reported that the inner rear cable clip butted against the center support and lacked enough clearance to be useful. Removed that X = 16 mm clip.
+- Replaced the two 6 mm clips with one continuous 12 mm open C-channel in the former outer-clip region. It spans X = 25–37 mm, keeps its outer edge flush with the 74 mm bracket plate, preserves the same total cable contact length, and leaves 10 mm clearance to the right gusset.
+- The active V3 rear-bracket STL now prints on its broad 74 × 36 mm cradle-bond plate with the cable-channel opening facing upward. This supersedes the V2-derived foot-down orientation for this replacement print; installed geometry and both adhesive mating faces are unchanged.
+- The channel retains the confirmed 4.15 mm internal diameter and 2.8 mm snap opening for the measured 3.45 mm braided cable. The downstream open-space route and sleeve channel remain unchanged.
+- The replacement bracket was sliced in its new broad-plate-down orientation using functional PLA settings: 0.20 mm layers, five walls, 40% grid infill, no supports, and no brim. Validation passed at 7.5 mm³/s peak flow, 86 × 48 × 28.6 mm toolpath bounds, about 22.4 g filament, and 1 h 31 m estimated time.
+- The user explicitly authorized the print. The printer was reachable and ready, and a fresh camera snapshot clearly showed the complete build plate empty. Moonraker accepted `tablet_stand_v3_rear_bracket_clips_up_pla.gcode` at 2026-08-27 04:48:05 UTC; the follow-up status reported the job printing.
+
 ### Production parts fit and illustrated adhesive assembly — 2026-08-27
 
 - The user reported that all current V3 production parts printed well and fit great. This supersedes the earlier status that the left wing and remaining modules were unprinted or unauthorized; preserve the active tablet allowance and tongue/socket/wedge dimensions.

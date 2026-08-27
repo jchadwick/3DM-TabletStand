@@ -73,11 +73,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     )[:3]
     clip_center_z = v2.BRACKET_PLATE_Z0 - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
     bracket_transform = rotation_x(ANGLE_RAD)
-    clip_far = (
-        bracket_transform
-        @ np.array([v2.BRACKET_CLIP_X[-1], v2.BRACKET_CLIP_LOCAL_Y, clip_center_z, 1.0])
-    )[:3]
-    clip_near = (
+    clip_center = (
         bracket_transform
         @ np.array([v2.BRACKET_CLIP_X[0], v2.BRACKET_CLIP_LOCAL_Y, clip_center_z, 1.0])
     )[:3]
@@ -104,8 +100,7 @@ def installed_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]
     transition_z = -36.0
     cable_points = [
         connector_exit,
-        clip_far,
-        clip_near,
+        clip_center,
         clip_release,
         np.array([outside_x, clip_release[1], transition_z]),
         np.array([outside_x, rear_clear_y, transition_z]),
@@ -182,6 +177,12 @@ def coupon_plate_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, i
     ]
 
 
+def bracket_print_objects() -> list[tuple[trimesh.Trimesh, tuple[int, int, int, int]]]:
+    """Show the active V3 bracket datum with its single long clip opening upward."""
+    bracket = model.rear_bracket_print_clips_up()
+    return [(cq_mesh(bracket), (48, 104, 156, 255))]
+
+
 def contact_sheet(
     installed: Path,
     left_edge: Path,
@@ -224,6 +225,7 @@ def main() -> None:
     joint = BUILD / "tablet_stand_v3_rear_joint.png"
     layout = BUILD / "tablet_stand_v3_print_layout.png"
     coupon_plate = BUILD / "tablet_stand_v3_lock_coupon_plate.png"
+    bracket_print = BUILD / "tablet_stand_v3_rear_bracket_print.png"
 
     if len(sys.argv) == 3 and sys.argv[1] == "--render-one":
         if sys.argv[2] == "installed":
@@ -290,6 +292,14 @@ def main() -> None:
                 eye=(65.0, -95.0, 105.0),
                 target=(0.0, 5.0, 1.5),
             )
+        elif sys.argv[2] == "bracket-print":
+            render_view(
+                bracket_print_objects(),
+                bracket_print,
+                (1400, 900),
+                eye=(110.0, -110.0, 110.0),
+                target=(0.0, 0.0, 15.0),
+            )
         else:
             raise ValueError(f"unknown V3 preview view: {sys.argv[2]}")
         return
@@ -307,6 +317,7 @@ def main() -> None:
             "joint",
             "layout",
             "coupon",
+            "bracket-print",
         )
     ]
     for process in processes:

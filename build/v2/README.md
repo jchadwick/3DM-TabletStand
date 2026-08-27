@@ -73,12 +73,13 @@ The cradle has a broad 215 × 135.6 mm rear datum, the bracket has a 60 × 28 mm
 sleeve has a 60 × 46 mm flange. The modular split avoids tall rail-support
 towers and the support ceiling inside the sleeve bore.
 The remaining flagged overhangs are predominantly the cradle's 2.2 mm lips,
-short USB-C bridges, shallow alignment-groove roofs, and the two open cable
-clips.
+short USB-C bridges, shallow alignment-groove roofs, and the one 12 mm open
+cable channel.
 
-Start with no supports at 0.20 mm layers and inspect the slicer preview. If the
-printer struggles with the rear clips, paint support only under those two
-features. The cradle cannot be rotated diagonally into a smaller bounding box.
+Start with no supports at 0.20 mm layers and inspect the slicer preview. The
+active V3 replacement bracket supersedes this historical foot-down orientation:
+it prints broad cradle-bond plate down with its cable-channel opening upward.
+The cradle cannot be rotated diagonally into a smaller bounding box.
 The production plate removes the optional 6 mm skirt and centers the 215 mm
 cradle. Do not add a skirt or brim to this job. Test the twin-plug coupon before
 uploading the full cradle.

@@ -128,6 +128,11 @@ LOCK_COUPON_Z_MAX = 6.0
 # island without fusing the parts together.
 LOCK_COUPON_PLATE_CENTERS = ((-25.0, 0.0), (25.0, 0.0), (0.0, 22.0))
 
+# Rotate the installed bracket so its broad cradle-bond plate is on the bed and
+# the open cable channel faces upward. This supersedes V2's foot-down export for
+# the active V3 production bracket.
+BRACKET_CLIPS_UP_ROTATION_X_DEG = 180.0 - core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG
+
 LINEAR_TOLERANCE = 0.05
 ANGULAR_TOLERANCE = 0.1
 
@@ -548,14 +553,25 @@ def installed_locking_wedge() -> cq.Workplane:
     return locking_wedge_installed().rotate((0, 0, 0), (1, 0, 0), tilt)
 
 
+def rear_bracket_print_clips_up() -> cq.Workplane:
+    """Place the bracket's broad bond plate on the bed with its clip opening up."""
+    return v2.shift_to_bed(
+        v2.rear_bracket_installed().rotate(
+            (0.0, 0.0, 0.0),
+            (1.0, 0.0, 0.0),
+            BRACKET_CLIPS_UP_ROTATION_X_DEG,
+        )
+    )
+
+
 def print_parts() -> tuple[cq.Workplane, ...]:
     """Return all unique V3 modules on their intended bed datums."""
     left, right = cradle_halves()
-    _, bracket, sleeve, _, alignment_key = v2.print_parts()
+    _, _, sleeve, _, alignment_key = v2.print_parts()
     return (
         v2.shift_to_bed(left),
         v2.shift_to_bed(right),
-        bracket,
+        rear_bracket_print_clips_up(),
         sleeve,
         alignment_key,
         v2.shift_to_bed(locking_wedge()),
@@ -700,9 +716,19 @@ def export() -> None:
             "bracket_to_sleeve_bond": "unchanged V2 adhesive joint",
             "alignment_key_quantity": 1,
         },
+        "cable_clip": {
+            "count": len(v2.BRACKET_CLIP_X),
+            "length": core.REAR_CLIP_LENGTH,
+            "center_x": v2.BRACKET_CLIP_X[0],
+            "outer_x": v2.BRACKET_CLIP_OUTER_X,
+            "opening": core.BRAIDED_CHANNEL_SLOT,
+            "internal_diameter": core.BRAIDED_CHANNEL_ID,
+        },
         "print_orientation": {
             "cradle_left": "rear face down",
             "cradle_right": "rear face down",
+            "rear_bracket": "broad cradle-bond plate down; cable clip opening up",
+            "rear_bracket_rotation_x": BRACKET_CLIPS_UP_ROTATION_X_DEG,
             "locking_wedge": "flat on a broad head/body face; print one",
             "supports": "none intended for split joint",
         },

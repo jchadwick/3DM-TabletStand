@@ -22,6 +22,8 @@ bed-friendly wings joined without cradle glue.
   cross-grooves on the bracket foot and sleeve flange.
 - `tablet_stand_v3_bracket_to_cradle_bond.png`: annotated unkeyed adhesive
   contact areas between the fixed right wing and rear bracket.
+- `tablet_stand_v3_rear_bracket_print.png`: active broad-plate-down bracket
+  orientation with its single 12 mm cable channel opening upward.
 - `tablet_stand_v3.step`: installed assembly.
 
 ## Production-oriented exports
@@ -31,10 +33,26 @@ bed-friendly wings joined without cradle glue.
 - `tablet_stand_v3_cradle_right.stl`: 111.33 × 139.00 × 14.20 mm; rear face
   down; includes the three matching receivers and lower locking channel.
 - `tablet_stand_v3_locking_wedge.stl`: print one; removable tapered cross-lock.
-- `tablet_stand_v3_rear_bracket.stl`: bonds only to the fixed right wing.
+- `tablet_stand_v3_rear_bracket.stl`: bonds only to the fixed right wing;
+  exported broad cradle-bond plate down with the one 12 mm cable channel up.
 - `tablet_stand_v3_sleeve.stl`: unchanged tested 32.2 mm sleeve.
 - `tablet_stand_v3_alignment_key_print_1.stl`: print one for the unchanged
   rear-bracket-to-sleeve adhesive joint.
+
+## Active replacement-bracket print
+
+- `tablet_stand_v3_rear_bracket_clips_up_pla.gcode`: validated functional PLA
+  slice; 0.20 mm layers, five walls, 40% grid infill, no supports, no brim.
+- `tablet_stand_v3_rear_bracket_clips_up_pla.ini`: resolved slicer settings
+  extracted from the generated G-code configuration block.
+- `tablet_stand_v3_rear_bracket_clips_up_validation.txt`: clean bounds,
+  temperature, flow, thumbnail, and Klipper-macro validation.
+- `tablet_stand_v3_rear_bracket_clips_up_print_record.json`: hashes, settings,
+  camera clearance evidence, upload/start result, and job status.
+
+The user explicitly authorized this replacement print. A fresh camera snapshot
+showed the complete bed empty, Moonraker accepted the start at 2026-08-27
+04:48:05 UTC, and the printer reported the job in progress.
 
 ## Exact joint coupon
 

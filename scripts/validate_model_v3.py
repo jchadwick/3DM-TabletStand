@@ -73,6 +73,20 @@ def main() -> None:
     assert metadata["structural_assembly"]["rear_bracket_bond"] == "fixed right cradle wing only"
     assert metadata["structural_assembly"]["left_wing_serviceable"] is True
     assert metadata["structural_assembly"]["alignment_key_quantity"] == 1
+    assert metadata["cable_clip"] == {
+        "count": 1,
+        "length": 12.0,
+        "center_x": v2.BRACKET_CLIP_X[0],
+        "outer_x": v2.BRACKET_CLIP_OUTER_X,
+        "opening": core.BRAIDED_CHANNEL_SLOT,
+        "internal_diameter": core.BRAIDED_CHANNEL_ID,
+    }
+    assert metadata["print_orientation"]["rear_bracket"] == (
+        "broad cradle-bond plate down; cable clip opening up"
+    )
+    assert metadata["print_orientation"]["rear_bracket_rotation_x"] == (
+        model.BRACKET_CLIPS_UP_ROTATION_X_DEG
+    )
     assert metadata["finish"]["screen_opening_size"] == [
         model.FRONT_OPENING_X,
         model.FRONT_OPENING_Y,
@@ -458,6 +472,22 @@ def main() -> None:
         "5.30 mm screen-opening corners conceal the tablet's 7 mm front corners "
         "with 1.70 mm overlap"
     )
+
+    # The active V3 bracket export lays its broad cradle-bond plate on the bed.
+    # The installed 80-degree plate rotation plus the 100-degree print rotation
+    # turns the clip's local downward opening exactly upward.
+    bracket_print = model.rear_bracket_print_clips_up()
+    assert math.isclose(
+        core.SCREEN_ANGLE_FROM_HORIZONTAL_DEG + model.BRACKET_CLIPS_UP_ROTATION_X_DEG,
+        180.0,
+        abs_tol=1e-9,
+    )
+    assert abs(bracket_print.val().BoundingBox().zmin) < 1e-6
+    bottom_face_area = sum(face.Area() for face in bracket_print.faces("<Z").vals())
+    assert bottom_face_area > 2400.0
+    assert len(v2.BRACKET_CLIP_X) == 1
+    assert core.REAR_CLIP_LENGTH == 12.0
+    print("rear bracket prints on its broad bond plate with one 12 mm clip opening upward")
 
     # The bracket spans the seam geometrically but is bonded only to the fixed
     # right wing.  The left rear face stays ungrooved and removable.

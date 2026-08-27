@@ -57,9 +57,9 @@
     "seam_x": 0.0,
     "total_clearance": 0.35,
     "left_print_envelope": [
-      125.0015529111282,
-      139.0031056222562,
-      14.228930376247533
+      125.00155291112776,
+      139.00310562225525,
+      14.228930376292366
     ],
     "right_print_envelope": [
       111.32733126523522,
@@ -102,9 +102,19 @@
     "bracket_to_sleeve_bond": "unchanged V2 adhesive joint",
     "alignment_key_quantity": 1
   },
+  "cable_clip": {
+    "count": 1,
+    "length": 12.0,
+    "center_x": 31.0,
+    "outer_x": 37.0,
+    "opening": 2.8,
+    "internal_diameter": 4.15
+  },
   "print_orientation": {
     "cradle_left": "rear face down",
     "cradle_right": "rear face down",
+    "rear_bracket": "broad cradle-bond plate down; cable clip opening up",
+    "rear_bracket_rotation_x": 100.0,
     "locking_wedge": "flat on a broad head/body face; print one",
     "supports": "none intended for split joint"
   }

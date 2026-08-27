@@ -102,7 +102,9 @@ BRAIDED_CHANNEL_SLOT = 2.8
 BRAIDED_CHANNEL_OUTER_X = 7.2
 BRAIDED_CHANNEL_OUTER_Y = 4.6
 BRAIDED_CHANNEL_EMBED = 1.2
-REAR_CLIP_LENGTH = 6.0
+# One continuous rear clip replaces the inaccessible inner member of the old
+# two-clip layout. Its 12 mm span preserves the same total cable contact length.
+REAR_CLIP_LENGTH = 12.0
 REAR_CLIP_OUTER_Y = 7.2
 REAR_CLIP_OUTER_Z = 5.2
 REAR_CLIP_CENTER_Z = -5.4

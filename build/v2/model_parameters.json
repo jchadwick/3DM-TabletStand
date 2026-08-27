@@ -121,10 +121,12 @@
   },
   "cable": {
     "braided_cable_diameter": 3.45,
+    "bracket_clip_count": 1,
     "bracket_clip_x": [
-      16.0,
-      34.0
+      31.0
     ],
+    "bracket_clip_length": 12.0,
+    "bracket_clip_outer_x": 37.0,
     "sleeve_channel_id": 4.15,
     "sleeve_channel_slot": 2.8,
     "usb_rear_turn_open_rectangle": {

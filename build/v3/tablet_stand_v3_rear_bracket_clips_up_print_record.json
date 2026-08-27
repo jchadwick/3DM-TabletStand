@@ -1,0 +1,54 @@
+{
+  "schema": "tablet-stand.print-record/1",
+  "part": "V3 replacement rear bracket with one 12 mm cable channel",
+  "material": "PLA",
+  "copies": 1,
+  "purpose": "functional replacement",
+  "machine": "Creality Ender-3 Pro, 220 x 220 x 250 mm, 0.4 mm nozzle",
+  "orientation": "broad 74 x 36 mm cradle-bond plate down; cable-channel opening up",
+  "geometry": {
+    "clip_count": 1,
+    "clip_length_mm": 12.0,
+    "clip_span_x_mm": [25.0, 37.0],
+    "clip_internal_diameter_mm": 4.15,
+    "clip_opening_mm": 2.8,
+    "stl_sha256": "a15f829c151d19f6d5af59e3b91dc0004915c9115901f83f8fdedce8f07711c6"
+  },
+  "slice": {
+    "slicer": "PrusaSlicer 2.8.1",
+    "layer_height_mm": 0.2,
+    "first_layer_height_mm": 0.24,
+    "walls": 5,
+    "top_layers": 5,
+    "bottom_layers": 4,
+    "infill_percent": 40,
+    "infill_pattern": "grid",
+    "supports": false,
+    "brim_mm": 0,
+    "nozzle_first_layer_c": 215,
+    "nozzle_c": 210,
+    "bed_c": 60,
+    "max_volumetric_flow_mm3_s": 10.0,
+    "validated_peak_flow_mm3_s": 7.5,
+    "estimated_time": "1h 31m 33s",
+    "estimated_filament_g": 22.4,
+    "gcode_sha256": "40758a656466f3bfbcbaded91208928f4f9590efada70ae55f01f18cac61eccd",
+    "resolved_ini_sha256": "5898a7452191bf106c9cd582d5a647209e76776e0fcc27809f6007e13cb74a1c",
+    "validation": "clean",
+    "postprocessing": [
+      "removed PrusaSlicer automatic M190/M104/M109 commands so Klipper START_PRINT exclusively owns heating",
+      "added BED=60 validation alias alongside the printer macro's required BED_TEMP=60 parameter",
+      "embedded 32 x 32 and 300 x 300 PNG thumbnails"
+    ]
+  },
+  "start": {
+    "authorized_by_user": true,
+    "printer_status_before_start": "ready; prior job complete; bed and nozzle cool",
+    "camera_checked": true,
+    "camera_result": "fresh full-bed snapshot clearly showed an empty unobstructed plate",
+    "remote_file": "tablet_stand_v3_rear_bracket_clips_up_pla.gcode",
+    "started_at": "2026-08-27 04:48:05 UTC",
+    "moonraker_result": "print start accepted",
+    "verified_job_state": "printing"
+  }
+}

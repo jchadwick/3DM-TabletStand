@@ -76,6 +76,9 @@ def main() -> None:
     assert metadata["right_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["button_fit_coupon"]["uses_exact_cradle_geometry"] is True
     assert metadata["left_slide_coupon"]["uses_exact_cradle_geometry"] is True
+    assert metadata["cable"]["bracket_clip_count"] == 1
+    assert metadata["cable"]["bracket_clip_length"] == 12.0
+    assert metadata["cable"]["bracket_clip_outer_x"] == model.BRACKET_PLATE_X / 2.0
     assert metadata["cable"]["usb_rear_turn_open_rectangle"] == {
         "x": 12.0,
         "y": 16.0,
@@ -122,6 +125,35 @@ def main() -> None:
         f"{cradle_flat.BoundingBox().ylen:.2f} x "
         f"{cradle_flat.BoundingBox().zlen:.2f} mm"
     )
+
+    # One continuous 12 mm cable channel replaces the inaccessible inner 6 mm
+    # clip. Its outer edge remains flush with the bracket plate, while its
+    # inner edge stays well clear of the right gusset.
+    assert len(model.BRACKET_CLIP_X) == 1
+    assert core.REAR_CLIP_LENGTH == 12.0
+    clip_center_x = model.BRACKET_CLIP_X[0]
+    clip_x0 = clip_center_x - core.REAR_CLIP_LENGTH / 2.0
+    clip_x1 = clip_center_x + core.REAR_CLIP_LENGTH / 2.0
+    assert math.isclose(clip_x1, model.BRACKET_PLATE_X / 2.0, abs_tol=1e-9)
+    assert clip_x0 - (13.0 + model.BRACKET_GUSSET_T / 2.0) >= 9.9
+    clip_center_z = model.BRACKET_PLATE_Z0 - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
+    for x_pos in (clip_x0 + 0.1, clip_center_x, clip_x1 - 0.1):
+        assert_open(
+            bracket_local,
+            (x_pos, model.BRACKET_CLIP_LOCAL_Y, clip_center_z),
+            "long rear cable channel is obstructed",
+        )
+        assert_solid(
+            bracket_local,
+            (x_pos, model.BRACKET_CLIP_LOCAL_Y + 2.7, clip_center_z),
+            "long rear cable channel wall is missing",
+        )
+    assert_open(
+        bracket_local,
+        (16.0, model.BRACKET_CLIP_LOCAL_Y, clip_center_z),
+        "inaccessible inner clip was not removed",
+    )
+    print("one accessible 12 mm rear cable channel replaces the two 6 mm clips")
 
     # The glue grooves remove material only from the intended mating faces.
     assert_open(cradle_flat, (0.0, model.BRACKET_PLATE_CENTER_Y, -2.5), "cradle groove missing")

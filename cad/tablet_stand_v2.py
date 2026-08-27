@@ -117,7 +117,11 @@ BRACKET_PLATE_CENTER_Y = 14.0
 BRACKET_PLATE_Z0 = -9.0
 BRACKET_CORNER_R = 4.0
 BRACKET_GUSSET_T = 4.0
-BRACKET_CLIP_X = (16.0, 34.0)
+# The original inner clip at X=16 was crowded against the center gusset and
+# could not be used. Preserve the two clips' combined 12 mm contact length as
+# one continuous channel whose outer end remains flush with the plate edge.
+BRACKET_CLIP_OUTER_X = BRACKET_PLATE_X / 2.0
+BRACKET_CLIP_X = (BRACKET_CLIP_OUTER_X - core.REAR_CLIP_LENGTH / 2.0,)
 BRACKET_CLIP_LOCAL_Y = 2.0
 
 # Sleeve-to-bracket flange and foot. Their matching front and side edges form a
@@ -409,7 +413,7 @@ def flat_end_stop() -> cq.Workplane:
 
 
 def rear_bracket_local_plate() -> cq.Workplane:
-    """Cradle-parallel mounting plate with captive nuts and open cable clips."""
+    """Cradle-parallel mounting plate with one accessible open cable channel."""
     plate = core.rounded_plate(
         BRACKET_PLATE_X,
         BRACKET_PLATE_Y,
@@ -424,8 +428,9 @@ def rear_bracket_local_plate() -> cq.Workplane:
         ALIGNMENT_GROOVE_DEPTH + 0.05,
     )
     plate = plate.cut(plate_groove)
-    # The clips attach to the rear face of the plate rather than the cradle,
-    # leaving the cradle's complete rear frame surface available as a print bed.
+    # The single long clip attaches to the rear face of the plate rather than
+    # the cradle, leaving the cradle's complete rear frame surface available as
+    # a print bed and maintaining clearance from the center gusset.
     rear_face_z = BRACKET_PLATE_Z0
     clip_center_z = rear_face_z - core.REAR_CLIP_OUTER_Z / 2.0 + 0.05
     for clip_x in BRACKET_CLIP_X:
@@ -852,7 +857,10 @@ def export() -> None:
         },
         "cable": {
             "braided_cable_diameter": core.BRAIDED_CABLE_D,
+            "bracket_clip_count": len(BRACKET_CLIP_X),
             "bracket_clip_x": BRACKET_CLIP_X,
+            "bracket_clip_length": core.REAR_CLIP_LENGTH,
+            "bracket_clip_outer_x": BRACKET_CLIP_OUTER_X,
             "sleeve_channel_id": core.BRAIDED_CHANNEL_ID,
             "sleeve_channel_slot": core.BRAIDED_CHANNEL_SLOT,
             "usb_rear_turn_open_rectangle": {
