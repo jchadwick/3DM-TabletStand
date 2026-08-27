@@ -20,6 +20,8 @@ bed-friendly wings joined without cradle glue.
   one locking wedge.
 - `tablet_stand_v3_assembly_grooves.png`: annotated view of the matching
   cross-grooves on the bracket foot and sleeve flange.
+- `tablet_stand_v3_bracket_to_cradle_bond.png`: annotated unkeyed adhesive
+  contact areas between the fixed right wing and rear bracket.
 - `tablet_stand_v3.step`: installed assembly.
 
 ## Production-oriented exports
